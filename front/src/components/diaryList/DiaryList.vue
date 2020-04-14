@@ -1,11 +1,19 @@
 <template>
-  <div>
+  <div class="diaryList">
     <h1>Diary List</h1>
+    <Nav />
   </div>
 </template>
 
 <script>
-export default {};
+import Nav from "../nav/Nav.vue";
+
+export default {
+  name: "DiaryList",
+  components: {
+    Nav
+  }
+};
 </script>
 
-<style></style>
+<style src="./DiaryList.css" scoped></style>
