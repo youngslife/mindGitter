@@ -1,0 +1,37 @@
+div.Login {
+  background-image: url(../../assets/login.jpg);
+  width: 360px;
+  height: 640px;
+  position: absolute;
+}
+
+form {
+  background-color: rgba( 255, 255, 255, 0.5 ); 
+  width: 200px;
+  height: 300px;
+  position: relative;
+  margin-top: 170px;
+  margin-left: 80px;
+}
+
+ul {
+  margin-top: 20px;
+  padding: 10px;
+  position: relative;
+  text-align: left;
+  font-size: 15px;
+}
+
+input {
+  position: relative;
+  width: 180px;
+  font-size: 20px;
+  outline: none;
+  border-bottom: 1px solid #000;
+}
+
+a {
+  position: fixed;
+  margin-top: 70px;
+  margin-left: 40px;
+}

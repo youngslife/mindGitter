@@ -16,4 +16,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style src="./DiaryList.css" scoped></style>

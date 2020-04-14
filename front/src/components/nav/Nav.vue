@@ -1,20 +1,19 @@
 <template>
-  <v-bottom-navigation :value="activeBtn" grow color="teal">
-    <v-btn>
-      <span>Recents</span>
-      <v-icon>mdi-history</v-icon>
-    </v-btn>
+  <div class="Nav">
+    <v-bottom-navigation :value="activeBtn" grow fixed height="40px">
+      <v-btn href="/home">
+        <v-icon>fas fa-home</v-icon>
+      </v-btn>
 
-    <v-btn>
-      <span>Favorites</span>
-      <v-icon>mdi-heart</v-icon>
-    </v-btn>
+      <v-btn href="/createDiary">
+        <v-icon>fas fa-plus</v-icon>
+      </v-btn>
 
-    <v-btn>
-      <span>Nearby</span>
-      <v-icon>mdi-map-marker</v-icon>
-    </v-btn>
-  </v-bottom-navigation>
+      <v-btn href="/userDetail">
+        <v-icon>fas fa-align-justify</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
+  </div>
 </template>
 
 <script>
@@ -28,4 +27,4 @@ export default {
 };
 </script>
 
-<style src="./Nav.css" scoped></style>
+<style></style>
