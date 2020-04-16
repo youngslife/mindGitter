@@ -95,8 +95,8 @@ MIDDLEWARE = [
 
 # cors 오류 대비 
 # cors header setting
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = [  # 어떤 포트에서 들어오는 정보만 인식할 것이냐
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = [
 "http://localhost:8080"
 ]
 CORS_ALLOW_METHODS = (

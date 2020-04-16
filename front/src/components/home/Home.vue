@@ -28,7 +28,7 @@
 
 <script>
 import router from "@/router";
-// import { mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -37,8 +37,7 @@ export default {
       carOption: false,
       diaryList: [],
       addImg:
-        "https://w0.pngwave.com/png/106/279/computer-icons-medicine-health-care-plus-button-png-clip-art.png",
-      isLoggedIn: true
+        "https://w0.pngwave.com/png/106/279/computer-icons-medicine-health-care-plus-button-png-clip-art.png"
     };
   },
   methods: {
@@ -72,13 +71,13 @@ export default {
       router.push("createDiary");
     },
     goDetail() {
-      router.push("diaryDetail");
+      router.push("diaryList");
     }
   },
-  // // vuex Login 연동
-  // computed: {
-  //   ...mapGetters(["isLoggedIn"])
-  // },
+  // vuex Login 연동
+  computed: {
+    ...mapGetters(["isLoggedIn"])
+  },
   created() {
     if (this.isLoggedIn) {
       this.getDiary();

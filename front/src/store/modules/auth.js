@@ -40,18 +40,14 @@ const actions = {
     if (getters.isLoggedIn) {
       router.push("/");
     } else {
-      console.log(username, password);
       axios
         .post(
-          HOST + "/api/rest_auth/login/",
+          HOST + "/api/rest-auth/login/",
           { username, password },
           {
             headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods":
-                "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-              "Access-Control-Allow-Headers":
-                "Origin, Content-Type, X-Auth-Token"
+              "Content-Type": "application/json",
+              Accept: "application/json"
             }
           }
         )
@@ -79,7 +75,7 @@ const actions = {
   },
   signup: (
     { commit, getters, dispatch },
-    { username, email, password, passwordconfirmation }
+    { username, email, password1, password2 }
   ) => {
     commit("clearErrors");
     if (getters.isLoggedIn) {
@@ -92,22 +88,31 @@ const actions = {
       if (!email) {
         commit("pushError", "E-mail을 입력하세요");
       }
-      if (password.length < 8) {
+      if (password1.length < 8) {
         commit("pushError", "비밀번호는 8자 이상어야 합니다");
       } else {
-        if (password === passwordconfirmation) {
-          console.log(username, email, password);
+        if (password1 === password2) {
+          console.log(username, email, password1);
           axios
-            .post(HOST + "/api/rest-auth/registration/", {
-              username,
-              email,
-              password
-            })
+            .post(
+              HOST + "/api/rest-auth/registration/",
+              {
+                username,
+                password1,
+                password2
+              },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json"
+                }
+              }
+            )
             .then(message => {
               message;
               const credentials = {
                 username,
-                password
+                password: password1
               };
               dispatch("login", credentials);
             })

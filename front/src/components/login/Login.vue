@@ -12,8 +12,8 @@
 
       <div class="LoginForm">
         <h1>Login</h1>
-        <ul id="userId">
-          <label for="userId">ID</label>
+        <ul id="username">
+          <label for="username">ID</label>
           <input
             v-model="credentials.username"
             type="text"
@@ -21,12 +21,12 @@
             placeholder="아이디"
           />
         </ul>
-        <ul id="userPassword">
-          <label for="userPassword">Password</label>
+        <ul id="password">
+          <label for="password">Password</label>
           <input
             v-model="credentials.password"
             type="password"
-            id="userPassword"
+            id="password"
             placeholder="비밀번호"
           />
         </ul>

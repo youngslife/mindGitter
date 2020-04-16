@@ -11,39 +11,39 @@
             </li>
           </ul>
         </div>
-        <ul id="userId">
-          <label for="userId">ID</label>
+        <ul id="username">
+          <label for="username">ID</label>
           <input
-            v-model="userInput.userId"
+            v-model="userInput.username"
             type="text"
-            id="userId"
+            id="username"
             placeholder="아이디"
           />
         </ul>
-        <ul id="userEmail">
-          <label for="userEmail">e-mail</label>
+        <ul id="email">
+          <label for="email">e-mail</label>
           <input
-            v-model="userInput.userEmail"
+            v-model="userInput.email"
             type="text"
-            id="userEmail"
+            id="email"
             placeholder="e-mail"
           />
         </ul>
-        <ul id="userPassword">
-          <label for="userPassword">Password</label>
+        <ul id="password1">
+          <label for="password1">Password</label>
           <input
-            v-model="userInput.userPassword"
+            v-model="userInput.password1"
             type="password"
-            id="userPassword"
+            id="password1"
             placeholder="비밀번호"
           />
         </ul>
-        <ul id="userPasswordConfirmation">
-          <label for="userPasswordConfirmation">Password</label>
+        <ul id="password2">
+          <label for="password2">Password</label>
           <input
-            v-model="userInput.userPasswordConfirmation"
+            v-model="userInput.password2"
             type="password"
-            id="userPasswordConfirmation"
+            id="password2"
             placeholder="비밀번호확인"
           />
         </ul>
@@ -62,10 +62,10 @@ export default {
   data() {
     return {
       userInput: {
-        userId: "",
-        userEmail: "",
-        userPassword: "",
-        userPasswordConfirmation: ""
+        username: "",
+        email: "",
+        password1: "",
+        password2: ""
       }
     };
   },
