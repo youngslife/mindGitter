@@ -15,7 +15,7 @@ form {
 }
 
 ul {
-  margin-top: 20px;
+  margin-top: 3px;
   padding: 10px;
   position: relative;
   text-align: left;
@@ -32,6 +32,6 @@ input {
 
 a {
   position: fixed;
-  margin-top: 85px;
-  margin-left: 40px;
+  margin-top: 2px;
+  margin-left: 50px;
 }
