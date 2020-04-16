@@ -41,7 +41,7 @@ button {
 }
 
 a {
-  position: fixed;
+  position: absolute;
   margin-top: 20px;
   margin-left: 50px;
 }

@@ -1,8 +1,14 @@
 <template>
   <div class="userDetail">
     <row>
-      <img class="userprofile" src="../../assets/userprofile.jpg" alt="userprofile" />
-      <h1>userId</h1>
+      <img
+        class="userprofile"
+        src="../../assets/userprofile.jpg"
+        alt="userprofile"
+      />
+      <div class="userId">
+        userId
+      </div>
     </row>
   </div>
 </template>
@@ -11,4 +17,4 @@
 export default {};
 </script>
 
-<style></style>
+<style src="./UserDetail.css" scoped></style>
