@@ -1,4 +1,4 @@
-div.Login {
+div.Signup {
   background-image: url(../../assets/login.jpg);
   width: 360px;
   height: 640px;
@@ -15,7 +15,7 @@ form {
 }
 
 ul {
-  margin-top: 30px;
+  margin-top: 3px;
   padding: 10px;
   position: relative;
   text-align: left;
@@ -32,7 +32,7 @@ input {
 
 button {
   position: relative;
-  margin-top: 30px;
+  margin-top: 5px;
   height: 30px;
   width: 180px;
   border-radius: 5px;
@@ -42,6 +42,6 @@ button {
 
 a {
   position: absolute;
-  margin-top: 60px;
-  margin-left: 45px;
+  margin-top: 20px;
+  margin-left: 50px;
 }

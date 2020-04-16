@@ -7,14 +7,15 @@ import DiaryList from "../components/diaryList/DiaryList.vue";
 import Login from "../components/login/Login.vue";
 import NewDiary from "../components/newDiary/NewDiary.vue";
 import UserDetail from "../components/userDetail/UserDetail.vue";
+import Signup from "../components/signup/Signup.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/login",
-    name: "Login",
-    component: Login
+    path: "/signup",
+    name: "Signup",
+    component: Signup
   },
   {
     path: "/createDiary",

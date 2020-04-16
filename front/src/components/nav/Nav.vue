@@ -1,7 +1,7 @@
 <template>
   <div class="Nav">
     <v-bottom-navigation :value="activeBtn" grow fixed height="40px">
-      <v-btn href="/home">
+      <v-btn href="/">
         <v-icon>fas fa-home</v-icon>
       </v-btn>
 
