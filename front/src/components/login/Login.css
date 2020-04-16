@@ -8,14 +8,14 @@ div.Login {
 form {
   background-color: rgba( 255, 255, 255, 0.5 ); 
   width: 200px;
-  height: 300px;
+  height: 350px;
   position: relative;
   margin-top: 170px;
   margin-left: 80px;
 }
 
 ul {
-  margin-top: 20px;
+  margin-top: 30px;
   padding: 10px;
   position: relative;
   text-align: left;
@@ -30,8 +30,18 @@ input {
   border-bottom: 1px solid #000;
 }
 
+button {
+  position: relative;
+  margin-top: 30px;
+  height: 30px;
+  width: 180px;
+  border-radius: 5px;
+  background: #dec4ff;
+  color: white;
+}
+
 a {
   position: fixed;
-  margin-top: 85px;
-  margin-left: 40px;
+  margin-top: 60px;
+  margin-left: 45px;
 }

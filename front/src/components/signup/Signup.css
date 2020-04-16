@@ -1,4 +1,4 @@
-div.Login {
+div.Signup {
   background-image: url(../../assets/login.jpg);
   width: 360px;
   height: 640px;
@@ -8,7 +8,7 @@ div.Login {
 form {
   background-color: rgba( 255, 255, 255, 0.5 ); 
   width: 200px;
-  height: 300px;
+  height: 350px;
   position: relative;
   margin-top: 170px;
   margin-left: 80px;
@@ -30,8 +30,18 @@ input {
   border-bottom: 1px solid #000;
 }
 
+button {
+  position: relative;
+  margin-top: 5px;
+  height: 30px;
+  width: 180px;
+  border-radius: 5px;
+  background: #dec4ff;
+  color: white;
+}
+
 a {
   position: fixed;
-  margin-top: 2px;
+  margin-top: 20px;
   margin-left: 50px;
 }
