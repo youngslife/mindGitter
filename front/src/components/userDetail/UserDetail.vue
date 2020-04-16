@@ -1,7 +1,11 @@
 <template>
   <div class="userDetail">
     <row>
-      <img class="userprofile" src="../../assets/userprofile.jpg" alt="userprofile" />
+      <img
+        class="userprofile"
+        src="../../assets/userprofile.jpg"
+        alt="userprofile"
+      />
       <h1>userId</h1>
     </row>
   </div>
