@@ -7,7 +7,9 @@
         alt="userprofile"
       />
       <div class="userId">
-        멋찌
+        <p>
+          jisunl23
+        </p>
       </div>
     </row>
   </div>
