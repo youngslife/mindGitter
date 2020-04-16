@@ -59,6 +59,8 @@ REST_USE_JWT = True
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    'posts',
     'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
