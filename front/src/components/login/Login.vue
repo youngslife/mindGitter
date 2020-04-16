@@ -15,7 +15,7 @@
         <ul id="userId">
           <label for="userId">ID</label>
           <input
-            v-model="credentials.userId"
+            v-model="credentials.username"
             type="text"
             id="userId"
             placeholder="아이디"
@@ -24,7 +24,7 @@
         <ul id="userPassword">
           <label for="userPassword">Password</label>
           <input
-            v-model="credentials.userPassword"
+            v-model="credentials.password"
             type="password"
             id="userPassword"
             placeholder="비밀번호"
@@ -45,8 +45,8 @@ export default {
   data() {
     return {
       credentials: {
-        userId: "",
-        userPassword: ""
+        username: "",
+        password: ""
       }
     };
   },

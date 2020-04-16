@@ -36,12 +36,25 @@ const actions = {
     commit("pushError", error);
   },
 
-  login: ({ commit, getters }, credentials) => {
+  login: ({ commit, getters }, { username, password }) => {
     if (getters.isLoggedIn) {
       router.push("/");
     } else {
+      console.log(username, password);
       axios
-        .post(HOST + "/api-token-auth/", credentials)
+        .post(
+          HOST + "/api/rest_auth/login/",
+          { username, password },
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods":
+                "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+              "Access-Control-Allow-Headers":
+                "Origin, Content-Type, X-Auth-Token"
+            }
+          }
+        )
         .then(token => {
           commit("setToken", token.data.token);
           commit("setLoading", false);
@@ -66,34 +79,35 @@ const actions = {
   },
   signup: (
     { commit, getters, dispatch },
-    { userId, userEmail, userPassword, userPasswordConfirmation }
+    { username, email, password, passwordconfirmation }
   ) => {
     commit("clearErrors");
     if (getters.isLoggedIn) {
       router.push("/");
     } else {
       commit("clearErrors");
-      if (!userId) {
+      if (!username) {
         commit("pushError", "ID를 입력하세요");
       }
-      if (!userEmail) {
+      if (!email) {
         commit("pushError", "E-mail을 입력하세요");
       }
-      if (userPassword.length < 8) {
+      if (password.length < 8) {
         commit("pushError", "비밀번호는 8자 이상어야 합니다");
       } else {
-        if (userPassword === userPasswordConfirmation) {
+        if (password === passwordconfirmation) {
+          console.log(username, email, password);
           axios
-            .post(HOST + "/api/v1/users/signup/", {
-              userId,
-              userEmail,
-              userPassword
+            .post(HOST + "/api/rest-auth/registration/", {
+              username,
+              email,
+              password
             })
             .then(message => {
               message;
               const credentials = {
-                userId,
-                userPassword
+                username,
+                password
               };
               dispatch("login", credentials);
             })
