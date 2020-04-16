@@ -7,7 +7,7 @@
         alt="userprofile"
       />
       <div class="userId">
-        userId
+        멋찌
       </div>
     </row>
   </div>
