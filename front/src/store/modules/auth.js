@@ -135,18 +135,18 @@ const actions = {
       commit("setToken", token);
     }
   },
-  validation: ({ commit, dispatch }, credentials) => {
+  validation: ({ commit, dispatch }, { username, password }) => {
     commit("setLoading", false);
     commit("clearErrors");
-    if (!credentials.username) {
+    if (!username) {
       commit("pushError", "username can not be empty");
       commit("setLoading", false);
     }
-    if (credentials.password < 8) {
+    if (password < 8) {
       commit("pushError", "password too short");
       commit("setLoading", false);
     } else {
-      dispatch("login", credentials);
+      dispatch("login", { username, password });
     }
   }
 };

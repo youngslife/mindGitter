@@ -29,7 +29,9 @@
 <script>
 import router from "@/router";
 import { mapGetters } from "vuex";
+
 export default {
+  name: "Home",
   data() {
     return {
       wHeight: 0,
