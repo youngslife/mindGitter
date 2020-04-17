@@ -12,9 +12,9 @@ utils.save_logs()
 
 # data preprocessing
 if args.is_data_video == 'True':
-  preprocess.handle_video()
+  preprocess.load_video()
 elif args.is_data_video == 'False':
-  xtrain, xvalid, ytrain, yvalid = preprocess.handle_image()
+  xtrain, xvalid, ytrain, yvalid = preprocess.load_image()
 else:
   print('Check argument is data video. It must be True or False')
 
@@ -24,8 +24,7 @@ num_features = 64
 num_labels = 7
 size = (48, 48)
 batch_size = 64
-test_size = 0.1
-epochs = 35
+epochs = 15
 
 # Select Model 
 if args.model == 'sCNN':
@@ -34,12 +33,12 @@ if args.model == 'sCNN':
 else:
   raise ValueError(f'There is no valid model named {args.model}. Check again models.')
 
-checkpoint_path = os.path.join(args.checkpoint_dir, 'sCNN.best.hdf5')
-checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_accuracy', save_best_only=True, save_weights_only=True, mode='max')
+checkpoint = ModelCheckpoint(args.checkpoint_path, monitor='val_accuracy', save_best_only=True, save_weights_only=True, period=1)
 
 if args.from_checkpoint == 'True':
-  model.save_weights(checkpoint_path.format(epoch=0))
+  model.load_weights(checkpoint_path.format(epoch=0))
 
+# 모델이 많아진다면 loss, optimizer 등의 하이퍼파라미터등도 인자화하거나 모델자체를 저장해야한다.
 #Compliling the model with adam optimixer and categorical crossentropy loss
 model.compile(loss=categorical_crossentropy,
               optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-7),
@@ -52,7 +51,7 @@ callback_list = [checkpoint, early_stopping]
 model.fit(np.array(xtrain), np.array(ytrain),
           batch_size=batch_size,
           epochs=epochs,
-          callbacks=[early_stopping],
+          callbacks=callback_list,
           verbose=1,
           validation_data=(np.array(xvalid), np.array(yvalid)),
           shuffle=True)
