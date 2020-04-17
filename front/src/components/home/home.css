@@ -8,7 +8,7 @@
     height: 81vh;
 }
 
-.newBtn:hover {
+button.v-icon.notranslate.newBtn.v-icon--link.mdi.mdi-plus.theme--light:hover {
     cursor: pointer;
     opacity: 100%;
 }
