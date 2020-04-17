@@ -1,7 +1,8 @@
 import utils, os
 import numpy as np
-from data import preprocess
+from data import preprocess, visualization
 from config import args
+
 from keras.optimizers import Adam
 from models.simple_cnn import SimpleCNN
 from keras.callbacks import ModelCheckpoint, EarlyStopping
@@ -24,7 +25,7 @@ num_features = 64
 num_labels = 7
 size = (48, 48)
 batch_size = 64
-epochs = 15
+epochs = 35
 
 # Select Model 
 if args.model == 'sCNN':
@@ -48,10 +49,15 @@ early_stopping = EarlyStopping(monitor='val_accuracy', patience=3)
 callback_list = [checkpoint, early_stopping]
 
 # training the model
-model.fit(np.array(xtrain), np.array(ytrain),
+history = model.fit(np.array(xtrain), np.array(ytrain),
           batch_size=batch_size,
           epochs=epochs,
           callbacks=callback_list,
           verbose=1,
           validation_data=(np.array(xvalid), np.array(yvalid)),
           shuffle=True)
+
+# visaulization of acc & loss on train data & validation data
+if args.show_graphs == 'True':
+  visualization.draw_accloss(history)
+  
