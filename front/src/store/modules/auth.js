@@ -92,7 +92,6 @@ const actions = {
         commit("pushError", "비밀번호는 8자 이상어야 합니다");
       } else {
         if (password1 === password2) {
-          console.log(username, email, password1);
           axios
             .post(
               HOST + "/api/rest-auth/registration/",

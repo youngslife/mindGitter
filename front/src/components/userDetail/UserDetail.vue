@@ -1,15 +1,18 @@
 <template>
   <div class="userDetail">
+    <div class="userId">
+      <p>
+        jisunl23
+      </p>
+      <button class="settings">
+        <v-icon>fas fa-cog</v-icon>
+      </button>
+    </div>
     <img
       class="userprofile"
       src="../../assets/userprofile.jpg"
       alt="userprofile"
     />
-    <div class="userId">
-      <p>
-        jisunl23
-      </p>
-    </div>
     <Nav />
   </div>
 </template>
