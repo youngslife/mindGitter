@@ -27,6 +27,20 @@
       </v-row>
       무슨 정보를 넣으면 좋겠다
     </div>
+    <div class="commitCalendar">
+      <CalendarHeatmap
+        endDate="2020-12-31"
+        :values="[
+          { date: '2020-04-20', count: 5 },
+          { date: '2020-04-19', count: 3 },
+          { date: '2020-04-17', count: 4 },
+          { date: '2020-04-15', count: 2 },
+          { date: '2020-04-12', count: 1 },
+          { date: '2020-04-10', count: 4 },
+          { date: '2020-04-6', count: 6 }
+        ]"
+      />
+    </div>
     <div class="emotion">
       <h3>Emotion</h3>
       <div class="emotionDetail">
@@ -45,12 +59,14 @@
 
 <script>
 import Nav from "../nav/Nav.vue";
+import { CalendarHeatmap } from "vue-calendar-heatmap";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "UserDetail",
   components: {
-    Nav
+    Nav,
+    CalendarHeatmap
   },
   computed: {
     ...mapGetters(["getUserName", "isLoggedIn"])
