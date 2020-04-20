@@ -1,6 +1,13 @@
-const state = {};
-const getters = {};
+const state = {
+  dates: ""
+};
+
+const getters = {
+  getDates: state => state.dates
+};
+
 const mutations = {};
+
 const actions = {};
 
 export default {

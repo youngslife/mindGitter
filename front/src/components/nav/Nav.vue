@@ -1,15 +1,15 @@
 <template>
   <div class="Nav">
     <v-bottom-navigation :value="activeBtn" grow fixed height="40px">
-      <v-btn href="/">
+      <v-btn @click="goHome">
         <v-icon>fas fa-home</v-icon>
       </v-btn>
 
-      <v-btn href="/createDiary">
+      <v-btn @click="goCreateDiary">
         <v-icon>fas fa-plus</v-icon>
       </v-btn>
 
-      <v-btn href="/userDetail">
+      <v-btn @click="goUserDetail">
         <v-icon>fas fa-align-justify</v-icon>
       </v-btn>
     </v-bottom-navigation>
@@ -17,12 +17,25 @@
 </template>
 
 <script>
+import router from "@/router";
+
 export default {
   name: "Nav",
   data() {
     return {
       activeBtn: 1
     };
+  },
+  methods: {
+    goHome() {
+      router.push("/");
+    },
+    goCreateDiary() {
+      router.push("createDiary");
+    },
+    goUserDetail() {
+      router.push("userDetail");
+    }
   }
 };
 </script>

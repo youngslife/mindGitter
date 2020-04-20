@@ -4,12 +4,14 @@
       <div class="SignupForm">
         <h1>Signup</h1>
         <div v-if="getErrors.length" class="error-list alert alert-danger">
-          <p>아래의 오류를 해결해주세요</p>
-          <ul>
-            <li v-for="(error, idx) in getErrors" :key="idx">
-              {{ error }}
-            </li>
-          </ul>
+          <v-alert outlined color="purple">
+            <p>아래의 오류를 해결해주세요</p>
+            <ul>
+              <li v-for="(error, idx) in getErrors" :key="idx">
+                {{ error }}
+              </li>
+            </ul>
+          </v-alert>
         </div>
         <ul id="username">
           <label for="username">ID</label
