@@ -1,6 +1,9 @@
 <template>
   <div class="diaryList">
-    <h1>Diary List</h1>
+    <h1>Diary Name</h1>
+    <div class="posts">
+      
+    </div>
     <Nav />
   </div>
 </template>
@@ -16,4 +19,4 @@ export default {
 };
 </script>
 
-<style src="./DiaryList.css" scoped></style>
+<style src="./PostList.css" scoped></style>
