@@ -20,6 +20,8 @@ if args.is_data_video == 'True':
   preprocess.load_video()
 elif args.is_data_video == 'False':
   xtest, ytest = preprocess.load_image()
+else:
+  print('Check argument is data video. It must be True or False')
 
 #hyper parameters
 num_features = 64

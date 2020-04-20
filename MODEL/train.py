@@ -13,7 +13,7 @@ utils.save_logs()
 
 # data preprocessing
 if args.is_data_video == 'True':
-  preprocess.load_video()
+  pass
 elif args.is_data_video == 'False':
   xtrain, xvalid, ytrain, yvalid = preprocess.load_image()
 else:
