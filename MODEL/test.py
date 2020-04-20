@@ -1,10 +1,12 @@
 import utils, os
 import numpy as np
 from config import args
-from data import preprocess
-from models.simple_cnn import SimpleCNN
+from data import preprocess, visualization
+
 from keras.optimizers import Adam
+from models.simple_cnn import SimpleCNN
 from keras.losses import categorical_crossentropy
+from sklearn.metrics import confusion_matrix, classification_report
 
 
 if args.is_train == 'True':
@@ -43,8 +45,28 @@ print('\n# Evaluate on test data')
 results = model.evaluate(xtest, ytest, batch_size=batch_size)
 print('test loss, test acc:', results)
 
-# Generate predictions (probabilities -- the output of the last layer)
-# on new data using `predict`
-print('\n# Generate predictions for 3 samples')
-predictions = model.predict(xtest[:3])
-print('predictions shape:', predictions.shape)
+# predict the model on the test data using predict
+yh = model.predict(xtest)
+
+yh = yh.tolist()
+yt = ytest.tolist()
+
+truey = [yt[i].index(max(yt[i])) for i in range(len(ytest))]
+predy = [yh[i].index(max(yh[i])) for i in range(len(ytest))]
+
+np.save(args.truey_dir, truey)
+np.save(args.predy_dir, predy)
+print("Predicted and true label values saved")
+
+# confusion matrix & report
+cm = confusion_matrix(truey, predy)
+cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+cr = classification_report(truey, predy)
+print(cm)
+print(cr)
+
+# visualization
+if args.show_graphs == 'True':
+  visualization.draw_confusion_matrix(cm)
+  visualization.draw_pred_sample(xtest, ytest, truey, predy, yh)
+
