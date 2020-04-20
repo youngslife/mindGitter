@@ -2,7 +2,7 @@
   <div class="userDetail">
     <div class="userId">
       <p>
-        jisunl23
+        {{ getUserName }}
       </p>
       <button class="settings">
         <v-icon>fas fa-cog</v-icon>
@@ -19,11 +19,15 @@
 
 <script>
 import Nav from "../nav/Nav.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "UserDetail",
   components: {
     Nav
+  },
+  computed: {
+    ...mapGetters(["getUserName"])
   }
 };
 </script>
