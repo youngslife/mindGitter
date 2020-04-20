@@ -3,5 +3,5 @@ from accounts.views import CurrentUserAPIView
 
 
 urlpatterns = [
-    path("accounts/", CurrentUserAPIView.as_view(), name="current-user")
+    path("current_user/", CurrentUserAPIView.as_view(), name="current-user")
 ]
