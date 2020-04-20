@@ -1,0 +1,40 @@
+.cImage {
+    border-radius: 20px;
+    height: 55vh;
+    background: #ffffff;
+}
+
+.aCon {
+    height: 81vh;
+}
+
+.newBtn:hover {
+    cursor: pointer;
+    opacity: 100%;
+}
+
+button.v-icon.notranslate.newBtn.v-icon--link.mdi.mdi-plus.theme--light {
+    font-size: 20vh;
+    color: #ffffff;
+    background-color: #c2c2c2;
+    border-radius: 50%;
+    opacity: 50%;
+}
+
+
+.cSummary {
+    height: 19vh;
+}
+
+.cBtn {
+    margin-top: 10px;
+    border-radius: 5px;
+    width: 100%;
+    height: 6vh;
+    background-color: #ffe135;
+}
+
+.hContainer {
+    padding-top: 10px;
+    padding-bottom: 0;
+}
