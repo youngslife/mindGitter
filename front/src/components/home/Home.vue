@@ -14,7 +14,7 @@
           <h2>Summary of Diary</h2>
           <p>{{ item.content }}</p>
         </div>
-        <button @click="goDetail" class="cBtn">Detail</button>
+        <button @click="goDetail(item.title)" class="cBtn">Detail</button>
       </v-carousel-item>
       <v-carousel-item>
         <h1>새 일기장</h1>
@@ -28,7 +28,7 @@
 
 <script>
 import router from "@/router";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "Home",
@@ -43,6 +43,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["setSelectedChan"]),
     // 유저의 일기 목록 가져오기
     getDiary() {
       const gotList = [
@@ -72,7 +73,8 @@ export default {
     goCreate() {
       router.push("createDiary");
     },
-    goDetail() {
+    goDetail(channel) {
+      this.setSelectedChan(channel);
       router.push("diaryList");
     }
   },

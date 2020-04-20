@@ -1,12 +1,14 @@
 const state = {
-  dates: ""
+  selectedChan: null
 };
 
 const getters = {
-  getDates: state => state.dates
+  getSelectedChan: state => state.selectedChan
 };
 
-const mutations = {};
+const mutations = {
+  setSelectedChan: (state, channel) => (state.selectedChan = channel)
+};
 
 const actions = {};
 

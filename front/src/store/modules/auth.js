@@ -102,6 +102,7 @@ const actions = {
               HOST + "/api/rest-auth/registration/",
               {
                 username,
+                email,
                 password1,
                 password2
               },
