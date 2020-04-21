@@ -127,7 +127,7 @@ def face_detection():
         startX, startY, endX, endY = box.astype("int")
         dets.append({'frame':fidx, 'box':(startX, startY, endX, endY), 'conf':confidence})
   
-  savepath = os.path.join(args.v_work, 'faces.pckl')
+  savepath = os.path.join(args.v_work, 'dets.pckl')
   with open(savepath, 'wb') as fil:
     pickle.dump(dets, fil)
   return dets
@@ -145,23 +145,46 @@ def crop_video(track):
     dets['s'].append(max((det[3]-det[1]),(det[2]-det[0]))/2)
     dets['y'].append((det[1]+det[3])/2)
     dets['x'].append((det[0]+det[2])/2)
-
+  faces = []
   for fidx, tdet in enumerate(track):
     frame = tdet['frame']
     bs = dets['s'][fidx]
-    # video padding이 필요하나?
-    # bsi = int(bs*1.8)
     image = cv2.imread(flist[frame])
     face = image[int(dets['y'][fidx]-bs):int(dets['y'][fidx]+bs), int(dets['x'][fidx]-bs):int(dets['x'][fidx]+bs)]
     cv2.imwrite(os.path.join(args.crop_dir, flist[frame][-10:]), face)
     v_out.write(cv2.resize(face, (300, 300)))
+    faces.append(face)
   v_out.release()
+  savepath = os.path.join(args.v_work, 'faces.pckl')
+  # with open(savepath, 'wb') as fil:
+  #   pickle.dump(dets, fil)
   # 음성 여기에 이어서
+  return faces
+
+def face_to_testdata(faces):
+  face_npy = []
+  for face in faces:
+    f = cv2.resize(src=face, dsize=(48, 48), interpolation=cv2.INTER_AREA)
+    f = cv2.cvtColor(f, cv2.COLOR_BGR2GRAY)
+    face_npy.append(f.astype('float32'))
+  # ytest부분은 데이터셋이 오면 바뀔 예정
+  face_npy = np.asarray(face_npy)
+  
+  face_npy = np.expand_dims(face_npy, -1)
+  face_npy -= np.mean(face_npy, axis=0)
+  face_npy /= np.std(face_npy, axis=0)
+
+  ytest = [3] * len(faces)
+  y = np.asarray(ytest).reshape(-1)
+  ytest = np.eye(7)[y]
+
+  np.save(args.xtest_dir, face_npy)
+  np.save(args.ytest_dir, ytest)
+  return face_npy, ytest
 
 # 한사람이 한 화면에 정면을 바라보고 있는 것을 가정
 # 여러 명의 얼굴을 분석하려면 face_tracking 파트가 필요
 # 얼굴이 없는 프레임도 포함하려면 scenedetect 파트가 필요
-# image 데이터의 형식인 csv 파일로 저장 필요
 def load_video():
   if args.is_data_video == 'False':
     raise ValueError('is_data_video options should be True. Check options again.')
@@ -169,5 +192,7 @@ def load_video():
   handle_dir()
   extract_frames()
   dets = face_detection()
-  crop_video(dets)
-    
+  faces = crop_video(dets)
+  xtest, ytest = face_to_testdata(faces)
+  return xtest, ytest
+  

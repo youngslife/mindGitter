@@ -17,7 +17,7 @@ utils.save_logs()
 
 # load dataset
 if args.is_data_video == 'True':
-  preprocess.load_video()
+  xtest, ytest = preprocess.load_video()
 elif args.is_data_video == 'False':
   xtest, ytest = preprocess.load_image()
 else:
@@ -33,7 +33,7 @@ epochs = 15
 # Select Model 
 if args.model == 'sCNN':
   model = SimpleCNN(num_features, num_labels, size)
-  model.load_weights(args.checkpoint_path)
+  model.load_weights(os.path.join(args.model_dir, f'{args.model}.best.hdf5'))
   model.summary()
 else:
   raise ValueError(f'There is no valid model named {args.model}. Check again models.')
