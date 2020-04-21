@@ -1,7 +1,6 @@
 <template>
   <div>
     <h1>Add Diary</h1>
-
   </div>
 </template>
 

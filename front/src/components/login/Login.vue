@@ -48,19 +48,19 @@ export default {
     return {
       credentials: {
         username: "",
-        password: "",
-      },
+        password: ""
+      }
     };
   },
   methods: {
     ...mapActions(["validation"]),
     goSignup() {
       router.push("/signup");
-    },
+    }
   },
   computed: {
-    ...mapGetters(["getErrors", "isLoading"]),
-  },
+    ...mapGetters(["getErrors", "isLoading"])
+  }
 };
 </script>
 

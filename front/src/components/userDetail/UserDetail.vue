@@ -33,15 +33,15 @@ export default {
   components: {
     Nav,
     UserHead,
-    UserInfo,
+    UserInfo
     // CommitCalendar,
   },
   computed: {
-    ...mapGetters(["getUserName", "isLoggedIn"]),
+    ...mapGetters(["getUserName", "isLoggedIn"])
   },
   methods: {
-    ...mapActions(["logout"]),
-  },
+    ...mapActions(["logout"])
+  }
 };
 </script>
 
