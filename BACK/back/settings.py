@@ -10,7 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os, datetime
+import os
+import datetime
 from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -38,9 +39,9 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
     ),
 }
 
@@ -68,13 +69,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites', # 확인하기
+    'django.contrib.sites',  # 확인하기
     # pip install
     'rest_auth',
-    'rest_auth.registration', # 회원가입
+    'rest_auth.registration',  # 회원가입
     'allauth',
-    'allauth.account', # 차후 SNS 로그인 대비
-    'allauth.socialaccount', # 차후 SNS 로그인
+    'allauth.account',  # 차후 SNS 로그인 대비
+    'allauth.socialaccount',  # 차후 SNS 로그인
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
@@ -93,32 +94,32 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# cors 오류 대비 
+# cors 오류 대비
 # cors header setting
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
-"http://localhost:8080"
+    "http://localhost:8080"
 ]
 CORS_ALLOW_METHODS = (
-'DELETE',
-'GET',
-'OPTIONS',
-'PATCH',
-'POST',
-'PUT',
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
 )
 CORS_ALLOW_HEADERS = (
-'accept',
-'accept-encoding',
-'authorization',
-'access-control-request-method',
-'access-control-request-headers',
-'content-type',
-'dnt',
-'origin',
-'user-agent',
-'x-csrftoken',
-'x-requested-with',
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'access-control-request-method',
+    'access-control-request-headers',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
 )
 
 ROOT_URLCONF = 'back.urls'
@@ -195,3 +196,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+# sign up
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SITE_ID = 1
+
+# media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

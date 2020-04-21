@@ -3,6 +3,6 @@ from accounts.models import User
 
 
 class UserDisplaySerializer(serializers.ModelSerializer):
- class Meta:
-  model = User
-  fields = ["username"]
+    class Meta:
+        model = User
+        fields = ["username"]
