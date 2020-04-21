@@ -1,0 +1,48 @@
+.userDetail {
+    background-size: cover;
+    width: 100vw;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: center;
+    justify-content: center;
+}
+
+div.container.userCon {
+    margin-bottom: 30px;
+}
+
+.userName {
+    text-align: left;
+    padding-left: 20px;
+    font-size: 20px;
+}
+
+.outBtn {
+    text-align: center;
+}
+
+div.emotion>h3 {
+    font-size: 5vw;
+    text-align: left;
+}
+
+div.emotionDetail {
+    background-color: lightgray;
+    border-radius: 5%;
+    height: 30vh;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+div.tag>h3 {
+    font-size: 5vw;
+    text-align: left;
+}
+
+div.tagDetail {
+    background-color: lightgray;
+    border-radius: 5%;
+    height: 30vh;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,42 @@
+div.Signup {
+  background-image: url(../../assets/login.jpg);
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+form {
+  background-color: rgba( 255, 255, 255, 0.5 ); 
+  width: 63vw;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+}
+
+ul {
+  padding: 10px;
+  text-align: center;
+  font-size: 15px;
+}
+
+input {
+  width: 58vw;
+  font-size: 15px;
+  margin-top: 1vh;
+  outline: none;
+  border-bottom: 1px solid #000;
+}
+
+button {
+  margin-top: 2vh;
+  height: 30px;
+  width: 58vw;
+  border-radius: 5px;
+  background: #dec4ff;
+  color: white;
+}

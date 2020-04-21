@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>hi</h1>
+    <h1>Add Diary</h1>
   </div>
 </template>
 
@@ -8,4 +8,4 @@
 export default {};
 </script>
 
-<style></style>
+<style src="./createDiary.css" scoped></style>
