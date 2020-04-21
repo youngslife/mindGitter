@@ -26,6 +26,11 @@
           src="../../assets/shareduserprofile.jpg"
           alt="sharedUserProfile"
         />
+        <img
+          class="sharedUserProfile"
+          src="../../assets/userprofile.jpg"
+          alt="sharedUserProfile"
+        />
       </div>
     </div>
     <div class="calendar">

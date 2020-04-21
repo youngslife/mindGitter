@@ -1,0 +1,60 @@
+div.createDiary{
+  background-image: url(../../assets/create.jpg);
+  width: 100vw;
+  height: 100vh;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.v-icon.back{
+  font-size: 30px;
+  position: absolute;
+  left: 15px;
+  margin: 10px;
+}
+
+form.AddDiaryForm{
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+div.AddDiaryForm{
+  margin-top: 150px;
+  background-color: rgba(255,232,169,0.7);
+}
+
+h1{
+  margin-bottom: 15px;
+}
+
+ul{
+  margin: 10px;
+}
+
+input{
+  margin: 10px;
+}
+
+input#diarytitle{
+  border-bottom: 1px solid #000;
+}
+
+input#diarydescription{
+  border-bottom: 1px solid #000;
+}
+
+input#diaryimage{
+  width: 210px;
+}
+
+button.submit{
+  margin-top: 2vh;
+  height: 30px;
+  width: 58vw;
+  border-radius: 5px;
+  background: #ffde84;
+  color: white;
+  margin-bottom: 10px;
+}

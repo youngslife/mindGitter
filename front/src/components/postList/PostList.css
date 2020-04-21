@@ -1,93 +1,90 @@
 h1{
-display: inline;
-position: relative;
+  display: inline;
+  position: relative;
 }
 
 div.infoAndSetting>.v-icon.plus{
-position: absolute;
-top: 15px;
-right: 50px;
+  position: absolute;
+  top: 15px;
+  right: 50px;
 }
 
 div.infoAndSetting>.v-icon.delete{
-position: absolute;
-top: 15px;
-right: 15px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
 }
 
 .v-card{
-position: absolute;
-margin: 10px;
-width: 300px;
-left: 20px;
+  position: absolute;
+  margin: 10px;
+  width: 300px;
+  left: 20px;
 }
 
 .v-btn.search{
-margin: 3px;
+  margin: 3px;
 }
 
 .v-btn.close{
-margin: 3px;
+  margin: 3px;
 }
 
-.v-icon.search{
-z-index: 0;
-}
 
 div.search{
-margin: 10px;
-display: inline-block;
-vertical-align: middle;
-position: relative;
+  margin: 10px;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
 }
 
 input{
-height: 25px;
-padding: 3px;
-margin: 5px;
-background-color: #e9e9e9;
+  height: 25px;
+  padding: 3px;
+  margin: 5px;
+  background-color: #e9e9e9;
 }
 
 div.sharedImage{
-display: inline-block;
+  display: inline-block;
 }
 
 img.sharedUserProfile{
-width: 40px;
-height: 40px;
-border-radius: 70%;
-border: 1.5px solid;
-margin-top: 10px;
-margin-left: 5px;
+  width: 40px;
+  height: 40px;
+  border-radius: 70%;
+  border: 1.5px solid;
+  margin-top: 10px;
+  margin-left: 5px;
 }
 
 div.calendar{
-margin: 20px;
-height: 300px;
-background-color: indianred;
+  margin: 20px;
+  height: 300px;
+  background-color: indianred;
 }
 
 div.diaries>div.diaryInfo{
-margin: 10px;
+  margin: 10px;
 }
 
 div.diaries>div.diaryInfo>img{
-width: 35px;
-height: 35px;
-border: 1.5px solid;
-border-radius: 70%;
-margin-right: 10px;
+  width: 35px;
+  height: 35px;
+  border: 1.5px solid;
+  border-radius: 70%;
+  margin-right: 10px;
 }
 
 div.diaries>div.diaryInfo>div.content{
-background-color: #e9e9e9;
-display: inline-block;
+  background-color: #e9e9e9;
+  display: inline-block;
 }
 
 div.diaries>div.diaryInfo>div.content>span.tag{
-/* display: block; */
+  /* display: block; */
 }
 
 div.diaryList{
-height: 700px;
+  height: 700px;
 }
