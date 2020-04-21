@@ -10,7 +10,7 @@ class User(AbstractUser):
     tags = models.ManyToManyField(Tag, blank=True)
     emotions = models.ManyToManyField(Emotion, blank=True)
     
-    profile_img = models.ImageField(upload_to='user', blank=True, default='../media/user/default_profile.png')
+    profile_img = models.ImageField(upload_to='user', blank=True)
 
     class Meta:
         ordering = ['-pk']

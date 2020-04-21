@@ -21,10 +21,17 @@ class ProfileImageAPIView(APIView):
         # print(img_url)
         return Response(serializer.data)
 
-    def put(self, request):
+    def put(self, request):  # profile_img 넘겨줘야함
         user = request.user
+        profile_img = request.user.profile_img
+        profile_img.delete()
         serializer = ProfileImageSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
+
+    def delete(self, request):
+        profile_img = request.user.profile_img
+        profile_img.delete()
+        return Response(status=204)
