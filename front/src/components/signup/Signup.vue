@@ -14,7 +14,8 @@
           </v-alert>
         </div>
         <ul id="username">
-          <label for="username">ID</label>
+          <label for="username">ID</label
+          ><br />
           <input
             v-model="userInput.username"
             type="text"
@@ -23,7 +24,8 @@
           />
         </ul>
         <ul id="email">
-          <label for="email">e-mail</label>
+          <label for="email">e-mail</label
+          ><br />
           <input
             v-model="userInput.email"
             type="text"
@@ -32,7 +34,8 @@
           />
         </ul>
         <ul id="password1">
-          <label for="password1">Password</label>
+          <label for="password1">Password</label
+          ><br />
           <input
             v-model="userInput.password1"
             type="password"
@@ -41,7 +44,8 @@
           />
         </ul>
         <ul id="password2">
-          <label for="password2">Password</label>
+          <label for="password2">Password</label
+          ><br />
           <input
             v-model="userInput.password2"
             type="password"
@@ -51,14 +55,14 @@
         </ul>
         <button>회원가입</button>
       </div>
-      <a href="/login">Login</a>
+      <button @click="goLogin">Login</button>
     </form>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
-
+import router from "@/router";
 export default {
   name: "Signup",
   data() {
@@ -67,17 +71,20 @@ export default {
         username: "",
         email: "",
         password1: "",
-        password2: ""
-      }
+        password2: "",
+      },
     };
   },
   methods: {
     ...mapActions(["signup"]),
-    ...mapMutations(["clearErrors"])
+    ...mapMutations(["clearErrors"]),
+    goLogin() {
+      router.push("/login");
+    },
   },
   computed: {
-    ...mapGetters(["getErrors"])
-  }
+    ...mapGetters(["getErrors"]),
+  },
 };
 </script>
 

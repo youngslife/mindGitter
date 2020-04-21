@@ -75,7 +75,7 @@ export default {
     },
     goDetail(channel) {
       this.setSelectedChan(channel);
-      router.push("diaryList");
+      router.push("postList");
     }
   },
   // vuex Login 연동

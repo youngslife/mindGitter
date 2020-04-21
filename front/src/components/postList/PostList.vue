@@ -119,4 +119,4 @@ export default {
 };
 </script>
 
-<style src="./DiaryList.css" scoped></style>
+<style src="./PostList.css" scoped></style>
