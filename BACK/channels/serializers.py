@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Channel
 from accounts.models import User
+from accounts.serializers import UserDisplaySerializer
+from datetime import datetime
 
 
 class ChannelSerializer(serializers.ModelSerializer):
