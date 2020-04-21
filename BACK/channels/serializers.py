@@ -6,6 +6,9 @@ from datetime import datetime
 
 
 class ChannelSerializer(serializers.ModelSerializer):
+    create_user = UserDisplaySerializer()
+    users = UserDisplaySerializer(source='user_set', many=True)
+
     class Meta:
         model = Channel
         fields = '__all__'
@@ -19,5 +22,7 @@ class UserChannelSerializer(ChannelSerializer):
         fields = ('pk', 'username', 'channels',)
 
 # after making post serializer
+
+
 class ChannelPostSerializer(ChannelSerializer):
     pass
