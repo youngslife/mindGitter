@@ -1,27 +1,26 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Channel
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from accounts.models import User
 from accounts.serializers import UserDisplaySerializer
 from .serializers import UserChannelSerializer, ChannelSerializer
-import jwt
 from django.http import JsonResponse
-from back.settings import SECRET_KEY
-from datetime import datetime
 
 # Create your views here.
 
 # 채널 목록
 @api_view(['GET', 'POST'])
+@permission_classes((IsAuthenticated, ))
 def board(request):
     if request.method == 'GET':  # list of diary books
-        user = User.objects.get(username=request.user)
+        user = get_object_or_404(User, username=request.user)
         serializers = UserChannelSerializer(user)
         return JsonResponse(serializers.data)
 
     elif request.method == 'POST':  # create a diary book
-        user = User.objects.get(username=request.user)
+        user = get_object_or_404(User, username=request.user)
         Channel.objects.create(
             title=request.data.get('title'),
             cover_image=request.data.get('cover_image'),
@@ -46,14 +45,15 @@ def board(request):
 
 # 채널 한 개
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes((IsAuthenticated, ))
 def board_title(request, id):
     if request.method == 'GET':  # diary book detail
-        channel = Channel.objects.get(id=id)
+        channel = get_object_or_404(Channel, id=id)
         serializer = ChannelSerializer(channel)
         return JsonResponse(serializer.data)
 
     elif request.method == 'PUT':  # update a diary book
-        channel = Channel.objects.get(id=id)
+        channel = get_object_or_404(Channel, id=id)
         serializer = ChannelSerializer(channel, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -62,23 +62,24 @@ def board_title(request, id):
             return JsonResponse({'message': 'fail to update'}, status=400)
 
     elif request.method == 'DELETE':  # delete a diary book
-        channel = Channel.objects.get(id=id)
+        channel = get_object_or_404(Channel, id=id)
         channel.delete()
         return JsonResponse({'message': 'success to delete'}, status=200)
 
 
 # 채널 입장 및 탈퇴
 @api_view(['POST', 'DELETE'])
+@permission_classes((IsAuthenticated, ))
 def board_join(request, id):
     if request.method == 'POST':  # join a channel
-        user = User.objects.get(username=request.user)
-        channel = Channel.objects.get(id=id)
+        user = get_object_or_404(User, username=request.user)
+        channel = get_object_or_404(Channel, id=id)
         user.channels.add(channel)
         return JsonResponse({'message': 'success to join'}, status=201)
 
     elif request.method == 'DELETE':  # leave from a channel
         user = request.user
-        channel = Channel.objects.get(id=id)
+        channel = get_object_or_404(Channel, id=id)
         if channel.user_set.filter(id=user.id).exists():
             channel.user_set.remove(user)
             return JsonResponse({'message': 'success to leave'}, status=200)
