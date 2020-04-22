@@ -22,11 +22,11 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   name: "UserHead",
   computed: {
-    ...mapGetters(["getUserName", "isLoggedIn"]),
+    ...mapGetters(["getUserName", "isLoggedIn"])
   },
   methods: {
-    ...mapActions(["logout"]),
-  },
+    ...mapActions(["logout"])
+  }
 };
 </script>
 

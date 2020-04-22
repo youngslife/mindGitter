@@ -31,7 +31,7 @@ export default {
       router.push("/");
     },
     goCreateDiary() {
-      router.push("createDiary");
+      router.push("newDiary");
     },
     goUserDetail() {
       router.push("userDetail");
