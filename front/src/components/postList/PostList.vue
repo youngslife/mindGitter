@@ -34,6 +34,7 @@
       </div>
     </div>
     <datepicker v-model="date" input-class="hi"></datepicker>
+    <v-divider></v-divider>
     <div class="diaries">
       <div class="diaryInfo" @click="goDetail(diaries[0])">
         <img
