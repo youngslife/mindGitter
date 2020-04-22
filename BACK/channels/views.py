@@ -38,25 +38,31 @@ def board(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes((IsAuthenticated, ))
 def board_title(request, id):
-    if request.method == 'GET':  # diary book detail
-        channel = get_object_or_404(Channel, id=id)
-        serializer = ChannelSerializer(channel)
-        return JsonResponse(serializer.data)
+    channel = get_object_or_404(Channel, id=id)
+    if channel.user_set.filter(id=request.user.id).exists():
+        if request.method == 'GET':  # diary book detail
+            serializer = ChannelSerializer(channel)
+            return JsonResponse(serializer.data)
+    else:
+        return JsonResponse({'message': 'INVALID USER'}, status=400)
 
-    elif request.method == 'PUT':  # update a diary book
-        channel = get_object_or_404(Channel, id=id)
-        serializer = ChannelSerializer(channel, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse({'message': 'success to update'}, status=201)
-        else:
-            return JsonResponse({'message': 'fail to update'}, status=400)
+    if channel.create_user_id == request.user.id:
+        if request.method == 'PUT':  # update a diary book
+            data = request.data
+            data.update({'create_user': request.user.id})
+            serializer = ChannelSerializer(channel, data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse({'message': 'success to update'}, status=201)
+            else:
+                # return JsonResponse({'message': 'fail to update'}, status=400)
+                return JsonResponse({'message': serializer.errors}, status=400)
 
-    elif request.method == 'DELETE':  # delete a diary book
-        channel = get_object_or_404(Channel, id=id)
-        channel.delete()
-        return JsonResponse({'message': 'success to delete'}, status=200)
-
+        elif request.method == 'DELETE':  # delete a diary book
+            channel.delete()
+            return JsonResponse({'message': 'success to delete'}, status=200)
+    else:
+        return JsonResponse({'message': 'INVALID USER'}, status=400)
 
 # 채널 입장 및 탈퇴
 @api_view(['POST', 'DELETE'])
