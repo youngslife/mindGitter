@@ -6,7 +6,7 @@ from django.conf import settings
 
 class Channel(models.Model):
     title = models.CharField(max_length=50)
-    cover_image = models.ImageField(upload_to="channel/%Y%m%d/")
+    cover_image = models.ImageField(upload_to="channel/%Y/%m/")
     description = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)

@@ -16,32 +16,26 @@ from django.http import JsonResponse
 def board(request):
     if request.method == 'GET':  # list of diary books
         user = get_object_or_404(User, username=request.user)
-        serializers = UserChannelSerializer(user)
-        return JsonResponse(serializers.data)
+        serializer = UserChannelSerializer(user)
+        return JsonResponse(serializer.data)
 
     elif request.method == 'POST':  # create a diary book
-        user = get_object_or_404(User, username=request.user)
-        Channel.objects.create(
-            title=request.data.get('title'),
-            cover_image=request.data.get('cover_image'),
-            description=request.data.get('description'),
-            create_user=user
-        )
-        channel = Channel.objects.last()
-        user.channels.add(channel)
+        data = request.data
+        data.update({'create_user': request.user.id})
+        data.update({'users': []})
 
-        serializers = ChannelSerializer(channel)
-        return JsonResponse(serializers.data)
-        # print(serializers)
+        serializer = ChannelSerializer(data=data)
+        print(serializer.fields['create_user'])
 
-        # if serializers.is_valid():
-        #     channel = Channel.objects.last()
-        #     user.channels.add(channel)
-        #     serializers.save()
-        #     return JsonResponse({'message': 'success to save'}, status=201)
-        # else:
-        #     return JsonResponse({'message': 'fail to save'}, status=400)
-
+        if serializer.is_valid():
+            serializer.save()
+            user = get_object_or_404(User, username=request.user)
+            channel = Channel.objects.last()
+            user.channels.add(channel)
+            return JsonResponse({'message': 'success to save'}, status=201)
+        else:
+            # return JsonResponse({'message': 'fail to save'}, status=400)
+            return JsonResponse({'error': serializer.errors}, status=400)
 
 # 채널 한 개
 @api_view(['GET', 'PUT', 'DELETE'])
