@@ -1,5 +1,5 @@
 .userDetail {
-    background-size: cover;
+    /* background-size: cover; */
     width: 100vw;
     display: -webkit-flex;
     display: flex;
@@ -9,6 +9,7 @@
 
 div.container.userCon {
     margin-bottom: 30px;
+    /* padding-top: 0px; */
 }
 
 .userName {
@@ -29,7 +30,7 @@ div.emotion>h3 {
 div.emotionDetail {
     background-color: lightgray;
     border-radius: 5%;
-    height: 30vh;
+    height: 130px;
     margin-top: 5px;
     margin-bottom: 10px;
 }
@@ -42,7 +43,7 @@ div.tag>h3 {
 div.tagDetail {
     background-color: lightgray;
     border-radius: 5%;
-    height: 30vh;
+    height: 25vh;
     margin-top: 5px;
     margin-bottom: 10px;
 }
