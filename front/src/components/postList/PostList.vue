@@ -35,7 +35,7 @@
     </div>
     <datepicker v-model="date" input-class="hi"></datepicker>
     <div class="diaries">
-      <div class="diaryInfo">
+      <div class="diaryInfo" @click="goDetail(diaries[0])">
         <img
           src="../../assets/shareduserprofile.jpg"
           alt="userProfile"
@@ -46,7 +46,7 @@
           <span class="tag">#첫 일기 #행복함 #재밌음</span>
         </div>
       </div>
-      <div class="diaryInfo">
+      <div class="diaryInfo" @click="goDetail(diaries[1])">
         <img
           src="../../assets/userprofile.jpg"
           alt="userProfile"
@@ -57,7 +57,7 @@
           <span class="tag">#공유신청 #기대됨 #얼른</span>
         </div>
       </div>
-      <div class="diaryInfo">
+      <div class="diaryInfo" @click="goDetail(diaries[2])">
         <img
           src="../../assets/userprofile.jpg"
           alt="userProfile"
@@ -68,7 +68,7 @@
           <span class="tag">#혼자심심 #공유할까? #지루함</span>
         </div>
       </div>
-      <div class="diaryInfo">
+      <div class="diaryInfo" @click="goDetail(diaries[3])">
         <img
           src="../../assets/userprofile.jpg"
           alt="userProfile"
@@ -87,7 +87,8 @@
 <script>
 import Nav from "../nav/Nav.vue";
 import Datepicker from "vuejs-datepicker";
-import { mapGetters } from "vuex";
+import router from "@/router";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "DiaryList",
@@ -95,7 +96,25 @@ export default {
     return {
       searchTag: null,
       date: new Date(),
-      showAddModal: false
+      showAddModal: false,
+      diaries: [
+        {
+          title: "첫 번째",
+          tags: "#첫 일기 #행복함 #재밌음"
+        },
+        {
+          title: "세 번째",
+          tags: "#공유신청 #기대됨 #얼른"
+        },
+        {
+          title: "두 번째",
+          tags: "#혼자심심 #공유할까? #지루함"
+        },
+        {
+          title: "일기장 만들었다",
+          tags: "#내가주인 #놀라움 #공유"
+        }
+      ]
     };
   },
   components: {
@@ -106,6 +125,7 @@ export default {
     ...mapGetters(["getSelectedChan"])
   },
   methods: {
+    ...mapMutations(["setSelectedDiary"]),
     changeShowAddModal() {
       this.showAddModal = !this.showAddModal;
     },
@@ -119,6 +139,10 @@ export default {
       } else {
         console.log("취소");
       }
+    },
+    goDetail(diaryInfo) {
+      this.setSelectedDiary(diaryInfo);
+      router.push("diaryDetail");
     }
   }
 };

@@ -4,15 +4,18 @@ const axios = require("axios");
 import router from "../../router";
 
 const state = {
-  selectedChan: null
+  selectedChan: null,
+  selectedDiary: null
 };
 
 const getters = {
-  getSelectedChan: state => state.selectedChan
+  getSelectedChan: state => state.selectedChan,
+  getSelectedDiary: state => state.selectedDiary
 };
 
 const mutations = {
-  setSelectedChan: (state, channel) => (state.selectedChan = channel)
+  setSelectedChan: (state, channel) => (state.selectedChan = channel),
+  setSelectedDiary: (state, diary) => (state.selectedDiary = diary)
 };
 
 const actions = {
