@@ -3,7 +3,7 @@
     <v-container class="userCon">
       <UserHead />
       <UserInfo />
-      <!-- <CommitCalendar /> -->
+      <CommitCalendar />
       <div class="emotion">
         <h3>Emotion</h3>
         <div class="emotionDetail">
@@ -25,7 +25,7 @@
 import Nav from "../nav/Nav.vue";
 import UserHead from "./userInfo/UserHead.vue";
 import UserInfo from "./userInfo/UserInfo.vue";
-// import CommitCalendar from "./userInfo/CommitCalendar";
+import CommitCalendar from "./userInfo/CommitCalendar";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -33,8 +33,8 @@ export default {
   components: {
     Nav,
     UserHead,
-    UserInfo
-    // CommitCalendar,
+    UserInfo,
+    CommitCalendar,
   },
   computed: {
     ...mapGetters(["getUserName", "isLoggedIn"])
