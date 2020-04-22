@@ -18,7 +18,7 @@
       <v-icon class="delete" @click="deleteChannel">fas fa-trash-alt</v-icon>
     </div>
     <div calss="search">
-      <v-icon class="search" v-if="!showAddModal">fas fa-search</v-icon>
+      <v-icon class="search">fas fa-search</v-icon>
       <input type="text" v-model="searchTag" />
       <div class="sharedImage">
         <img
@@ -33,9 +33,7 @@
         />
       </div>
     </div>
-    <div class="calendar">
-      달력....
-    </div>
+    <datepicker v-model="date" input-class="hi"></datepicker>
     <div class="diaries">
       <div class="diaryInfo">
         <img
@@ -88,6 +86,7 @@
 
 <script>
 import Nav from "../nav/Nav.vue";
+import Datepicker from "vuejs-datepicker";
 import { mapGetters } from "vuex";
 
 export default {
@@ -100,7 +99,8 @@ export default {
     };
   },
   components: {
-    Nav
+    Nav,
+    Datepicker
   },
   computed: {
     ...mapGetters(["getSelectedChan"])

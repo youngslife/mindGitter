@@ -1,6 +1,6 @@
 <template>
   <div class="createDiary">
-    <v-icon class="back" @click="goHome">fas fa-angle-left</v-icon>
+    <v-icon class="back" @click="goHome">fas fa-arrow-left</v-icon>
     <form class="AddDiaryForm" @submit.prevent="addDiary(diaryInfo)">
       <div class="AddDiaryForm">
         <h1>Add Diary</h1>

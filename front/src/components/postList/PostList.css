@@ -20,6 +20,7 @@ div.infoAndSetting>.v-icon.delete{
   margin: 10px;
   width: 300px;
   left: 20px;
+  z-index: 100;
 }
 
 .v-btn.search{
@@ -58,14 +59,17 @@ img.sharedUserProfile{
   margin-left: 5px;
 }
 
-div.calendar{
+div.vdp-datepicker{
   margin: 20px;
-  height: 300px;
-  background-color: indianred;
+}
+
+input.hi{
+  text-align: center;
+  background-color: gray;
 }
 
 div.diaries>div.diaryInfo{
-  margin: 10px;
+  margin: 15px;
 }
 
 div.diaries>div.diaryInfo>img{
@@ -79,10 +83,6 @@ div.diaries>div.diaryInfo>img{
 div.diaries>div.diaryInfo>div.content{
   background-color: #e9e9e9;
   display: inline-block;
-}
-
-div.diaries>div.diaryInfo>div.content>span.tag{
-  /* display: block; */
 }
 
 div.diaryList{
