@@ -22,20 +22,17 @@ def board(request):
     elif request.method == 'POST':  # create a diary book
         data = request.data
         data.update({'create_user': request.user.id})
-        data.update({'users': []})
-
         serializer = ChannelSerializer(data=data)
-        print(serializer.fields['create_user'])
 
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=request.user)
             user = get_object_or_404(User, username=request.user)
             channel = Channel.objects.last()
             user.channels.add(channel)
             return JsonResponse({'message': 'success to save'}, status=201)
         else:
-            # return JsonResponse({'message': 'fail to save'}, status=400)
-            return JsonResponse({'error': serializer.errors}, status=400)
+            return JsonResponse({'message': 'fail to save'}, status=400)
+            # return JsonResponse({'message': serializer.errors }, status=400)
 
 # 채널 한 개
 @api_view(['GET', 'PUT', 'DELETE'])

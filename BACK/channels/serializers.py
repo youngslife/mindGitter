@@ -7,14 +7,11 @@ import json
 
 
 class ChannelSerializer(serializers.ModelSerializer):
-    # create_user = UserDisplaySerializer()
-    # users = UserDisplaySerializer(source='user_set', many=True)
+    user_set = UserDisplaySerializer(read_only=True, many=True)
 
-    def create_user(self):
-        self.create_user = UserDisplaySerializer()
-
-    def users(self):
-        self.users = UserDisplaySerializer(source='user_set', many=True)
+    def to_representation(self, instance):
+        self.fields['create_user'] = UserDisplaySerializer(read_only=True)
+        return super(ChannelSerializer, self).to_representation(instance)
 
     class Meta:
         model = Channel
