@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from channels.models import Channel
+# from accounts.models import User
 
 # Create your models here.
 class Tag(models.Model):
@@ -8,6 +9,8 @@ class Tag(models.Model):
 
 class Emotion(models.Model):
     category = models.CharField(max_length=20)
+
+
 
 class Post(models.Model):
     title = models.CharField(max_length=50)
@@ -19,7 +22,8 @@ class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, blank=True)
     emotions = models.ManyToManyField(Emotion, blank=True)
-    
+    video_file = models.FileField(upload_to='post/%Y/%m/')
+
     class Meta:
         ordering = ['-pk']
     def __str__(self):
