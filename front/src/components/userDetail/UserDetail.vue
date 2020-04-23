@@ -34,7 +34,7 @@ export default {
     Nav,
     UserHead,
     UserInfo,
-    CommitCalendar,
+    CommitCalendar
   },
   computed: {
     ...mapGetters(["getUserName", "isLoggedIn"])

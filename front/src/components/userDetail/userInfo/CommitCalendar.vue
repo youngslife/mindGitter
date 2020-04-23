@@ -1,30 +1,63 @@
 <template>
   <div class="commitCalendar">
-    달력....
-    <!-- <CalendarHeatmap
-      endDate="2020-12-31"
-      :values="[
-        { date: '2020-04-20', count: 5 },
-        { date: '2020-04-19', count: 3 },
-        { date: '2020-04-17', count: 4 },
-        { date: '2020-04-15', count: 2 },
-        { date: '2020-04-12', count: 1 },
-        { date: '2020-04-10', count: 4 },
-        { date: '2020-04-6', count: 6 },
-      ]"
-      ,
-      radius="10"
-    /> -->
+    <v-container @click="check">
+      <v-row>
+        <div class="first"></div>
+        <div class="first">Mon</div>
+        <div class="first"></div>
+        <div class="first">Wed</div>
+        <div class="first"></div>
+        <div class="first">Fri</div>
+        <div class="first"></div>
+      </v-row>
+      <v-row>
+        <div :class="nemo" v-for="(nemo, i) in commitData.nemos.slice(0, 7)" :key="i"></div>
+      </v-row>
+      <v-row>
+        <div :class="nemo" v-for="(nemo, i) in commitData.nemos.slice(7, 14)" :key="i"></div>
+      </v-row>
+      <v-row>
+        <div :class="nemo" v-for="(nemo, i) in commitData.nemos.slice(14, 21)" :key="i"></div>
+      </v-row>
+      <v-row>
+        <div :class="nemo" v-for="(nemo, i) in commitData.nemos.slice(21, 28)" :key="i"></div>
+      </v-row>
+      <v-row>
+        <div :class="nemo" v-for="(nemo, i) in commitData.nemos.slice(28, 35)" :key="i"></div>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script>
-// import { CalendarHeatmap } from "vue-calendar-heatmap";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
-  components: {
-    // CalendarHeatmap,
+  name: "commitCalendar",
+  data() {
+    return {
+      commitData:{
+        commitInfo: null,
+        commitDates: null,
+        nemos: null
+      }
+    }
   },
+  computed: {
+    ...mapGetters(["getCommitInfo", "getCommitDates", "getNemos"])
+  },
+  methods: {
+    ...mapMutations(["setNemos"]),
+    check() {
+      this.setNemos(this.commitData);
+      this.commitData.nemos = this.getNemos;
+    }
+  },
+  created() {
+    this.commitData.commitInfo = this.getCommitInfo;
+    this.commitData.commitDates = this.getCommitDates;
+    this.commitData.nemos = this.getNemos;
+  }
 };
 </script>
 

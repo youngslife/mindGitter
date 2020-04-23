@@ -11,8 +11,8 @@
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
-    "vue-calendar-heatmap": "^0.8.4",
     "vue-router": "^3.1.6",
+    "vue-video": "^0.1.7",
     "vuejs-datepicker": "^1.6.2",
     "vuetify": "^2.2.11",
     "vuex": "^3.1.3"
