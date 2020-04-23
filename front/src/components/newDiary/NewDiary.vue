@@ -8,4 +8,4 @@
 export default {};
 </script>
 
-<style></style>
+<style src="./NewDiary.css" scoped></style>
