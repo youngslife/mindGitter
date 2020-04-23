@@ -1,0 +1,74 @@
+form.AddPostForm {
+    -webkit-align-items: center;
+    align-items: center;
+    margin-left: 10vw;
+    margin-right: 10vw;
+}
+
+div.diaryName {
+    padding-top: 4px;
+}
+
+div.AddPostForm {
+    align-self: center;
+    justify-content: center;
+    margin-top: 5vh;
+    background-color: rgba(255, 232, 169, 0.7);
+    border-radius: 5%;
+}
+
+ul {
+    margin: 10px;
+}
+
+label {
+    font-size: large;
+}
+
+ul#posttitle {
+    padding-top: 2vh;
+    /* height: 15vh; */
+}
+
+ul#postvideo {
+    font-size: small;
+    text-align: center;
+    /* font-size: large; */
+}
+
+input#posttitle {
+    margin-top: 2vh;
+    width: 80%;
+    border-bottom: 1px solid #000;
+}
+
+input#posttag {
+    margin-top: 2vh;
+    width: 80%;
+    border-bottom: 1px solid #000;
+}
+
+input#postvideo {
+    margin-top: 2vh;
+    width: 80%;
+}
+
+button.submit {
+    margin-top: 2vh;
+    min-height: 30px;
+    max-height: 40px;
+    height: 10vh;
+    width: 80%;
+    border-radius: 5px;
+    background: #ffde84;
+    color: white;
+    margin-bottom: 20px;
+}
+
+div.preview {
+    height: 100px;
+    width: 85%;
+    margin: auto;
+    margin-top: 15px;
+    background-color: lightpink;
+}
