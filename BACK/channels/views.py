@@ -25,7 +25,7 @@ def board(request):
         serializer = ChannelSerializer(data=data)
 
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save()
             user = get_object_or_404(User, username=request.user)
             channel = Channel.objects.last()
             user.channels.add(channel)
