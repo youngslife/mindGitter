@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
 from .models import Tag, Emotion, Post, Comment
 from rest_framework import status
 from rest_framework.response import Response
@@ -78,3 +79,50 @@ from django.views.generic import ListView, DetailView, TemplateView
 # def comment_detail(request, id):
 #     pass
 
+class CommentList(APIView):
+    permission_classes = (IsAuthenticated, )
+    # get 요청이 필요한가?
+    # def get(self, reqeust, post_id):
+    #     return JsonResponse({'message': 'get request'}, status=200)
+
+    def post(self, request, post_id):
+        data = request.data.dict()
+        data.update({'user': request.user.id})
+        data.update({'post': post_id})
+        serializer = CommentSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({'message': 'success to save comment'}, status=201)
+        else:
+            return JsonResponse({'message': serializer.errors }, status=400)
+
+class CommentDetail(APIView):
+    permission_classes = (IsAuthenticated, )
+    def put(self, request, post_id, comment_id):
+        comment = get_object_or_404(Comment, id=comment_id)
+        if comment.user == request.user:
+            data = request.data.dict()
+            data.update({'user': request.user.id })
+            data.update({'post': post_id})
+            serializer = CommentSerializer(comment, data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse({'message': 'success to save comment'}, status=200)
+            else:
+                # return JsonResponse({'message': 'fail to save comment'}, status=400)
+                return JsonResponse({'message': serializer.errors}, status=400)
+        else:
+            return JsonResponse({'message': 'INVALID USER'}, status=400)
+
+
+    def delete(self, reqeust, post_id, comment_id):
+        comment = get_object_or_404(Comment, id=comment_id)
+        if comment.user == reqeust.user:
+            posting = get_object_or_404(Post, id=post_id)
+            if posting.comment_set.filter(id=comment_id).exists():
+                comment.delete()
+                return JsonResponse({'message': 'success to delete comment'}, status=200)
+            else:
+                return JsonResponse({'message': 'do not exists the comment in the post'}, status=400)
+        else:
+            return JsonResponse({'message': 'INVALID USER'}, status=400)

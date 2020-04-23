@@ -78,6 +78,7 @@ def board_join(request, id):
         user = request.user
         channel = get_object_or_404(Channel, id=id)
         if channel.user_set.filter(id=user.id).exists():
+            print(type(channel.user_set))
             channel.user_set.remove(user)
             return JsonResponse({'message': 'success to leave'}, status=200)
         else:
