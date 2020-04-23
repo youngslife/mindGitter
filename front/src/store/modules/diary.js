@@ -45,26 +45,30 @@ const actions = {
       .post(HOST + "?", DiaryInfo, {
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json"
-        }
+          Accept: "application/json",
+        },
       })
-      .then(message => {
+      .then((message) => {
         message;
         router.push("/postList");
       })
-      .catch(err => {
+      .catch((err) => {
         if (!err.response) {
           commit("pushError", "Network Error..");
         } else {
           commit("pushError", "Some error occured");
         }
       });
-  }
+  },
+  addPost: ({ commit }, PostInfo) => {
+    console.log(PostInfo)
+    commit("pushError", "Success")
+  },
 };
 
 export default {
   state,
   getters,
   mutations,
-  actions
+  actions,
 };
