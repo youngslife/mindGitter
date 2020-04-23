@@ -6,7 +6,6 @@ parser.add_argument('--timestamp', type=str, default=str(datetime.now().strftime
 parser.add_argument('--name', required=True, type=str, help='The unit of project. Name folder under data will be created to store outcomes when you run models.')
 parser.add_argument('--model', type=str, help='The model you want to use to face emotion recognition. There is only sCNN now.')
 parser.add_argument('--model_dir', type=str, default='.\\models')
-parser.add_argument('--is_train', type=str, default='True', help='If want to run test, it should be False')
 parser.add_argument('--is_data_video', type=str, default='True', help='If data type is video, input True. Model will extract frames and audio')
 parser.add_argument('--dataset_path', type=str, default='.\\datasets\\monoact.mp4', help='Path of dataset')
 parser.add_argument('--data_dir', type=str, default='.\\data', help='dir path for output of the model')

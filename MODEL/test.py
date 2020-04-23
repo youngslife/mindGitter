@@ -8,10 +8,6 @@ from models.simple_cnn import SimpleCNN
 from keras.losses import categorical_crossentropy
 from sklearn.metrics import confusion_matrix, classification_report
 
-
-if args.is_train == 'True':
-  raise ValueError('You are trying to run test with train option. Check options again.')
-
 # save configs
 utils.save_logs()
 

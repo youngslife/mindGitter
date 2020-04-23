@@ -12,6 +12,25 @@ def load_original_data():
   except:
     print('Dataset path is not valid. Check out your logs.')
 
+def csv_to_npy(s):
+  data = pd.read_csv(s, header=None)
+  width, height = 48, 48
+  datapoints = data['pixels'].tolist()
+
+  #getting features for training
+  X = []
+  for xseq in datapoints:
+    xx = [int(xp) for xp in xseq.split(' ')]
+    xx = np.asarray(xx).reshape(width, height)
+    X.append(xx.astype('float32'))
+  
+  X = np.asarray(X)
+  X = np.expand_dims(X, -1)
+
+  #input regularization
+  X -= np.mean(X, axis=0)
+  X /= np.std(X, axis=0)
+  return X
 
 def split_original_data(data):
   try:
