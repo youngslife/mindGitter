@@ -8,4 +8,4 @@ app_name = 'channels'
 urlpatterns = [
     path('', views.board, name='board'),
     path('<int:id>/', views.board_title, name='board')
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
