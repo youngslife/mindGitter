@@ -38,7 +38,11 @@
         </ul>
         <ul id="postposs">
           <input type="checkbox" id="postposs" v-model="postInfo.possible" />
-          <label for="postposs">리뷰 작성 여부</label>
+          <label for="postposs">Comment 허용</label>
+        </ul>
+        <ul id="saveVideo">
+          <input type="checkbox" id="saveVideo" v-model="postInfo.saveVideo" />
+          <label for="saveVideo">영상 저장</label>
         </ul>
         <button class="submit">Upload</button>
       </div>
@@ -59,6 +63,7 @@ export default {
         video: null,
         tags: null,
         possible: false,
+        saveVideo: false,
       },
     };
   },
