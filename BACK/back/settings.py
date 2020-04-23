@@ -80,8 +80,10 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     # tag기능
-    'taggit.apps.TaggitAppConfig',
+    'taggit',
+    # 'taggit.apps.TaggitAppConfig',
     'taggit_templatetags2',
+    'taggit_serializer',
 ]
 
 MIDDLEWARE = [
@@ -214,3 +216,7 @@ LOGOUT_ON_PASSWORD_CHANGE = False
 # media
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Tag
+TAGGIT_CASE_INSENSITIVE = True # 태그 대소문자 구분안함
+# TAGGIT_LIMIT =  # 태그 클라우드에 나타나는 태그 최대 개수

@@ -17,8 +17,6 @@ class ProfileImageAPIView(APIView):
     permission_classes = (IsAuthenticated,)
     def get(self, request):
         serializer = ProfileImageSerializer(request.user)
-        # img_url = Response(serializer.data)
-        # print(img_url)
         return Response(serializer.data)
 
     def put(self, request):  # profile_img 넘겨줘야함
