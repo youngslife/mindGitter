@@ -10,7 +10,7 @@ from taggit.models import TaggedItemBase
 class User(AbstractUser):
     channels = models.ManyToManyField(Channel, blank=True)
     # tags = models.ManyToManyField(Tag, blank=True)
-    tags = TaggableManager(through='UserTag', blank=True)
+    tags = TaggableManager(through='UserTag', blank=True, related_name='tags')
     emotions = models.ManyToManyField(Emotion, through='UserEmotion')
     
     profile_img = models.ImageField(upload_to='user', blank=True)
@@ -23,7 +23,7 @@ class User(AbstractUser):
 
 
 class UserTag(TaggedItemBase):
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    content_object = models.ForeignKey('User', on_delete=models.CASCADE)
 
 
 class UserEmotion(models.Model):

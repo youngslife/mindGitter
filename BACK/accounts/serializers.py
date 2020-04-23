@@ -21,7 +21,7 @@ class UserTagSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('pk', 'tags',)
+        fields = ('tags',)
 
 
 # class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
