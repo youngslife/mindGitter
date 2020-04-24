@@ -3,18 +3,19 @@ import VueRouter from "vue-router";
 import Home from "../components/home/Home.vue";
 import CreateDiary from "../components/createDiary/createDiary.vue";
 import DiaryDetail from "../components/diaryDetail/DiaryDetail.vue";
-import DiaryList from "../components/diaryList/DiaryList.vue";
+import PostList from "../components/postList/PostList.vue";
 import Login from "../components/login/Login.vue";
-import NewDiary from "../components/newDiary/NewDiary.vue";
+import NewPost from "../components/newPost/NewPost.vue";
 import UserDetail from "../components/userDetail/UserDetail.vue";
+import Signup from "../components/signup/Signup.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/login",
-    name: "Login",
-    component: Login
+    path: "/signup",
+    name: "Signup",
+    component: Signup
   },
   {
     path: "/createDiary",
@@ -27,14 +28,14 @@ const routes = [
     component: DiaryDetail
   },
   {
-    path: "/diaryList",
-    name: "DiaryList",
-    component: DiaryList
+    path: "/postList",
+    name: "PostList",
+    component: PostList
   },
   {
-    path: "/newDiary",
-    name: "NewDiary",
-    component: NewDiary
+    path: "/newPost",
+    name: "NewPost",
+    component: NewPost
   },
   {
     path: "/login",
@@ -43,7 +44,7 @@ const routes = [
   },
   {
     path: "/userDetail",
-    name: "userDetail",
+    name: "UserDetail",
     component: UserDetail
   },
   {

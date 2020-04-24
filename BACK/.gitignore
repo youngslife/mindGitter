@@ -122,3 +122,6 @@ dmypy.json
 
 # customize
 .env
+venv
+mysql.cnf
+.vscode
