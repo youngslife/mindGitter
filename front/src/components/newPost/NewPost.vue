@@ -67,10 +67,8 @@ export default {
         saveVideo: false,
         file: null,
         fileName: null
-      },
+      }
     };
-  },
-  async mounted() {
   },
   methods: {
     ...mapActions(["addPost"]),
@@ -81,10 +79,10 @@ export default {
       const files = e.target.files;
       if (files) {
         this.postInfo.file = files[0];
-        this.postInfo.fileName = 'test.png'
+        this.postInfo.fileName = "test.png";
       }
     }
-  },
+  }
 };
 </script>
 

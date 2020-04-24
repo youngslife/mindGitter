@@ -15,7 +15,9 @@
           <v-btn class="close" @click="changeShowAddModal">닫기</v-btn>
         </v-card-actions>
       </v-card>
-      <v-icon class="delete" @click="deleteChannel(selectedChan.id)">fas fa-trash-alt</v-icon>
+      <v-icon class="delete" @click="deleteChannel(selectedChan.id)"
+        >fas fa-trash-alt</v-icon
+      >
     </div>
     <div calss="search">
       <v-icon class="search">fas fa-search</v-icon>
@@ -150,7 +152,7 @@ export default {
     }
   },
   created() {
-    this.selectedChan = this.getSelectedChan
+    this.selectedChan = this.getSelectedChan;
     if (!this.getSelectedChan) {
       router.push("/");
     }

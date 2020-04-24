@@ -9,7 +9,7 @@ const state = {
   errors: [],
   loading: false,
   userName: null
-}; 
+};
 
 const getters = {
   isLoggedIn: state => !!state.token,

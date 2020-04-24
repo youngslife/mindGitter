@@ -59,7 +59,7 @@ export default {
       const files = e.target.files;
       if (files) {
         this.diaryInfo.image = files[0];
-      console.log(files[0])
+        console.log(files[0]);
       }
     }
   }

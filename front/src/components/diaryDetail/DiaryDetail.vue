@@ -2,8 +2,7 @@
   <div class="dairyDetail">
     <v-icon class="back" @click="goPostList">fas fa-arrow-left</v-icon>
     <h1>{{ getSelectedChan }}</h1>
-    <div class="video">
-    </div>
+    <div class="video"></div>
     <div class="temp"></div>
     <v-tabs fixed-tabs>
       <v-tab v-for="mode in modes" :key="mode" @click="changeMode(mode)">{{
