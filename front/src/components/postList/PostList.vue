@@ -1,7 +1,7 @@
 <template>
   <div class="diaryList">
     <div class="infoAndSetting">
-      <h1>{{ getSelectedChan }}</h1>
+      <h1>{{ selectedChan.title }}</h1>
       <v-icon class="plus" @click="changeShowAddModal">fas fa-user-plus</v-icon>
       <v-card v-if="showAddModal" @close="showAddModal = false">
         <v-card-title>Share Diary</v-card-title>
@@ -15,7 +15,7 @@
           <v-btn class="close" @click="changeShowAddModal">닫기</v-btn>
         </v-card-actions>
       </v-card>
-      <v-icon class="delete" @click="deleteChannel">fas fa-trash-alt</v-icon>
+      <v-icon class="delete" @click="deleteChannel(selectedChan.id)">fas fa-trash-alt</v-icon>
     </div>
     <div calss="search">
       <v-icon class="search">fas fa-search</v-icon>
@@ -89,7 +89,7 @@
 import Nav from "../nav/Nav.vue";
 import Datepicker from "vuejs-datepicker";
 import router from "@/router";
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "DiaryList",
@@ -98,6 +98,7 @@ export default {
       searchTag: null,
       date: new Date(),
       showAddModal: false,
+      selectedChan: this.getSelectedChan,
       diaries: [
         {
           title: "첫 번째",
@@ -127,16 +128,18 @@ export default {
   },
   methods: {
     ...mapMutations(["setSelectedDiary"]),
+    ...mapActions(["deleteChan"]),
     changeShowAddModal() {
       this.showAddModal = !this.showAddModal;
     },
-    deleteChannel() {
+    deleteChannel(channelId) {
       if (
         confirm(
           "일기장이 삭제되면 지금까지 작성하신 일기가 모두 삭제됩니다.\n삭제하시겠습니까?"
         )
       ) {
         console.log("삭제");
+        this.deleteChan(channelId);
       } else {
         console.log("취소");
       }
@@ -144,6 +147,11 @@ export default {
     goDetail(diaryInfo) {
       this.setSelectedDiary(diaryInfo);
       router.push("diaryDetail");
+    }
+  },
+  created() {
+    if (!this.getSelectedChan) {
+      router.push("/");
     }
   }
 };

@@ -2,7 +2,7 @@ const HOST = process.env.VUE_APP_SERVER_HOST;
 
 const axios = require("axios");
 import router from "../../router";
-import diary from "./diary.js";
+// import diary from "./diary.js";
 
 const state = {
   token: null,
@@ -61,7 +61,6 @@ const actions = {
           commit("setToken", token.data.token);
           commit("setLoading", false);
           commit("setUserName", username);
-          diary.actions.bringChanList;
           router.push("/");
         })
         .catch(err => {

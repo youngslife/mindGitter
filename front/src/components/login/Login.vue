@@ -53,13 +53,16 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["validation"]),
+    ...mapActions(["validation", "bringChanList"]),
     goSignup() {
       router.push("/signup");
     }
   },
   computed: {
     ...mapGetters(["getErrors", "isLoading"])
+  },
+  destroyed() {
+    this.bringChanList();
   }
 };
 </script>

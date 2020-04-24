@@ -31,8 +31,8 @@ def board(request):
             user.channels.add(channel)
             return JsonResponse({'message': 'success to save'}, status=201)
         else:
-            return JsonResponse({'message': 'fail to save'}, status=400)
-            # return JsonResponse({'message': serializer.errors }, status=400)
+            # return JsonResponse({'message': 'fail to save'}, status=400)
+            return JsonResponse({'message': serializer.errors }, status=400)
 
 # 채널 한 개
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -55,8 +55,8 @@ def board_title(request, id):
                 serializer.save()
                 return JsonResponse({'message': 'success to update'}, status=201)
             else:
-                # return JsonResponse({'message': 'fail to update'}, status=400)
-                return JsonResponse({'message': serializer.errors}, status=400)
+                return JsonResponse({'message': 'fail to update'}, status=400)
+                # return JsonResponse({'message': serializer.errors}, status=400)
 
         elif request.method == 'DELETE':  # delete a diary book
             channel.delete()

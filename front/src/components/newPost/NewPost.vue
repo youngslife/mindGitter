@@ -117,6 +117,7 @@ export default {
     async uploadDiary() {
       try{
         let res = await this.s3upload('test.mp4')
+        res;
       } catch {
         alert("s3에 업로드 하는 중 에러가 발생했습니다.")
       }

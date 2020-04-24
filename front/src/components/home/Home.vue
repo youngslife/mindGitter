@@ -9,12 +9,12 @@
     >
       <v-carousel-item v-for="(item, i) in diaryList" :key="i">
         <h1>{{ item.title }}</h1>
-        <v-img :src="item.src" alt="No Image" class="cImage"></v-img>
+        <v-img :src="item.cover_image" alt="No Image" class="cImage"></v-img>
         <div class="cSummary">
           <h2>Summary of Diary</h2>
-          <p>{{ item.content }}</p>
+          <p>{{ item.description }}</p>
         </div>
-        <button @click="goDetail(item.title)" class="cBtn">Detail</button>
+        <button @click="goDetail(item.id)" class="cBtn">Detail</button>
       </v-carousel-item>
       <v-carousel-item>
         <h1>새 일기장</h1>
@@ -28,7 +28,7 @@
 
 <script>
 import router from "@/router";
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Home",
@@ -43,7 +43,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["setSelectedChan"]),
+    ...mapActions(["bringChanList", "bringChanDetail"]),
     // 유저의 일기 목록 가져오기
     getDiary() {
       this.diaryList = this.getChanList;
@@ -51,9 +51,8 @@ export default {
     goCreate() {
       router.push("createDiary");
     },
-    goDetail(channel) {
-      this.setSelectedChan(channel);
-      router.push("postList");
+    goDetail(channelId) {
+      this.bringChanDetail(channelId);
     }
   },
   // vuex Login 연동

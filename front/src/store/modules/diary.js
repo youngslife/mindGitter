@@ -1,3 +1,5 @@
+import router from "../../router";
+
 const HOST = process.env.VUE_APP_SERVER_HOST;
 // import auth from './auth.js';
 
@@ -76,7 +78,7 @@ const actions = {
         HOST + "/channels/",
         {
           title: PostInfo.title,
-          cover_img: PostInfo.image,
+          cover_image: PostInfo.image,
           description: PostInfo.description
         },
         options
@@ -84,6 +86,33 @@ const actions = {
       .then(message => {
         console.log(message);
       });
+  },
+  bringChanDetail: ({ commit }, channelId) => {
+    commit;
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    axios.get(`${HOST}/channels/${channelId}`, options).then(message => {
+      commit("setSelectedChan", message.data);
+      // console.log(message.data.title)
+      router.push("postList");
+    });
+  },
+  deleteChan: ({ dispatch }, channelId) => {
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    axios.delete(`${HOST}/channels/${channelId}`, options).then(message => {
+      console.log(message);
+      dispatch("bringChanList");
+      router.push("/");
+    });
   }
 };
 
