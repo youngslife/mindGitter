@@ -11,7 +11,7 @@ class User(AbstractUser):
     # emotions = models.ManyToManyField(Emotion, blank=True) 밑에가 새로 수정한 버전 이건 지워주면됨
     emotions = models.ManyToManyField(Emotion, through='UserEmotion')
     
-    profile_img = models.ImageField(upload_to='user', blank=True)
+    profile_img = models.CharField(max_length=100)
 
     class Meta:
         ordering = ['-pk']

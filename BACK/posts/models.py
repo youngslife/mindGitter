@@ -14,7 +14,7 @@ class Emotion(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=50)
-    cover_image = models.ImageField(upload_to="post/%Y/%m/%d/cover/", blank=True)
+    cover_image = models.CharField(max_length=100)
     context = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -22,7 +22,7 @@ class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tags = TaggableManager(blank=True)
     emotions = models.ManyToManyField(Emotion, blank=True)
-    video_file = models.FileField(upload_to='post/%Y/%m/%d/video/', blank=True)
+    video_file = models.CharField(max_length=100)
     # summary = models.CharField(max_length=200)
 
     class Meta:
