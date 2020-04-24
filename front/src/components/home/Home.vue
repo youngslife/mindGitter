@@ -45,9 +45,9 @@ export default {
   methods: {
     ...mapActions(["bringChanList", "bringChanDetail"]),
     // 유저의 일기 목록 가져오기
-    getDiary() {
-      this.diaryList = this.getChanList;
-    },
+    // getDiary() {
+    //   this.diaryList = this.getChanList;
+    // },
     goCreate() {
       router.push("createDiary");
     },
@@ -61,7 +61,8 @@ export default {
   },
   created() {
     if (this.isLoggedIn) {
-      this.getDiary();
+      // this.getDiary();
+      this.diaryList = this.getChanList;
     } else {
       router.push("/login");
     }

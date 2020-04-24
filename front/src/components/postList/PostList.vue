@@ -98,7 +98,7 @@ export default {
       searchTag: null,
       date: new Date(),
       showAddModal: false,
-      selectedChan: this.getSelectedChan,
+      selectedChan: null,
       diaries: [
         {
           title: "첫 번째",
@@ -150,6 +150,7 @@ export default {
     }
   },
   created() {
+    this.selectedChan = this.getSelectedChan
     if (!this.getSelectedChan) {
       router.push("/");
     }

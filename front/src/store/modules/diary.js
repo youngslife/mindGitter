@@ -1,10 +1,13 @@
 import router from "../../router";
 
 const HOST = process.env.VUE_APP_SERVER_HOST;
-// import auth from './auth.js';
+const ALBUMBUCKETNAME = process.env.VUE_APP_BUCKET_NAME
+// const BUCKETREGION = process.env.VUE_APP_BUCKET_REGION
+// const IDENTIFYPOOL = process.env.VUE_APP_IDENTIFYPOOL
+
 
 const axios = require("axios");
-// import router from "../../router";
+import AWS from "aws-sdk";
 
 const state = {
   chanList: null,
@@ -12,7 +15,8 @@ const state = {
   selectedDiary: null,
   commitDates: [new Date().getFullYear(), new Date().getMonth() + 1],
   commitInfo: [{"1일": 0, "2일": 1, "3일": 0, "4일": 1, "5일": 1, "6일":1, "7일": 0, "8일": 1, "9일": 0, "10일": 1, "11일": 1, "12일": 0, "13일": 1, "14일": 1, "15일": 0, "16일": 1, "17일": 0, "18일": 1, "19일": 0, "20일": 1, "21일": 0, "22일": 1, "23일": 0, "24일": 1, "25일": 0, "26일": 1, "27일": 1, "28일": 0, "29일":0, "30일": 1}],
-  nemos: ["nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo"]
+  nemos: ["nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo"],
+  s3: {}
 };
 
 const getters = {
@@ -21,7 +25,7 @@ const getters = {
   getSelectedDiary: state => state.selectedDiary,
   getCommitDates: state => state.commitDates,
   getCommitInfo: state => state.commitInfo,
-  getNemos: state => state.nemos
+  getNemos: state => state.nemos,
 };
 
 const mutations = {
@@ -48,6 +52,21 @@ const mutations = {
       }
     }
     state.nemos = results;
+  },
+  sets3: (state) => {
+    state.s3 = new AWS.S3({
+      apiVersion: "2006-03-01",
+      params: { Bucket: ALBUMBUCKETNAME }
+    })
+  },
+  updates3: (state, PostInfo) => {
+    console.log(PostInfo)
+    state.s3 = state.s3.upload({
+      Key: PostInfo.fileName,
+      Body: PostInfo.file,
+      ACL: "public-read-write"
+    })
+    .promise();
   }
 };
 
@@ -113,8 +132,15 @@ const actions = {
       dispatch("bringChanList");
       router.push("/");
     });
-  }
+  },
+  addPost: ({ commit }, { PostInfo }) => {
+    console.log(PostInfo)
+    commit('updates3', PostInfo)
+    console.log(PostInfo)
+  } 
 };
+
+
 
 export default {
   state,

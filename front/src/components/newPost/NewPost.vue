@@ -44,14 +44,13 @@
           <input type="checkbox" id="saveVideo" v-model="postInfo.saveVideo" />
           <label for="saveVideo">영상 저장</label>
         </ul>
-        <button class="submit" @click="uploadDiary">Upload</button>
+        <button class="submit">Upload</button>
       </div>
     </form>
   </v-container>
 </template>
 
 <script>
-
 import { mapActions } from "vuex";
 import router from "@/router";
 import AWS from "aws-sdk";
@@ -66,13 +65,9 @@ export default {
         tags: null,
         possible: false,
         saveVideo: false,
+        file: null,
+        fileName: null
       },
-      rawVideo: null,
-      //s3setting
-      albumBucketName: process.env.VUE_APP_BUCKET_NAME,
-      bucketRegion: process.env.VUE_APP_BUCKET_REGION,
-      IdentifyPool: process.env.VUE_APP_IDENTIFYPOOL,
-      s3: {},
     };
   },
   async mounted() {
@@ -85,41 +80,44 @@ export default {
     },
     s3Init() {
       AWS.config.update({
-        region: this.bucketRegion,
+        region: process.env.VUE_APP_BUCKET_REGION,
         credentials: new AWS.CognitoIdentityCredentials({
-          IdentityPoolId: this.IdentifyPool
+          IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL
         })
-      });
+      })
+    },
 
-      this.s3 = new AWS.S3({
-        apiVersion: "2006-03-01",
-        params: { Bucket: this.albumBucketName }
-      });
-    },
-    s3upload(fileName) {
-      console.log('s3upload')
-      this.postInfo.video = fileName
-      return this.s3
-        .upload({
-          Key: fileName,
-          Body: this.rawVideo,
-          ACL: "public-read-write"
-        })
-        .promise();
-    },
+    //   this.s3 = new AWS.S3({
+    //     apiVersion: "2006-03-01",
+    //     params: { Bucket: this.albumBucketName }
+    //   });
+    // },
+    // s3upload(fileName) {
+    //   console.log('s3upload')
+    //   this.postInfo.video = fileName
+    //   return this.s3
+    //     .upload({
+    //       Key: fileName,
+    //       Body: this.rawVideo,
+    //       ACL: "public-read-write"
+    //     })
+    //     .promise();
+    // },
     async onFileChange(e) {
       const files = e.target.files;
       if (files) {
         console.log(files);
-        this.rawVideo = files[0];
-      }
-    },
-    async uploadDiary() {
-      try{
-        let res = await this.s3upload('test.mp4')
-        res;
-      } catch {
-        alert("s3에 업로드 하는 중 에러가 발생했습니다.")
+    //     this.rawVideo = files[0];
+    //   }
+    // },
+    // async uploadDiary() {
+    //   try{
+    //     let res = await this.s3upload('test.mp4')
+    //     res;
+    //   } catch {
+    //     alert("s3에 업로드 하는 중 에러가 발생했습니다.")
+        this.postInfo.file = files[0];
+        this.postInfo.fileName = 'test.mp4'
       }
     }
   },
