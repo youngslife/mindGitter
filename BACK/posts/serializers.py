@@ -34,6 +34,6 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         model = Post
         fields = ('pk', 'title', 'cover_image', 'user_id',
                     'context', 'created_at', 'updated_at', 
-                    'video_file', 'tags', 'comment_set',)   
+                    'video_file', 'tags', 'comment_set', )   
 
    

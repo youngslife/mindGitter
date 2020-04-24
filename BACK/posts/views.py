@@ -87,10 +87,11 @@ class PostDetail(APIView):
     
     def put(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
-        cover_img = post.cover_image
-        cover_img.delete()
-        video_file = post.video_file
-        video_file.delete()
+        #파일이 아니라서 아래처럼 파일 지워줄 필요 없음 => 일단 혹시 몰라서 남겨둠
+        # cover_img = post.cover_image
+        # cover_img.delete()
+        # video_file = post.video_file
+        # video_file.delete()
         # print('###############원래 태그들', post.tags.all(), type(post.tags.all()))
         # print('요청 태그들', request.data.get('tags', None), type(request.data.get('tags', None)))
         # request_tags = request.data.get('tags', None)
