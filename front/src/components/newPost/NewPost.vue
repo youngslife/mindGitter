@@ -44,15 +44,17 @@
           <input type="checkbox" id="saveVideo" v-model="postInfo.saveVideo" />
           <label for="saveVideo">영상 저장</label>
         </ul>
-        <button class="submit">Upload</button>
+        <button class="submit" @click="uploadDiary">Upload</button>
       </div>
     </form>
   </v-container>
 </template>
 
 <script>
+
 import { mapActions } from "vuex";
 import router from "@/router";
+import AWS from "aws-sdk";
 
 export default {
   name: "createDiary",
@@ -63,23 +65,63 @@ export default {
         video: null,
         tags: null,
         possible: false,
-        saveVideo: false
-      }
+        saveVideo: false,
+      },
+      rawVideo: null,
+      //s3setting
+      albumBucketName: process.env.VUE_APP_BUCKET_NAME,
+      bucketRegion: process.env.VUE_APP_BUCKET_REGION,
+      IdentifyPool: process.env.VUE_APP_IDENTIFYPOOL,
+      s3: {},
     };
+  },
+  async mounted() {
+    this.s3Init()
   },
   methods: {
     ...mapActions(["addPost"]),
     goHome() {
       router.push("/");
     },
-    onFileChange(e) {
+    s3Init() {
+      AWS.config.update({
+        region: this.bucketRegion,
+        credentials: new AWS.CognitoIdentityCredentials({
+          IdentityPoolId: this.IdentifyPool
+        })
+      });
+
+      this.s3 = new AWS.S3({
+        apiVersion: "2006-03-01",
+        params: { Bucket: this.albumBucketName }
+      });
+    },
+    s3upload(fileName) {
+      console.log('s3upload')
+      this.postInfo.video = fileName
+      return this.s3
+        .upload({
+          Key: fileName,
+          Body: this.rawVideo,
+          ACL: "public-read-write"
+        })
+        .promise();
+    },
+    async onFileChange(e) {
       const files = e.target.files;
       if (files) {
         console.log(files);
-        this.postInfo.video = files[0];
+        this.rawVideo = files[0];
+      }
+    },
+    async uploadDiary() {
+      try{
+        let res = await this.s3upload('test.mp4')
+      } catch {
+        alert("s3에 업로드 하는 중 에러가 발생했습니다.")
       }
     }
-  }
+  },
 };
 </script>
 
