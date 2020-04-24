@@ -2,6 +2,7 @@ const HOST = process.env.VUE_APP_SERVER_HOST;
 
 const axios = require("axios");
 import router from "../../router";
+import diary from "./diary.js";
 
 const state = {
   token: null,
@@ -26,6 +27,7 @@ const mutations = {
   pushError: (state, error) => state.errors.push(error),
   clearErrors: state => (state.errors = []),
   setUserName: (state, userName) => (state.userName = userName)
+  // setUserName: ({ rootState, userName }) => (rootState.userName = userName)
 };
 
 const actions = {
@@ -59,6 +61,7 @@ const actions = {
           commit("setToken", token.data.token);
           commit("setLoading", false);
           commit("setUserName", username);
+          diary.actions.bringChanList;
           router.push("/");
         })
         .catch(err => {

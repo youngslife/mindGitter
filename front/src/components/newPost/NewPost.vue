@@ -63,8 +63,8 @@ export default {
         video: null,
         tags: null,
         possible: false,
-        saveVideo: false,
-      },
+        saveVideo: false
+      }
     };
   },
   methods: {
@@ -78,8 +78,8 @@ export default {
         console.log(files);
         this.postInfo.video = files[0];
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

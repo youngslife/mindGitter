@@ -36,12 +36,12 @@ export default {
   name: "commitCalendar",
   data() {
     return {
-      commitData:{
+      commitData:{ 
         commitInfo: null,
         commitDates: null,
         nemos: null
       }
-    }
+    };
   },
   computed: {
     ...mapGetters(["getCommitInfo", "getCommitDates", "getNemos"])

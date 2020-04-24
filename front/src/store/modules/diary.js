@@ -1,9 +1,11 @@
 const HOST = process.env.VUE_APP_SERVER_HOST;
+// import auth from './auth.js';
 
 const axios = require("axios");
-import router from "../../router";
+// import router from "../../router";
 
 const state = {
+  chanList: null,
   selectedChan: null,
   selectedDiary: null,
   commitDates: [new Date().getFullYear(), new Date().getMonth() + 1],
@@ -12,6 +14,7 @@ const state = {
 };
 
 const getters = {
+  getChanList: state => state.chanList,
   getSelectedChan: state => state.selectedChan,
   getSelectedDiary: state => state.selectedDiary,
   getCommitDates: state => state.commitDates,
@@ -20,18 +23,25 @@ const getters = {
 };
 
 const mutations = {
+  setChanList: (state, chanList) => (state.chanList = chanList),
   setSelectedChan: (state, channel) => (state.selectedChan = channel),
   setSelectedDiary: (state, diary) => (state.selectedDiary = diary),
   setNemos: (state, commitData) => {
     let results = ["nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo", "nemo"];
-    const pre = new Date(`${commitData.commitDates[0]}-${commitData.commitDates[1]}-01`).getDay();
-    const lastDay = new Date(commitData.commitDates[0], commitData.commitDates[1], 0).getDate();
+    const pre = new Date(
+      `${commitData.commitDates[0]}-${commitData.commitDates[1]}-01`
+    ).getDay();
+    const lastDay = new Date(
+      commitData.commitDates[0],
+      commitData.commitDates[1],
+      0
+    ).getDate();
     for (let cnt = 0; cnt < 35; cnt++) {
       if (cnt >= pre && cnt <= lastDay) {
         if (commitData.commitInfo[0][`${cnt}일`]) {
           results[cnt] = "red";
         } else {
-          results[cnt] = "nemo"
+          results[cnt] = "nemo";
         }
       }
     }
@@ -40,35 +50,46 @@ const mutations = {
 };
 
 const actions = {
-  addDiary: ({ commit }, DiaryInfo) => {
+  bringChanList: ({ commit }) => {
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    axios.get(HOST + "/channels/", options).then(message => {
+      commit("setChanList", message.data.channels);
+    });
+  },
+  addChannel: ({ commit }, PostInfo) => {
+    commit;
+    console.log(PostInfo);
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: "JWT " + token
+      }
+    };
     axios
-      .post(HOST + "?", DiaryInfo, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+      .post(
+        HOST + "/channels/",
+        {
+          title: PostInfo.title,
+          cover_img: PostInfo.image,
+          description: PostInfo.description
         },
-      })
-      .then((message) => {
-        message;
-        router.push("/postList");
-      })
-      .catch((err) => {
-        if (!err.response) {
-          commit("pushError", "Network Error..");
-        } else {
-          commit("pushError", "Some error occured");
-        }
+        options
+      )
+      .then(message => {
+        console.log(message);
       });
-  },
-  addPost: ({ commit }, PostInfo) => {
-    console.log(PostInfo)
-    commit("pushError", "Success")
-  },
+  }
 };
 
 export default {
   state,
   getters,
   mutations,
-  actions,
+  actions
 };

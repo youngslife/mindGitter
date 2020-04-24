@@ -46,29 +46,7 @@ export default {
     ...mapMutations(["setSelectedChan"]),
     // 유저의 일기 목록 가져오기
     getDiary() {
-      const gotList = [
-        {
-          title: "첫 번째",
-          content: "첫 번째 일기의 내용입니다",
-          src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg"
-        },
-        {
-          title: "두 번째",
-          content: "두 번째 일기의 내용입니다",
-          src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg"
-        },
-        {
-          title: "세 번째",
-          content: "세 번째 일기의 내용입니다",
-          src: "https://cdn.vuetifyjs.com/images/carousel/bird.jpg"
-        },
-        {
-          title: "네 번째",
-          content: "네 번째 일기의 내용입니다",
-          src: "https://cdn.vuetifyjs.com/images/carousel/planet.jpg"
-        }
-      ];
-      this.diaryList = gotList;
+      this.diaryList = this.getChanList;
     },
     goCreate() {
       router.push("createDiary");
@@ -80,7 +58,7 @@ export default {
   },
   // vuex Login 연동
   computed: {
-    ...mapGetters(["isLoggedIn"])
+    ...mapGetters(["isLoggedIn", "getChanList"])
   },
   created() {
     if (this.isLoggedIn) {
