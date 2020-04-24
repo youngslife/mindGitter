@@ -2,8 +2,10 @@
   <div class="dairyDetail">
     <v-icon class="back" @click="goPostList">fas fa-arrow-left</v-icon>
     <h1>{{ getSelectedChan }}</h1>
-    <div class="video">
-      <!-- <my-video :sources="video.sources" :options="video.options"></my-video> -->
+    <div class="video" v-for="(video, i) in videos" :key="i">
+      <video width="100%" height="100%" controls class="dvideo">
+        <source :src="videoURL" :type="video.type" />
+      </video>
     </div>
     <div class="temp"></div>
     <v-tabs fixed-tabs>
@@ -24,8 +26,6 @@
 import router from "@/router";
 import { mapGetters } from "vuex";
 
-// import myVideo from "vue-video";
-
 export default {
   name: "DiaryDetail",
   data() {
@@ -33,26 +33,17 @@ export default {
       modes: ["Detail", "Analysis", "Comment"],
       selectedMode: "Detail",
       selectedDiary: "",
-      video: {
-        sources: [
-          {
-            src: "../assets/test.mp4",
-            type: "video/mp4"
-          }
-        ],
-        options: {
-          autoplay: true,
-          volume: 0.6
-          // poster: "https://www.youtube.com/watch?v=1C7IXEejZeU"
-        }
-      }
+      videoURL: "https://mind-gitter-diary.s3.ap-northeast-2.amazonaws.com/diary/diary.mp4",
+      videos: [
+        {
+          name: require("../../assets/test/Clouds.mp4"),
+          type: "video/mp4",
+        },
+      ],
     };
   },
-  components: {
-    // myVideo
-  },
   computed: {
-    ...mapGetters(["getSelectedChan", "getSelectedDiary"])
+    ...mapGetters(["getSelectedChan", "getSelectedDiary"]),
   },
   methods: {
     goPostList() {
@@ -60,11 +51,11 @@ export default {
     },
     changeMode(mode) {
       this.selectedMode = mode;
-    }
+    },
   },
   created() {
     this.selectedDiary = this.getSelectedDiary;
-  }
+  },
 };
 </script>
 

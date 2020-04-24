@@ -12,7 +12,7 @@ h1{
 }
 
 div.video{
-  height: 300px;
+  height: 250px;
   top: 0;
   left: 0;
   right: 0;
@@ -30,4 +30,10 @@ div.text{
 
 div.text>h3{
   margin: 15px;
+}
+
+video.dvideo {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
