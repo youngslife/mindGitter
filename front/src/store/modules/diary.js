@@ -1,5 +1,5 @@
 const HOST = process.env.VUE_APP_SERVER_HOST;
-const ALBUMBUCKETNAME = process.env.VUE_APP_BUCKET_NAME
+// const ALBUMBUCKETNAME = process.env.VUE_APP_BUCKET_NAME
 // const BUCKETREGION = process.env.VUE_APP_BUCKET_REGION
 // const IDENTIFYPOOL = process.env.VUE_APP_IDENTIFYPOOL
 
@@ -23,6 +23,7 @@ const getters = {
   getCommitDates: state => state.commitDates,
   getCommitInfo: state => state.commitInfo,
   getNemos: state => state.nemos,
+  getS3: state => state.s3
 };
 
 const mutations = {
@@ -43,21 +44,7 @@ const mutations = {
     }
     state.nemos = results;
   },
-  sets3: (state) => {
-    state.s3 = new AWS.S3({
-      apiVersion: "2006-03-01",
-      params: { Bucket: ALBUMBUCKETNAME }
-    })
-  },
-  updates3: (state, PostInfo) => {
-    console.log(PostInfo)
-    state.s3 = state.s3.upload({
-      Key: PostInfo.fileName,
-      Body: PostInfo.file,
-      ACL: "public-read-write"
-    })
-    .promise();
-  }
+  sets3: (state, s3) => {state.s3 = s3},
 };
 
 const actions = {
@@ -81,14 +68,35 @@ const actions = {
         }
       });
   },
-  addPost: ({ commit }, { PostInfo }) => {
-    console.log(PostInfo)
-    commit('updates3', PostInfo)
-    console.log(PostInfo)
+  s3Init: ({ commit }) => {
+    AWS.config.update({
+      region: process.env.VUE_APP_BUCKET_REGION,
+      credentials: new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL
+      })
+    })
+    const s3 = new AWS.S3({
+      apiVersion: "2006-03-01",
+      params: { Bucket: process.env.VUE_APP_BUCKET_NAME }
+    });
+    commit("sets3", s3)
+  },
+  async updates3 ({ commit }, PostInfo) {
+    const s3 = state.s3
+    const params = {
+      Key: PostInfo.fileName,
+      Body: PostInfo.file,
+      ACL: "public-read-write"
+    }
+    const res = await s3.upload(params).promise()
+    console.log(res)
+    commit("sets3", {})
+  },
+  async addPost ({ dispatch }, PostInfo ) {
+    await dispatch('s3Init')
+    await dispatch('updates3', PostInfo)
   } 
 };
-
-
 
 export default {
   state,
