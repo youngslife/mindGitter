@@ -24,7 +24,7 @@ class EmotionSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
-    comments = CommentSerializer(many=True)
+    comment_set = CommentSerializer(read_only=True, many=True)
     tags = TagListSerializerField()
     # emotions = EmotionSerializer(many=True)
     # Channel 은 일단 생략
@@ -32,6 +32,6 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('pk', 'title', 'cover_image',
-                    'context', 'created_at', 'updated_at', 'video_file', 'tags',)   
-
+                    'context', 'created_at', 'updated_at', 'video_file', 'tags', 'comment_set',)   
+        # fields = '__all__'
    
