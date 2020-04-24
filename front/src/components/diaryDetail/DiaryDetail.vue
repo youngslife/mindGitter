@@ -2,7 +2,11 @@
   <div class="dairyDetail">
     <v-icon class="back" @click="goPostList">fas fa-arrow-left</v-icon>
     <h1>{{ getSelectedChan }}</h1>
-    <div class="video"></div>
+    <div class="video" v-for="(video, i) in videos" :key="i">
+      <video width="100%" height="100%" controls class="dvideo">
+        <source :src="videoURL" :type="video.type" />
+      </video>
+    </div>
     <div class="temp"></div>
     <v-tabs fixed-tabs>
       <v-tab v-for="mode in modes" :key="mode" @click="changeMode(mode)">{{
@@ -28,14 +32,18 @@ export default {
     return {
       modes: ["Detail", "Analysis", "Comment"],
       selectedMode: "Detail",
-      selectedDiary: ""
+      selectedDiary: "",
+      videoURL: "https://mind-gitter-diary.s3.ap-northeast-2.amazonaws.com/diary/diary.mp4",
+      videos: [
+        {
+          name: require("../../assets/test/Clouds.mp4"),
+          type: "video/mp4",
+        },
+      ],
     };
   },
-  components: {
-    // myVideo
-  },
   computed: {
-    ...mapGetters(["getSelectedChan", "getSelectedDiary"])
+    ...mapGetters(["getSelectedChan", "getSelectedDiary"]),
   },
   methods: {
     goPostList() {
@@ -43,11 +51,11 @@ export default {
     },
     changeMode(mode) {
       this.selectedMode = mode;
-    }
+    },
   },
   created() {
     this.selectedDiary = this.getSelectedDiary;
-  }
+  },
 };
 </script>
 
