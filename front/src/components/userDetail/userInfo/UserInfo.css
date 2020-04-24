@@ -1,0 +1,9 @@
+img.userProfile {
+    width: 100%;
+    border-radius: 50%;
+    border: 1.5px solid;
+}
+
+div.row.userSummary {
+    font-size: 4vw;
+}

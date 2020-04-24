@@ -1,0 +1,33 @@
+.v-icon.back{
+  font-size: 30px;
+  position: absolute;
+  left: 15px;
+  margin: 10px;
+  z-index: 200;
+}
+
+h1{
+  z-index: 100;
+  position: relative;
+}
+
+div.video{
+  height: 300px;
+  top: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  background-color: gray;
+}
+
+div.temp{
+  height: 250px;
+}
+
+div.text{
+  margin: 15px;
+}
+
+div.text>h3{
+  margin: 15px;
+}
