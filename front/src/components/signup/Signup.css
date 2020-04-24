@@ -1,47 +1,42 @@
 div.Signup {
   background-image: url(../../assets/login.jpg);
-  width: 360px;
-  height: 640px;
-  position: absolute;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
 }
 
 form {
   background-color: rgba( 255, 255, 255, 0.5 ); 
-  width: 200px;
-  height: 350px;
-  position: relative;
-  margin-top: 170px;
-  margin-left: 80px;
+  width: 63vw;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
 }
 
 ul {
-  margin-top: 3px;
   padding: 10px;
-  position: relative;
-  text-align: left;
+  text-align: center;
   font-size: 15px;
 }
 
 input {
-  position: relative;
-  width: 180px;
+  width: 58vw;
   font-size: 15px;
+  margin-top: 1vh;
   outline: none;
   border-bottom: 1px solid #000;
 }
 
 button {
-  position: relative;
-  margin-top: 5px;
+  margin-top: 2vh;
   height: 30px;
-  width: 180px;
+  width: 58vw;
   border-radius: 5px;
   background: #dec4ff;
   color: white;
-}
-
-a {
-  position: absolute;
-  margin-top: 20px;
-  margin-left: 50px;
 }
