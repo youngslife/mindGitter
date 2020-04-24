@@ -6,13 +6,15 @@ import router from "../../router";
 const state = {
   token: null,
   errors: [],
-  loading: false
+  loading: false,
+  userName: null
 };
 
 const getters = {
   isLoggedIn: state => !!state.token,
   getErrors: state => state.errors,
-  isLoading: state => state.loading
+  isLoading: state => state.loading,
+  getUserName: state => state.userName
 };
 
 const mutations = {
@@ -22,12 +24,14 @@ const mutations = {
     sessionStorage.setItem("jwt", token);
   },
   pushError: (state, error) => state.errors.push(error),
-  clearErrors: state => (state.errors = [])
+  clearErrors: state => (state.errors = []),
+  setUserName: (state, userName) => (state.userName = userName)
 };
 
 const actions = {
   logout: ({ commit }) => {
     commit("setToken", null);
+    commit("setUserName", null);
     sessionStorage.removeItem("jwt");
     router.push("/login");
   },
@@ -54,6 +58,7 @@ const actions = {
         .then(token => {
           commit("setToken", token.data.token);
           commit("setLoading", false);
+          commit("setUserName", username);
           router.push("/");
         })
         .catch(err => {
@@ -92,7 +97,6 @@ const actions = {
         commit("pushError", "비밀번호는 8자 이상어야 합니다");
       } else {
         if (password1 === password2) {
-          console.log(username, email, password1);
           axios
             .post(
               HOST + "/api/rest-auth/registration/",
