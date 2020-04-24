@@ -13,7 +13,7 @@ class User(AbstractUser):
     tags = TaggableManager(through='UserTag', blank=True, related_name='tags')
     emotions = models.ManyToManyField(Emotion, through='UserEmotion')
     
-    profile_img = models.ImageField(upload_to='user', blank=True)
+    profile_img = models.CharField(max_length=100)
 
     class Meta:
         ordering = ['-pk']
