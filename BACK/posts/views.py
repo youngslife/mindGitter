@@ -45,7 +45,7 @@ class PostList(APIView):
         serializer = PostSerializer(data=request.data)
         # user-tag serializer모르겠어서 for 문으로 저장
         if serializer.is_valid():
-            serializer.save(user_id=user.id)
+            serializer.save(user_id=user.id, channel_id=request.data['channel_id'])
             posting = Post.objects.first()  # -pk 로 정렬이므로
             posting_id = posting.id
             taggeditem = TaggedItem.objects.filter(object_id=posting_id)
@@ -61,7 +61,8 @@ class PostList(APIView):
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:    
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     
     # post(일기) 생성

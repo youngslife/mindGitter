@@ -27,11 +27,10 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
 
-# ALLOWED_HOSTS = [
-#     'localhost',
-#     # '13.125.177.238',
-#     # 'mind-gitter.me'
-# ]
+ALLOWED_HOSTS = [
+    '13.125.177.238',
+    'mind-gitter.me'
+]
 
 # REST_framework 설정
 REST_FRAMEWORK = {
@@ -39,7 +38,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.IsAdminUser',
         'rest_framework.permissions.AllowAny',
-
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
