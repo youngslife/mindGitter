@@ -2,7 +2,8 @@ from rest_framework import serializers
 from .models import Post, Emotion, Tag, Comment
 from accounts.models import User, UserEmotion
 from taggit_serializer.serializers import (TaggitSerializer, TagListSerializerField)
-from accounts.serializers import UserDisplaySerializer
+from accounts.serializers import UserTagSerializer, UserDisplaySerializer
+
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,7 +32,8 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     # channel_id = 1git
     class Meta:
         model = Post
-        fields = ('pk', 'title', 'cover_image',
-                    'context', 'created_at', 'updated_at', 'video_file', 'tags', 'comment_set',)   
-        # fields = '__all__'
+        fields = ('pk', 'title', 'cover_image', 'user_id',
+                    'context', 'created_at', 'updated_at', 
+                    'video_file', 'tags', 'comment_set', )   
+
    
