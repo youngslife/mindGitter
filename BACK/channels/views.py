@@ -20,7 +20,7 @@ def board(request):
         return JsonResponse(serializer.data)
 
     elif request.method == 'POST':  # create a diary book
-        data = request.data
+        data = request.data.dict()
         data.update({'create_user': request.user.id})
         serializer = ChannelSerializer(data=data)
 
