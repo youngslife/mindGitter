@@ -16,12 +16,18 @@ class ProfileImageSerializer(serializers.ModelSerializer):
         fields = ["profile_img"]
 
 
-class UserTagSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
+# class UserTagSerializer(TaggitSerializer, serializers.ModelSerializer):
+#     tags = TagListSerializerField()
+
+#     class Meta:
+#         model = User
+#         fields = ('tags',)
+
+class UserTagSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = User
-        fields = ('tags',)
+        model = UserTag
+        fields = ('content_object_id', 'tag_id')
 
 
 # class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
