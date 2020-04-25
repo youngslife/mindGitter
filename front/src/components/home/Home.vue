@@ -44,10 +44,6 @@ export default {
   },
   methods: {
     ...mapActions(["bringChanList", "bringChanDetail"]),
-    // 유저의 일기 목록 가져오기
-    // getDiary() {
-    //   this.diaryList = this.getChanList;
-    // },
     goCreate() {
       router.push("createDiary");
     },
@@ -59,15 +55,14 @@ export default {
   computed: {
     ...mapGetters(["isLoggedIn", "getChanList"])
   },
-  async beforeCreate() {
-    await this.bringChanList;
-  },
-  created() {
+  async created() {
     if (!this.isLoggedIn) {
       router.push("/login");
-    } else {
-      this.diaryList = this.getChanList;
     }
+    await this.bringChanList();
+  },
+  beforeMount() {
+    this.diaryList = this.getChanList;
   }
 };
 </script>

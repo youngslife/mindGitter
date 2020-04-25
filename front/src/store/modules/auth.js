@@ -2,7 +2,7 @@ const HOST = process.env.VUE_APP_SERVER_HOST;
 
 const axios = require("axios");
 import router from "../../router";
-// import diary from "./diary.js";
+
 
 const state = {
   token: null,
@@ -37,11 +37,9 @@ const actions = {
     sessionStorage.removeItem("jwt");
     router.push("/login");
   },
-
   pushError: ({ commit }, error) => {
     commit("pushError", error);
   },
-
   login: ({ commit, getters }, { username, password }) => {
     if (getters.isLoggedIn) {
       router.push("/");
@@ -58,6 +56,7 @@ const actions = {
           }
         )
         .then(token => {
+          console.log(token)
           commit("setToken", token.data.token);
           commit("setLoading", false);
           commit("setUserName", username);
