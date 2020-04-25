@@ -59,12 +59,14 @@ export default {
   computed: {
     ...mapGetters(["isLoggedIn", "getChanList"])
   },
+  async beforeCreate() {
+    await this.bringChanList;
+  },
   created() {
-    if (this.isLoggedIn) {
-      // this.getDiary();
-      this.diaryList = this.getChanList;
-    } else {
+    if (!this.isLoggedIn) {
       router.push("/login");
+    } else {
+      this.diaryList = this.getChanList;
     }
   }
 };

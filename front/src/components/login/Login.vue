@@ -60,10 +60,10 @@ export default {
   },
   computed: {
     ...mapGetters(["getErrors", "isLoading"])
-  },
-  destroyed() {
-    this.bringChanList();
   }
+  // async destroyed() {
+  //   await this.bringChanList();
+  // }
 };
 </script>
 
