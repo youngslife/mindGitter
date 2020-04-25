@@ -26,9 +26,3 @@ class UserChannelSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('pk', 'username', 'channels',)
-
-# after making post serializer
-
-
-class ChannelPostSerializer(ChannelSerializer):
-    pass

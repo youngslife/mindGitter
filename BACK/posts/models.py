@@ -22,7 +22,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     # channel blank=True 지워야함!1!!!연결안해놔서 테스트할려구 해둔거임
-    # channel = models.ForeignKey(Channel, on_delete=models.CASCADE, blank=True)
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tags = TaggableManager(blank=True)
     emotions = models.ManyToManyField(Emotion, blank=True)
