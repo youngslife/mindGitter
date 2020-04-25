@@ -21,7 +21,7 @@ div.video{
 }
 
 div.temp{
-  height: 250px;
+  height: 220px;
 }
 
 div.text{
@@ -32,8 +32,19 @@ div.text>h3{
   margin: 15px;
 }
 
+div.text>div{
+  margin: 10px;
+}
+
 video.dvideo {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+div.additionalInfo {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  text-align: right;
 }

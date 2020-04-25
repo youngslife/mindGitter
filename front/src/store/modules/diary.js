@@ -84,7 +84,8 @@ const state = {
     "nemo",
     "nemo"
   ],
-  s3: {}
+  s3: {},
+  writerInfo: null
 };
 
 const getters = {
@@ -94,7 +95,8 @@ const getters = {
   getCommitDates: state => state.commitDates,
   getCommitInfo: state => state.commitInfo,
   getNemos: state => state.nemos,
-  getS3: state => state.s3
+  getS3: state => state.s3,
+  getWriterInfo: state => state.writerInfo
 };
 
 const mutations = {
@@ -160,7 +162,8 @@ const mutations = {
   },
   sets3: (state, s3) => {
     state.s3 = s3;
-  }
+  },
+  setWriterInfo: (state, writerInfo) => (state.writerInfo = writerInfo)
 };
 
 const actions = {
@@ -172,8 +175,24 @@ const actions = {
       }
     };
     axios.get(HOST + "/channels/", options).then(message => {
-      commit("setChanList", message.data.channels);
+      commit("setChanList", message.data.channels)
+      console.log("이건 직접 받아온 리스트")
+      console.log(message.data.channels)
+      return new Promise((resolve, reject) => {
+        // commit("setChanList", message.data.channels)
+        resolve()
+        reject("데이터를 가져오는데 실패했습니다.")
+        // setTimeout(() => {
+        //   commit("setChanList", message.data.channels)
+        //   resolve()
+        //   reject("데이터를 가져오는데 실패했습니다.")
+        // })
+      })
+      // commit("setChanList", message.data.channels);
     });
+    // return new Promise((resolve, reject) => {
+
+    // })
   },
   addChannel: ({ commit }, PostInfo) => {
     commit;
@@ -200,7 +219,6 @@ const actions = {
       });
   },
   bringChanDetail: ({ commit }, channelId) => {
-    commit;
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
@@ -213,19 +231,52 @@ const actions = {
       router.push("postList");
     });
   },
-  deleteChan: ({ dispatch }, channelId) => {
+  async deleteChan({ dispatch, state }, channelId) {
+    console.log("before")
+    console.log(state.chanList)
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
     };
-    axios.delete(`${HOST}/channels/${channelId}`, options).then(message => {
-      console.log(message);
-      dispatch("bringChanList");
-      router.push("/");
+    await axios.delete(`${HOST}/channels/${channelId}`, options).then(message => {
+      message;
+      // dispatch("bringChanList");
+      alert("성공적으로 삭제되었습니다.");
+      // router.push("/");
+    }).catch(message => {
+      message;
+      alert("삭제 중에 문제가 발생하였습니다.");
+    });
+    dispatch("bringChanList").then(
+      console.log("after bring"), 
+      console.log(state.chanList)
+    );
+    // console.log("after bring")
+    // console.log(state.chanList)
+    router.push("/")
+  },
+  bringDiaryDetail: ({ commit, getters }, diaryInfo) => {
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    axios.get(`${HOST}/posts/${diaryInfo.pk}`, options).then(message => {
+      commit("setSelectedDiary", message.data);
+      const selectedChanUser = getters.getSelectedChan.user_set
+      for (let idx=0; idx < selectedChanUser.length; idx++) {
+        console.log(selectedChanUser[idx])
+        if (selectedChanUser[idx].id === message.data.user_id) {
+          commit("setWriterInfo", selectedChanUser[idx]);
+        }
+      }
+      router.push("/diaryDetail");
     });
   },
+  //S3 부분
   s3Init: ({ commit }) => {
     AWS.config.update({
       region: process.env.VUE_APP_BUCKET_REGION,
@@ -251,6 +302,10 @@ const actions = {
     commit("sets3", {});
   },
   async addPost({ dispatch }, PostInfo) {
+    // if (PostInfo.saveVideo) {
+    //   await dispatch("s3Init");
+    //   await dispatch("updates3", PostInfo);
+    // }
     await dispatch("s3Init");
     await dispatch("updates3", PostInfo);
   }

@@ -3,19 +3,20 @@ const HOST = process.env.VUE_APP_SERVER_HOST;
 const axios = require("axios");
 import router from "../../router";
 
-
 const state = {
   token: null,
   errors: [],
   loading: false,
-  userName: null
+  userName: null,
+  userId: null
 };
 
 const getters = {
   isLoggedIn: state => !!state.token,
   getErrors: state => state.errors,
   isLoading: state => state.loading,
-  getUserName: state => state.userName
+  getUserName: state => state.userName,
+  getUserId: state => state.userId
 };
 
 const mutations = {
@@ -26,8 +27,8 @@ const mutations = {
   },
   pushError: (state, error) => state.errors.push(error),
   clearErrors: state => (state.errors = []),
-  setUserName: (state, userName) => (state.userName = userName)
-  // setUserName: ({ rootState, userName }) => (rootState.userName = userName)
+  setUserName: (state, userName) => (state.userName = userName),
+  setUserId: (state, userId) => (state.userId = userId)
 };
 
 const actions = {
@@ -60,6 +61,7 @@ const actions = {
           commit("setToken", token.data.token);
           commit("setLoading", false);
           commit("setUserName", username);
+          commit("setUserId", token.data.user.pk);
           router.push("/");
         })
         .catch(err => {

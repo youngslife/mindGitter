@@ -38,48 +38,23 @@
     <datepicker v-model="date" input-class="hi"></datepicker>
     <v-divider></v-divider>
     <div class="diaries">
-      <div class="diaryInfo" @click="goDetail(diaries[0])">
-        <img
-          src="../../assets/shareduserprofile.jpg"
-          alt="userProfile"
-          class="uImage"
-        />
-        <div class="content">
-          <p class="title">첫 번째</p>
-          <span class="tag">#첫 일기 #행복함 #재밌음</span>
-        </div>
-      </div>
-      <div class="diaryInfo" @click="goDetail(diaries[1])">
+      <div
+        class="diaryInfo"
+        v-for="(item, idx) in getSelectedChan.post_set"
+        :key="idx"
+        @click="goDetail(item)"
+      >
+        <!-- <div class="diaryInfo" @click="goDetail(diaries[0])"> -->
         <img
           src="../../assets/userprofile.jpg"
           alt="userProfile"
           class="uImage"
         />
         <div class="content">
-          <p class="title">세 번째</p>
-          <span class="tag">#공유신청 #기대됨 #얼른</span>
-        </div>
-      </div>
-      <div class="diaryInfo" @click="goDetail(diaries[2])">
-        <img
-          src="../../assets/userprofile.jpg"
-          alt="userProfile"
-          class="uImage"
-        />
-        <div class="content">
-          <p class="title">두 번째</p>
-          <span class="tag">#혼자심심 #공유할까? #지루함</span>
-        </div>
-      </div>
-      <div class="diaryInfo" @click="goDetail(diaries[3])">
-        <img
-          src="../../assets/userprofile.jpg"
-          alt="userProfile"
-          class="uImage"
-        />
-        <div class="content">
-          <p class="title">일기장 만들었다</p>
-          <span class="tag">#내가주인 #놀라움 #공유</span>
+          <p class="title">{{ item.title }}</p>
+          <span class="tag" v-for="(tag, i) in item.tags" :key="i"
+            >#{{ tag }}
+          </span>
         </div>
       </div>
     </div>
@@ -90,8 +65,7 @@
 <script>
 import Nav from "../nav/Nav.vue";
 import Datepicker from "vuejs-datepicker";
-import router from "@/router";
-import { mapGetters, mapMutations, mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "DiaryList",
@@ -100,25 +74,7 @@ export default {
       searchTag: null,
       date: new Date(),
       showAddModal: false,
-      selectedChan: null,
-      diaries: [
-        {
-          title: "첫 번째",
-          tags: "#첫 일기 #행복함 #재밌음"
-        },
-        {
-          title: "세 번째",
-          tags: "#공유신청 #기대됨 #얼른"
-        },
-        {
-          title: "두 번째",
-          tags: "#혼자심심 #공유할까? #지루함"
-        },
-        {
-          title: "일기장 만들었다",
-          tags: "#내가주인 #놀라움 #공유"
-        }
-      ]
+      selectedChan: null
     };
   },
   components: {
@@ -129,8 +85,7 @@ export default {
     ...mapGetters(["getSelectedChan"])
   },
   methods: {
-    ...mapMutations(["setSelectedDiary"]),
-    ...mapActions(["deleteChan"]),
+    ...mapActions(["deleteChan", "bringDiaryDetail"]),
     changeShowAddModal() {
       this.showAddModal = !this.showAddModal;
     },
@@ -147,15 +102,11 @@ export default {
       }
     },
     goDetail(diaryInfo) {
-      this.setSelectedDiary(diaryInfo);
-      router.push("diaryDetail");
+      this.bringDiaryDetail(diaryInfo);
     }
   },
-  created() {
+  beforeMount() {
     this.selectedChan = this.getSelectedChan;
-    if (!this.getSelectedChan) {
-      router.push("/");
-    }
   }
 };
 </script>

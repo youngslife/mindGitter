@@ -1,10 +1,13 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="10" class="diaryName"><h1>일기장1</h1></v-col>
       <v-col cols="2"
         ><v-icon class="back" @click="goHome">fas fa-arrow-left</v-icon></v-col
       >
+      <v-col cols="10" class="diaryName"><h1>일기장1</h1></v-col>
+      <!-- <v-col cols="2"
+        ><v-icon class="back" @click="goHome">fas fa-arrow-left</v-icon></v-col
+      > -->
     </v-row>
     <form class="AddPostForm" @submit.prevent="addPost(postInfo)">
       <div class="AddPostForm">
@@ -51,7 +54,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import router from "@/router";
 // import AWS from "aws-sdk";
 
@@ -79,9 +82,12 @@ export default {
       const files = e.target.files;
       if (files) {
         this.postInfo.file = files[0];
-        this.postInfo.fileName = "test.png";
+        this.postInfo.fileName = String(this.getUserId) + new Date().getTime();
       }
     }
+  },
+  computed: {
+    ...mapGetters(["getUserId"])
   }
 };
 </script>
