@@ -48,7 +48,7 @@ def board_title(request, id):
 
     if channel.create_user_id == request.user.id:
         if request.method == 'PUT':  # update a diary book
-            data = request.data
+            data = request.data.dict()
             data.update({'create_user': request.user.id})
             serializer = ChannelSerializer(channel, data=data)
             if serializer.is_valid():
