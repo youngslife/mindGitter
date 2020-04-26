@@ -1,13 +1,14 @@
 <template>
   <v-container class="hContainer">
     <v-carousel
+      v-if="getChanList"
       :show-arrows="carOption"
       hide-delimiter-background
       delimiter-icon="mdi-minus"
       light
       height="98vh"
     >
-      <v-carousel-item v-for="(item, i) in diaryList" :key="i">
+      <v-carousel-item v-for="(item, i) in getChanList" :key="i">
         <h1>{{ item.title }}</h1>
         <v-img :src="item.cover_image" alt="No Image" class="cImage"></v-img>
         <div class="cSummary">
@@ -37,7 +38,6 @@ export default {
       wHeight: 0,
       wWidth: 0,
       carOption: false,
-      diaryList: [],
       addImg:
         "https://w0.pngwave.com/png/106/279/computer-icons-medicine-health-care-plus-button-png-clip-art.png"
     };
@@ -51,19 +51,19 @@ export default {
       this.bringChanDetail(channelId);
     }
   },
-  // vuex Login 연동
   computed: {
     ...mapGetters(["isLoggedIn", "getChanList"])
   },
   async created() {
     if (!this.isLoggedIn) {
       router.push("/login");
+    } else {
+      await this.bringChanList();
     }
-    await this.bringChanList();
-  },
-  beforeMount() {
-    this.diaryList = this.getChanList;
   }
+  // async beforeMount() {
+  //   await this.bringChanList();
+  // }
 };
 </script>
 

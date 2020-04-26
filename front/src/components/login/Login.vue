@@ -53,7 +53,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["validation", "bringChanList"]),
+    ...mapActions(["validation"]),
     goSignup() {
       router.push("/signup");
     }
@@ -61,9 +61,6 @@ export default {
   computed: {
     ...mapGetters(["getErrors", "isLoading"])
   }
-  // async destroyed() {
-  //   await this.bringChanList();
-  // }
 };
 </script>
 

@@ -167,32 +167,16 @@ const mutations = {
 };
 
 const actions = {
-  bringChanList: ({ commit }) => {
+  async bringChanList({ commit }) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
     };
-    axios.get(HOST + "/channels/", options).then(message => {
-      commit("setChanList", message.data.channels)
-      console.log("이건 직접 받아온 리스트")
-      console.log(message.data.channels)
-      return new Promise((resolve, reject) => {
-        // commit("setChanList", message.data.channels)
-        resolve()
-        reject("데이터를 가져오는데 실패했습니다.")
-        // setTimeout(() => {
-        //   commit("setChanList", message.data.channels)
-        //   resolve()
-        //   reject("데이터를 가져오는데 실패했습니다.")
-        // })
-      })
-      // commit("setChanList", message.data.channels);
+    await axios.get(HOST + "/channels/", options).then(message => {
+      commit("setChanList", message.data.channels);
     });
-    // return new Promise((resolve, reject) => {
-
-    // })
   },
   addChannel: ({ commit }, PostInfo) => {
     commit;
@@ -231,31 +215,25 @@ const actions = {
       router.push("postList");
     });
   },
-  async deleteChan({ dispatch, state }, channelId) {
-    console.log("before")
-    console.log(state.chanList)
+  async deleteChan({ dispatch }, channelId) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
     };
-    await axios.delete(`${HOST}/channels/${channelId}`, options).then(message => {
-      message;
-      // dispatch("bringChanList");
-      alert("성공적으로 삭제되었습니다.");
-      // router.push("/");
-    }).catch(message => {
-      message;
-      alert("삭제 중에 문제가 발생하였습니다.");
-    });
-    dispatch("bringChanList").then(
-      console.log("after bring"), 
-      console.log(state.chanList)
-    );
-    // console.log("after bring")
-    // console.log(state.chanList)
-    router.push("/")
+    await axios
+      .delete(`${HOST}/channels/${channelId}`, options)
+      .then(message => {
+        message;
+        alert("성공적으로 삭제되었습니다.");
+      })
+      .catch(message => {
+        message;
+        alert("삭제 중에 문제가 발생하였습니다.");
+      });
+    await dispatch("bringChanList");
+    router.push("/");
   },
   bringDiaryDetail: ({ commit, getters }, diaryInfo) => {
     const token = sessionStorage.getItem("jwt");
@@ -266,9 +244,8 @@ const actions = {
     };
     axios.get(`${HOST}/posts/${diaryInfo.pk}`, options).then(message => {
       commit("setSelectedDiary", message.data);
-      const selectedChanUser = getters.getSelectedChan.user_set
-      for (let idx=0; idx < selectedChanUser.length; idx++) {
-        console.log(selectedChanUser[idx])
+      const selectedChanUser = getters.getSelectedChan.user_set;
+      for (let idx = 0; idx < selectedChanUser.length; idx++) {
         if (selectedChanUser[idx].id === message.data.user_id) {
           commit("setWriterInfo", selectedChanUser[idx]);
         }
