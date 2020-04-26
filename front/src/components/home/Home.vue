@@ -61,9 +61,6 @@ export default {
       await this.bringChanList();
     }
   }
-  // async beforeMount() {
-  //   await this.bringChanList();
-  // }
 };
 </script>
 

@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="2"
-        ><v-icon class="back" @click="goHome">fas fa-arrow-left</v-icon></v-col
+        ><v-icon class="back" @click="goList">fas fa-arrow-left</v-icon></v-col
       >
       <v-col cols="10" class="diaryName"><h1>일기장1</h1></v-col>
       <!-- <v-col cols="2"
@@ -75,8 +75,8 @@ export default {
   },
   methods: {
     ...mapActions(["addPost"]),
-    goHome() {
-      router.push("/");
+    goList() {
+      router.push("/postList");
     },
     async onFileChange(e) {
       const files = e.target.files;

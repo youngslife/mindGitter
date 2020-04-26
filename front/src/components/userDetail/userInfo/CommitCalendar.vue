@@ -1,7 +1,7 @@
 <template>
   <div class="commitCalendar">
     <v-container @click="check">
-      <v-row>
+      <!-- <v-row>
         <div class="first"></div>
         <div class="first">Mon</div>
         <div class="first"></div>
@@ -24,6 +24,150 @@
       </v-row>
       <v-row>
         <div :class="nemo" v-for="(nemo, i) in commitData.nemos.slice(28, 35)" :key="i"></div>
+      </v-row> -->
+      <!-- 월 -->
+      <v-row class="month">
+        <v-col class="first"></v-col>
+        <v-col></v-col>
+        <v-col></v-col>
+        <v-col>
+          <div class="first">Feb</div>
+        </v-col>
+        <v-col></v-col>
+        <v-col></v-col>
+        <v-col></v-col>
+        <v-col></v-col>
+        <v-col>
+          <div class="first">Mar</div>
+        </v-col>
+        <v-col></v-col>
+        <v-col></v-col>
+        <v-col></v-col>
+        <v-col></v-col>
+        <v-col>
+          <div class="first">Apr</div>
+        </v-col>
+        <v-col></v-col>
+        <v-col></v-col>
+      </v-row>
+      <v-row>
+        <v-col class="first">
+          <div class="first"></div>
+          <div class="first">Mon</div>
+          <div class="first"></div>
+          <div class="first">Wed</div>
+          <div class="first"></div>
+          <div class="first">Fri</div>
+          <div class="first"></div>
+        </v-col>
+        <!-- 2월 -->
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
+            :key="i"
+          ></div>
+        </v-col>
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(7, 14)"
+            :key="i"
+          ></div>
+        </v-col>
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(14, 21)"
+            :key="i"
+          ></div>
+        </v-col>
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(21, 28)"
+            :key="i"
+          ></div>
+        </v-col>
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
+            :key="i"
+          ></div>
+        </v-col>
+        <!-- 3월 -->
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
+            :key="i"
+          ></div>
+        </v-col>
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
+            :key="i"
+          ></div>
+        </v-col>
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
+            :key="i"
+          ></div>
+        </v-col>
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
+            :key="i"
+          ></div>
+        </v-col>
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
+            :key="i"
+          ></div>
+        </v-col>
+        <!-- 4월 -->
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
+            :key="i"
+          ></div>
+        </v-col>
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
+            :key="i"
+          ></div>
+        </v-col>
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
+            :key="i"
+          ></div>
+        </v-col>
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
+            :key="i"
+          ></div>
+        </v-col>
+        <v-col>
+          <div
+            :class="nemo"
+            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
+            :key="i"
+          ></div>
+        </v-col>
       </v-row>
     </v-container>
   </div>
@@ -36,7 +180,7 @@ export default {
   name: "commitCalendar",
   data() {
     return {
-      commitData:{ 
+      commitData: {
         commitInfo: null,
         commitDates: null,
         nemos: null
