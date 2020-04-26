@@ -1,8 +1,0 @@
-stages:
-  - build
-
-job-build:
-  stage: build
-  script:
-    - docker build .
-    - docker push ghleokim/ai-302-backend:$CI_COMMIT_REF_SLUG
