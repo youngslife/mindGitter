@@ -27,7 +27,7 @@ class UserTagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserTag
-        fields = ('content_object_id', 'tag_id')
+        fields = ('content_object_id', 'tag_id', 'count')
 
 
 # class PostSerializer(TaggitSerializer, serializers.ModelSerializer):

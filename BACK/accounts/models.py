@@ -23,7 +23,8 @@ class User(AbstractUser):
 
 
 class UserTag(TaggedItemBase):
-    content_object = models.ForeignKey('User', on_delete=models.CASCADE)
+    content_object = models.ForeignKey('User', on_delete=models.CASCADE) # user
+    count = models.IntegerField(default=1)
 
 
 class UserEmotion(models.Model):
