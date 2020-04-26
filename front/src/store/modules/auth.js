@@ -10,7 +10,7 @@ const state = {
   userName: null,
   userId: null,
   userInfoSet: null,
-  userImgModal: false
+  userImgModal: false,
 };
 
 const getters = {
@@ -20,7 +20,7 @@ const getters = {
   getUserName: state => state.userName,
   getUserId: state => state.userId,
   getUserInfoSet: state => state.userInfoSet,
-  getUserImgModal: state => state.userImgModal
+  getUserImgModal: state => state.userImgModal,
 };
 
 const mutations = {
@@ -118,7 +118,7 @@ const actions = {
               {
                 headers: {
                   "Content-Type": "application/json",
-                  Accept: "application/json"
+                  Accept: "application/json",
                 }
               }
             )

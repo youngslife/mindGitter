@@ -26,7 +26,7 @@
           ><br />
           <input type="file" id="postvideo" @change="onFileChange" />
           <div class="preview">
-            영상 사진
+            <video class="videoPreview" :src="videoTempUrl" controls="controls"/>
           </div>
         </ul>
         <ul id="posttag">
@@ -56,7 +56,6 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import router from "@/router";
-// import AWS from "aws-sdk";
 
 export default {
   name: "createDiary",
@@ -66,11 +65,14 @@ export default {
         title: null,
         video: null,
         tags: null,
+        context: "context",
+        cover_image: "cover_image",
         possible: false,
         saveVideo: false,
         file: null,
         fileName: null
-      }
+      },
+      videoTempUrl: null,
     };
   },
   methods: {
@@ -81,8 +83,11 @@ export default {
     async onFileChange(e) {
       const files = e.target.files;
       if (files) {
-        this.postInfo.file = files[0];
-        this.postInfo.fileName = String(this.getUserId) + new Date().getTime();
+        const file = files[0];
+        this.postInfo.file = file
+        this.postInfo.fileName = String(this.getUserId) + new Date().getTime() +'.mp4';
+        const blobFile = new Blob([file], {"type": file.type})
+        this.videoTempUrl = URL.createObjectURL(blobFile)
       }
     }
   },

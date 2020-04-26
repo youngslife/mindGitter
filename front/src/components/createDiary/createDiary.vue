@@ -1,14 +1,14 @@
 <template>
   <div class="createDiary">
     <v-icon class="back" @click="goHome">fas fa-arrow-left</v-icon>
-    <form class="AddDiaryForm" @submit.prevent="addChannel(diaryInfo)">
+    <form class="AddDiaryForm" @submit.prevent="addChannel(PostInfo)">
       <div class="AddDiaryForm">
         <h1>Add Diary</h1>
         <ul id="diarytitle">
           <label for="diarytitle">Diary Title</label
           ><br />
           <input
-            v-model="diaryInfo.title"
+            v-model="PostInfo.title"
             type="text"
             id="diarytitle"
             placeholder="제목"
@@ -18,7 +18,7 @@
           <label for="diarydescription">Description</label
           ><br />
           <input
-            v-model="diaryInfo.description"
+            v-model="PostInfo.description"
             type="text"
             id="diarydescription"
             placeholder="다이어리 설명"
@@ -36,32 +36,36 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import router from "@/router";
 
 export default {
   name: "createDiary",
   data() {
     return {
-      diaryInfo: {
+      PostInfo: {
         title: null,
-        image: null,
-        description: null
+        description: null,
+        file: null,
+        fileName: null
       }
     };
   },
+  computed: {
+    ...mapGetters(["getUserId"])
+  },
   methods: {
     ...mapActions(["addChannel"]),
-    goHome() {
-      router.push("/");
-    },
     onFileChange(e) {
       const files = e.target.files;
       if (files) {
-        this.diaryInfo.image = files[0];
-        console.log(files[0]);
+        this.PostInfo.file = files[0];
+        this.PostInfo.fileName = String(this.getUserId) + new Date().getTime() +'.jpg'; 
       }
-    }
+    },
+    goHome() {
+      router.push("/");
+    },
   }
 };
 </script>

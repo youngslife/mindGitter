@@ -10,7 +10,7 @@
     >
       <v-carousel-item v-for="(item, i) in getChanList" :key="i">
         <h1>{{ item.title }}</h1>
-        <v-img :src="item.cover_image" alt="No Image" class="cImage"></v-img>
+        <v-img :src="imgAddr+item.cover_image" alt="No Image" class="cImage"></v-img>
         <div class="cSummary">
           <h2>Summary of Diary</h2>
           <p>{{ item.description }}</p>
@@ -37,6 +37,7 @@ export default {
     return {
       wHeight: 0,
       wWidth: 0,
+      imgAddr: process.env.VUE_APP_STATIC_ADDR+"channel/",
       carOption: false,
       addImg:
         "https://w0.pngwave.com/png/106/279/computer-icons-medicine-health-care-plus-button-png-clip-art.png"
