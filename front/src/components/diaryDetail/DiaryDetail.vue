@@ -1,9 +1,11 @@
 <template>
   <div class="dairyDetail">
     <v-icon class="back" @click="goPostList">fas fa-arrow-left</v-icon>
-    <h1>{{ getSelectedChan }}</h1>
-    <div class="video">
-      <!-- <my-video :sources="video.sources" :options="video.options"></my-video> -->
+    <h1>{{ getSelectedChan.title }}</h1>
+    <div class="video" v-for="(video, i) in videos" :key="i">
+      <video width="100%" height="100%" controls class="dvideo">
+        <source :src="selectedDiary.video_file" :type="video.type" />
+      </video>
     </div>
     <div class="temp"></div>
     <v-tabs fixed-tabs>
@@ -11,11 +13,32 @@
         mode
       }}</v-tab>
     </v-tabs>
-    <div class="text">
+    <div class="text" v-if="selectedMode == 'Detail'">
       <h3>{{ selectedDiary.title }}</h3>
-      <span>{{ selectedDiary.tags }}</span>
-      <br />
+      <div class="tags">
+        <span v-for="(tag, idx) in selectedDiary.tags" :key="idx"
+          >#{{ tag }} </span
+        >
+      </div>
+      <div class="context">
+        {{ selectedDiary.context }}
+      </div>
+      <!-- <div class="additionalInfo">
+        <span>작성자: {{ getWriterInfo.username }}</span>
+        <br />
+        <span>작성시간: {{ `${selectedDiary.created_at.slice(0, 10)}  ${selectedDiary.created_at.slice(11, 16)}` }}</span>
+      </div> -->
+    </div>
+    <div class="text" v-if="selectedMode == 'Analysis'">
       <span>{{ selectedMode }}</span>
+    </div>
+    <div class="text" v-if="selectedMode == 'Comment'">
+      <span>{{ selectedMode }}</span>
+    </div>
+    <div class="additionalInfo">
+      <span>작성자: {{ getWriterInfo.username }}</span>
+      <br />
+      <span>작성시간: {{ `${selectedDiary.created_at.slice(0, 10)}  ${selectedDiary.created_at.slice(11, 16)}` }}</span>
     </div>
   </div>
 </template>
@@ -24,8 +47,6 @@
 import router from "@/router";
 import { mapGetters } from "vuex";
 
-// import myVideo from "vue-video";
-
 export default {
   name: "DiaryDetail",
   data() {
@@ -33,26 +54,19 @@ export default {
       modes: ["Detail", "Analysis", "Comment"],
       selectedMode: "Detail",
       selectedDiary: "",
-      video: {
-        sources: [
-          {
-            src: "../assets/test.mp4",
-            type: "video/mp4"
-          }
-        ],
-        options: {
-          autoplay: true,
-          volume: 0.6
-          // poster: "https://www.youtube.com/watch?v=1C7IXEejZeU"
+      videoURL:
+        "https://mind-gitter-diary.s3.ap-northeast-2.amazonaws.com/diary/diary.mp4",
+      videos: [
+        {
+          name: require("../../assets/test/Clouds.mp4"),
+          type: "video/mp4"
         }
-      }
+      ],
+      writer: null
     };
   },
-  components: {
-    // myVideo
-  },
   computed: {
-    ...mapGetters(["getSelectedChan", "getSelectedDiary"])
+    ...mapGetters(["getSelectedChan", "getSelectedDiary", "getWriterInfo"])
   },
   methods: {
     goPostList() {
@@ -64,6 +78,9 @@ export default {
   },
   created() {
     this.selectedDiary = this.getSelectedDiary;
+    console.log(this.selectedDiary.video_file)
+    // console.log(this.selectedDiary)
+    // console.log(this.getSelectedChan)
   }
 };
 </script>

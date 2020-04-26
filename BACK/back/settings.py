@@ -27,7 +27,10 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = [
+#     '13.125.177.238',
+#     'mind-gitter.me',
+# ]
 
 # REST_framework 설정
 REST_FRAMEWORK = {
@@ -35,7 +38,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.IsAdminUser',
         'rest_framework.permissions.AllowAny',
-
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
@@ -79,6 +81,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    # tag기능
+    'taggit',
+    # 'taggit.apps.TaggitAppConfig',
+    # 'taggit_templatetags2',
+    'taggit_serializer',
 ]
 
 MIDDLEWARE = [
@@ -98,7 +105,8 @@ MIDDLEWARE = [
 # cors header setting
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:8080"
+    "http://localhost:8080",
+    "http://mind-gitter.me"
 ]
 CORS_ALLOW_METHODS = (
     'DELETE',
@@ -151,7 +159,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
             'read_default_file': os.path.join(BASE_DIR, "mysql.cnf"),
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         }
     }
 }
@@ -179,9 +187,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-US'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -198,9 +206,20 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'accounts.User'
 
 # sign up
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 SITE_ID = 1
+
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_EMAIL_REQUIRED = False
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+OLD_PASSWORD_FIELD_ENABLED = True
+LOGOUT_ON_PASSWORD_CHANGE = False
 
 # media
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Tag
+TAGGIT_CASE_INSENSITIVE = True # 태그 대소문자 구분안함
+# TAGGIT_LIMIT =  # 태그 클라우드에 나타나는 태그 최대 개수

@@ -1,7 +1,7 @@
 <template>
   <div class="createDiary">
     <v-icon class="back" @click="goHome">fas fa-arrow-left</v-icon>
-    <form class="AddDiaryForm" @submit.prevent="addDiary(diaryInfo)">
+    <form class="AddDiaryForm" @submit.prevent="addChannel(diaryInfo)">
       <div class="AddDiaryForm">
         <h1>Add Diary</h1>
         <ul id="diarytitle">
@@ -51,7 +51,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["addDiary"]),
+    ...mapActions(["addChannel"]),
     goHome() {
       router.push("/");
     },
@@ -59,6 +59,7 @@ export default {
       const files = e.target.files;
       if (files) {
         this.diaryInfo.image = files[0];
+        console.log(files[0]);
       }
     }
   }

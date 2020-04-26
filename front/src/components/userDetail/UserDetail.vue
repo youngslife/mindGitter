@@ -3,6 +3,15 @@
     <v-container class="userCon">
       <UserHead />
       <UserInfo />
+      <v-card v-if="getUserImgModal" @close="setUserImgModal(false)">
+        <v-card-title>프로필 사진</v-card-title>
+        <input type="file" />
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn class="save" @click="setUserImgModal(false)">저장</v-btn>
+          <v-btn class="close" @click="setUserImgModal(false)">닫기</v-btn>
+        </v-card-actions>
+      </v-card>
       <CommitCalendar />
       <div class="emotion">
         <h3>Emotion</h3>
@@ -26,7 +35,7 @@ import Nav from "../nav/Nav.vue";
 import UserHead from "./userInfo/UserHead.vue";
 import UserInfo from "./userInfo/UserInfo.vue";
 import CommitCalendar from "./userInfo/CommitCalendar";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "UserDetail",
@@ -37,10 +46,11 @@ export default {
     CommitCalendar
   },
   computed: {
-    ...mapGetters(["getUserName", "isLoggedIn"])
+    ...mapGetters(["getUserName", "isLoggedIn", "getUserImgModal"])
   },
   methods: {
-    ...mapActions(["logout"])
+    ...mapActions(["logout"]),
+    ...mapMutations(["setUserImgModal"])
   }
 };
 </script>

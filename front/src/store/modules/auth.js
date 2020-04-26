@@ -7,14 +7,20 @@ const state = {
   token: null,
   errors: [],
   loading: false,
-  userName: null
-}; 
+  userName: null,
+  userId: null,
+  userInfoSet: null,
+  userImgModal: false
+};
 
 const getters = {
   isLoggedIn: state => !!state.token,
   getErrors: state => state.errors,
   isLoading: state => state.loading,
-  getUserName: state => state.userName
+  getUserName: state => state.userName,
+  getUserId: state => state.userId,
+  getUserInfoSet: state => state.userInfoSet,
+  getUserImgModal: state => state.userImgModal
 };
 
 const mutations = {
@@ -25,7 +31,10 @@ const mutations = {
   },
   pushError: (state, error) => state.errors.push(error),
   clearErrors: state => (state.errors = []),
-  setUserName: (state, userName) => (state.userName = userName)
+  setUserName: (state, userName) => (state.userName = userName),
+  setUserId: (state, userId) => (state.userId = userId),
+  setUserInfoSet: (state, userInfoSet) => (state.userInfoSet = userInfoSet),
+  setUserImgModal: (state, userImgModal) => (state.userImgModal = userImgModal)
 };
 
 const actions = {
@@ -35,12 +44,10 @@ const actions = {
     sessionStorage.removeItem("jwt");
     router.push("/login");
   },
-
   pushError: ({ commit }, error) => {
     commit("pushError", error);
   },
-
-  login: ({ commit, getters }, { username, password }) => {
+  login: ({ commit, getters, dispatch }, { username, password }) => {
     if (getters.isLoggedIn) {
       router.push("/");
     } else {
@@ -59,6 +66,8 @@ const actions = {
           commit("setToken", token.data.token);
           commit("setLoading", false);
           commit("setUserName", username);
+          commit("setUserId", token.data.user.pk);
+          dispatch("bringUserInfoSet");
           router.push("/");
         })
         .catch(err => {
@@ -134,11 +143,17 @@ const actions = {
       }
     }
   },
-  initialLogin: ({ commit }) => {
+  bringUserInfoSet: ({ commit }) => {
+    commit;
     const token = sessionStorage.getItem("jwt");
-    if (token) {
-      commit("setToken", token);
-    }
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    axios.get(`${HOST}/api/current_user`, options).then(message => {
+      console.log(message.data);
+    });
   },
   validation: ({ commit, dispatch }, { username, password }) => {
     commit("setLoading", false);
