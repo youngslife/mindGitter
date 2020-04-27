@@ -11,10 +11,26 @@ const state = {
   userId: null,
   userInfoSet: null,
   userImgModal: false,
-  commitDates: [new Date().getFullYear(), new Date().getMonth() + 1],
+  commitDates: [new Date().getFullYear(), new Date().getMonth()],
   commitInfo: null,
+  indexDict: null,
   userProfile: null,
-  s3: {}
+  s3: {},
+  months: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec"
+  ],
+  targetMonths: null
 };
 
 const getters = {
@@ -27,7 +43,8 @@ const getters = {
   getUserImgModal: state => state.userImgModal,
   getCommitDates: state => state.commitDates,
   getCommitInfo: state => state.commitInfo,
-  getUserProfile: state => state.userProfile
+  getUserProfile: state => state.userProfile,
+  getTargetMonths: state => state.targetMonths
 };
 
 const mutations = {
@@ -42,34 +59,13 @@ const mutations = {
   setUserId: (state, userId) => (state.userId = userId),
   setUserInfoSet: (state, userInfoSet) => (state.userInfoSet = userInfoSet),
   setUserImgModal: (state, userImgModal) => (state.userImgModal = userImgModal),
-  setNemos: (state, commitData) => {
-    let results = [];
-    for (let i = 0; i < 105; i++) {
-      results.push("nemo");
-    }
-    const pre = new Date(
-      `${commitData.commitDates[0]}-${commitData.commitDates[1]}-01`
-    ).getDay();
-    const lastDay = new Date(
-      commitData.commitDates[0],
-      commitData.commitDates[1],
-      0
-    ).getDate();
-    for (let cnt = 0; cnt < 35; cnt++) {
-      if (cnt >= pre && cnt <= lastDay) {
-        if (commitData.commitInfo[0][`${cnt}일`]) {
-          results[cnt] = "red";
-        } else {
-          results[cnt] = "nemo";
-        }
-      }
-    }
-    state.nemos = results;
-  },
   setUserProfile: (state, userProfile) => (state.userProfile = userProfile),
   sets3: (state, s3) => {
     state.s3 = s3;
-  }
+  },
+  setCommitInfo: (state, commitInfo) => (state.commitInfo = commitInfo),
+  setIndexDict: (state, indexDict) => (state.indexDict = indexDict),
+  setTargetMonths: (state, targetMonths) => (state.targetMonths = targetMonths)
 };
 
 const actions = {
@@ -98,13 +94,13 @@ const actions = {
           }
         )
         .then(token => {
-          console.log(state.commitDates) // [2020, 04]
-          console.log(token)
+          console.log(state.commitDates); // [2020, 04]
+          console.log(token);
           commit("setToken", token.data.token);
           commit("setLoading", false);
           commit("setUserName", username);
           commit("setUserId", token.data.user.pk);
-          dispatch("bringUserInfoSet");
+          dispatch("preprocessingCommit");
           router.push("/");
         })
         .catch(err => {
@@ -180,20 +176,68 @@ const actions = {
       }
     }
   },
-  bringUserInfoSet: ({ state, commit }) => {
+  preprocessingCommit({ state, commit }) {
+    commit;
+    let targetMonths = [];
+    const dates = new Date(state.commitDates[0], state.commitDates[1] + 1, 0);
+    const nowEndYoil = dates.getDay();
+
+    dates.setDate(dates.getDate() + 6 - nowEndYoil);
+
+    const temp = new Date(state.commitDates[0], state.commitDates[1], 1);
+    dates.setDate(dates.getDate() - 146);
+
+    for (let i = 0; i < 5; i++) {
+      targetMonths.push(
+        `${temp.getFullYear()} - ${state.months[temp.getMonth()]}`
+      );
+      temp.setMonth(temp.getMonth() - 1);
+    }
+    commit("setTargetMonths", targetMonths);
+
+    let indexDict = {};
+
+    for (let i = 0; i < 147; i++) {
+      if (dates.getMonth() < 9) {
+        indexDict[
+          `${dates.getFullYear()}-0${dates.getMonth() + 1}-${dates.getDate()}`
+        ] = i;
+      } else {
+        indexDict[
+          `${dates.getFullYear()}-${dates.getMonth() + 1}-${dates.getDate()}`
+        ] = i;
+      }
+      dates.setDate(dates.getDate() + 1);
+    }
+    commit("setIndexDict", indexDict);
+    let commitInfo = [];
+    for (let i = 0; i < 147; i++) {
+      commitInfo.push("nemo");
+    }
+    commit("setCommitInfo", commitInfo);
+
+    console.log(targetMonths);
+    console.log(indexDict);
+  },
+  async bringUserInfoSet({ commit }) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
     };
-    axios.get(`${HOST}/api/current_user`, options).then(message => {
-      console.log(message.data);
-      commit("setUserInfoSet", message.data);
-      if (state.commitDates[1] > 3) {
-        const startMonth = state.commitDates[1] - 3;
+    const message = await axios.get(`${HOST}/api/current_user`, options);
+    commit("setUserInfoSet", message.data);
+    let commitInfo = [];
+    for (let i = 0; i < 147; i++) {
+      commitInfo.push("nemo");
+    }
+    for (const post of message.data.post_set) {
+      if (commitInfo[state.indexDict[post.created_at.slice(0, 10)]] == "nemo") {
+        commitInfo[state.indexDict[post.created_at.slice(0, 10)]] = "done";
       }
-    });
+    }
+    commit("setCommitInfo", commitInfo);
   },
   validation: ({ commit, dispatch }, { username, password }) => {
     commit("setLoading", false);
@@ -218,12 +262,12 @@ const actions = {
     });
     const s3 = new AWS.S3({
       apiVersion: "2006-03-01",
-      params: { Bucket: process.env.VUE_APP_BUCKET_NAME+'/'+type }
+      params: { Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type }
     });
     commit("sets3", s3);
   },
   async updates3({ commit }, PostInfo) {
-    console.log('upadates3', PostInfo)
+    console.log("upadates3", PostInfo);
     const s3 = state.s3;
     const params = {
       Key: PostInfo.fileName,
@@ -234,34 +278,34 @@ const actions = {
     console.log(res);
     commit("sets3", {});
   },
-  async bringUserProfile ({ commit }) {
+  async bringUserProfile({ commit }) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
     };
-    const res = await axios.get(`${HOST}/api/profile_img/`, options)
-    console.log("bringUserProfile", res.data)
-    commit("setUserProfile", res.data.profile_img)
+    const res = await axios.get(`${HOST}/api/profile_img/`, options);
+    console.log("bringUserProfile", res.data);
+    commit("setUserProfile", res.data.profile_img);
   },
-  async updateUserInfo ({ commit, dispatch }, PostInfo) {
-    console.log('addChannel', PostInfo)
-    await dispatch("s3Init", 'profile');
+  async updateUserInfo({ commit, dispatch }, PostInfo) {
+    console.log("addChannel", PostInfo);
+    await dispatch("s3Init", "profile");
     await dispatch("updates3", PostInfo);
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
-    }
+    };
     const body = {
       profile_img: PostInfo.fileName
-    }
-    const res = await axios.put(`${HOST}/api/profile_img/`, body, options)
-    console.log(res)
-    await dispatch("bringUserProfile")
-    commit("setUserImgModal", false)
+    };
+    const res = await axios.put(`${HOST}/api/profile_img/`, body, options);
+    console.log(res);
+    await dispatch("bringUserProfile");
+    commit("setUserImgModal", false);
   }
 };
 

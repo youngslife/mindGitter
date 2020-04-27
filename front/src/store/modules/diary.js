@@ -46,9 +46,9 @@ const actions = {
       commit("setChanList", message.data.channels);
     });
   },
-  async addChannel ({ dispatch }, PostInfo) {
-    console.log('addChannel', PostInfo)
-    await dispatch("s3Init", 'channel');
+  async addChannel({ dispatch, commit }, PostInfo) {
+    console.log("addChannel", PostInfo);
+    await dispatch("s3Init", "channel");
     await dispatch("updates3", PostInfo);
     const token = sessionStorage.getItem("jwt");
     const options = {
@@ -56,16 +56,16 @@ const actions = {
         "Content-Type": "application/json",
         Authorization: "JWT " + token
       }
-    }
-    const body =
-    {
+    };
+    const body = {
       title: PostInfo.title,
       cover_image: PostInfo.fileName,
       description: PostInfo.description
-    }
-    console.log('body', body)
-    const res = await axios.post(HOST + "/channels/", body, options)
-    console.log(res)
+    };
+    console.log("body", body);
+    const res = await axios.post(HOST + "/channels/", body, options);
+    console.log(res);
+    await commit("setChanList", null);
     router.push("/");
   },
   bringChanDetail: ({ commit }, channelId) => {
@@ -129,12 +129,12 @@ const actions = {
     });
     const s3 = new AWS.S3({
       apiVersion: "2006-03-01",
-      params: { Bucket: process.env.VUE_APP_BUCKET_NAME+'/'+type }
+      params: { Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type }
     });
     commit("sets3", s3);
   },
   async updates3({ commit }, PostInfo) {
-    console.log('upadates3', PostInfo)
+    console.log("upadates3", PostInfo);
     const s3 = state.s3;
     const params = {
       Key: PostInfo.fileName,
@@ -147,26 +147,26 @@ const actions = {
   },
   // async addPost({ getters }, PostInfo) {
   async addPost({ dispatch, getters }, PostInfo) {
-    await dispatch("s3Init", 'diary');
+    await dispatch("s3Init", "diary");
     await dispatch("updates3", PostInfo);
     const token = sessionStorage.getItem("jwt");
-    const tags = PostInfo.tags
+    const tags = PostInfo.tags;
     const body = {
-      title : PostInfo.title,
-      context : PostInfo.context,
-      video_file : PostInfo.fileName,
-      tags: "["+'"'+tags+'"'+"]",
+      title: PostInfo.title,
+      context: PostInfo.context,
+      video_file: PostInfo.fileName,
+      tags: "[" + '"' + tags + '"' + "]",
       cover_image: PostInfo.cover_image,
       channel_id: parseInt(getters.getSelectedChan.id)
-    }
-    console.log('bodybody', body)
+    };
+    console.log("bodybody", body);
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
     };
-    const res = await axios.post(HOST + "/posts/", body, options)
-    console.log('res', res)
+    const res = await axios.post(HOST + "/posts/", body, options);
+    console.log("res", res);
     router.push("/postList");
   }
 };

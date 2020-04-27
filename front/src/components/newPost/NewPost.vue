@@ -26,7 +26,11 @@
           ><br />
           <input type="file" id="postvideo" @change="onFileChange" />
           <div class="preview">
-            <video class="videoPreview" :src="videoTempUrl" controls="controls"/>
+            <video
+              class="videoPreview"
+              :src="videoTempUrl"
+              controls="controls"
+            />
           </div>
         </ul>
         <ul id="posttag">
@@ -72,7 +76,7 @@ export default {
         file: null,
         fileName: null
       },
-      videoTempUrl: null,
+      videoTempUrl: null
     };
   },
   methods: {
@@ -84,10 +88,11 @@ export default {
       const files = e.target.files;
       if (files) {
         const file = files[0];
-        this.postInfo.file = file
-        this.postInfo.fileName = String(this.getUserId) + new Date().getTime() +'.mp4';
-        const blobFile = new Blob([file], {"type": file.type})
-        this.videoTempUrl = URL.createObjectURL(blobFile)
+        this.postInfo.file = file;
+        this.postInfo.fileName =
+          String(this.getUserId) + new Date().getTime() + ".mp4";
+        const blobFile = new Blob([file], { type: file.type });
+        this.videoTempUrl = URL.createObjectURL(blobFile);
       }
     }
   },

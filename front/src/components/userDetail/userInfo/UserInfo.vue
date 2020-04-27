@@ -20,24 +20,25 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
-        // src="../../../assets/basic_userImage.png"
+// src="../../../assets/basic_userImage.png"
 export default {
   data() {
     return {
-      profileAddr: process.env.VUE_APP_STATIC_ADDR+"profile/",
-    }
+      profileAddr: process.env.VUE_APP_STATIC_ADDR + "profile/"
+    };
   },
   methods: {
     ...mapMutations(["setUserImgModal"]),
     showProfile() {
-      console.log(this.profileAddr+this.getUserProfile)
-      return this.getUserProfile ? this.profileAddr+this.getUserProfile : require("../../../assets/basic_userImage.png")
+      console.log(this.profileAddr + this.getUserProfile);
+      return this.getUserProfile
+        ? this.profileAddr + this.getUserProfile
+        : require("../../../assets/basic_userImage.png");
     }
   },
   computed: {
     ...mapActions(["bringUserProfile"]),
     ...mapGetters(["getUserProfile"])
-    
   }
 };
 </script>
