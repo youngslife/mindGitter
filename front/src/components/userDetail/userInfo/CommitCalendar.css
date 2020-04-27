@@ -1,5 +1,89 @@
+/* div.commitCalendar{
+  margin-top: 2vh;
+  width: 100%;
+  height: 20vh;
+}
+
+div.nemo{
+  width: 11px;
+  height: 11px;
+  margin:3px;
+  background-color: #e9e9e9;
+}
+
+div.container{
+  border: 1px solid;
+  height: 110px;
+  padding: 4px;
+}
+
+div.row{
+  position: relative;
+  left: 15px;
+}
+
+div.red{
+  width: 11px;
+  height: 11px;
+  margin:3px;
+  font-size: 5px;
+  background-color: #aafed8;
+}
+
+div.first{
+  width: 11px;
+  height: 11px;
+  margin:3px;
+  font-size: 5px;
+} */
+
 div.commitCalendar{
-    margin-top: 2vh;
-    width: 100%;
-    height: 20vh;
-  }
+  margin-top: 2vh;
+  width: 100%;
+  height: 23vh;
+}
+
+div.nemo{
+  width: 11px;
+  height: 11px;
+  margin:3px;
+  background-color: #e9e9e9;
+}
+
+div.container{
+  border: 1px solid;
+  height: 135px;
+  padding: 4px;
+}
+
+div.row{
+  position: relative;
+  left: 15px;
+}
+
+div.col.first{
+  margin: 5px;
+}
+
+div.col{
+  padding: 0;
+}
+
+.col{
+  max-width: 4%;
+}
+
+div.red{
+  width: 11px;
+  height: 11px;
+  margin:3px;
+  font-size: 5px;
+  background-color: #aafed8;
+}
+
+div.first{
+  width: 11px;
+  height: 11px;
+  margin:3px;
+  font-size: 5px;
+}

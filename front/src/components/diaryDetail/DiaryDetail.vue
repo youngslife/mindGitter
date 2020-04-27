@@ -1,19 +1,42 @@
 <template>
   <div class="dairyDetail">
     <v-icon class="back" @click="goPostList">fas fa-arrow-left</v-icon>
-    <h1>{{ getSelectedChan }}</h1>
-    <div class="video"></div>
+    <h1>{{ getSelectedChan.title }}</h1>
+    <video width="100%" height="255px" controls class="dvideo">
+      <source :src="videoAddr+selectedDiary.video_file"/>
+    </video>
     <div class="temp"></div>
     <v-tabs fixed-tabs>
       <v-tab v-for="mode in modes" :key="mode" @click="changeMode(mode)">{{
         mode
       }}</v-tab>
     </v-tabs>
-    <div class="text">
+    <div class="text" v-if="selectedMode == 'Detail'">
       <h3>{{ selectedDiary.title }}</h3>
-      <span>{{ selectedDiary.tags }}</span>
-      <br />
+      <div class="tags">
+        <span v-for="(tag, idx) in selectedDiary.tags" :key="idx"
+          >#{{ tag }} </span
+        >
+      </div>
+      <div class="context">
+        {{ selectedDiary.context }}
+      </div>
+      <!-- <div class="additionalInfo">
+        <span>작성자: {{ getWriterInfo.username }}</span>
+        <br />
+        <span>작성시간: {{ `${selectedDiary.created_at.slice(0, 10)}  ${selectedDiary.created_at.slice(11, 16)}` }}</span>
+      </div> -->
+    </div>
+    <div class="text" v-if="selectedMode == 'Analysis'">
       <span>{{ selectedMode }}</span>
+    </div>
+    <div class="text" v-if="selectedMode == 'Comment'">
+      <span>{{ selectedMode }}</span>
+    </div>
+    <div class="additionalInfo">
+      <span>작성자: {{ getWriterInfo.username }}</span>
+      <br />
+      <span>작성시간: {{ `${selectedDiary.created_at.slice(0, 10)}  ${selectedDiary.created_at.slice(11, 16)}` }}</span>
     </div>
   </div>
 </template>
@@ -28,11 +51,13 @@ export default {
     return {
       modes: ["Detail", "Analysis", "Comment"],
       selectedMode: "Detail",
-      selectedDiary: ""
+      selectedDiary: "",
+      videoAddr: process.env.VUE_APP_STATIC_ADDR+"diary/",
+      writer: null
     };
   },
   computed: {
-    ...mapGetters(["getSelectedChan", "getSelectedDiary"])
+    ...mapGetters(["getSelectedChan", "getSelectedDiary", "getWriterInfo"])
   },
   methods: {
     goPostList() {
@@ -44,6 +69,9 @@ export default {
   },
   created() {
     this.selectedDiary = this.getSelectedDiary;
+    console.log(this.selectedDiary.video_file)
+    // console.log(this.selectedDiary)
+    // console.log(this.getSelectedChan)
   }
 };
 </script>

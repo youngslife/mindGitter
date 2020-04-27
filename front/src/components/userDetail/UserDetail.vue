@@ -3,6 +3,15 @@
     <v-container class="userCon">
       <UserHead />
       <UserInfo />
+      <v-card v-if="getUserImgModal" @close="setUserImgModal(false)">
+        <v-card-title>프로필 사진</v-card-title>
+        <input type="file" @change="onFileChange"/>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn class="save" @click="updateUserInfo(PostInfo)">저장</v-btn>
+          <v-btn class="close" @click="setUserImgModal(false)">닫기</v-btn>
+        </v-card-actions>
+      </v-card>
       <CommitCalendar />
       <div class="emotion">
         <h3>Emotion</h3>
@@ -26,7 +35,7 @@ import Nav from "../nav/Nav.vue";
 import UserHead from "./userInfo/UserHead.vue";
 import UserInfo from "./userInfo/UserInfo.vue";
 import CommitCalendar from "./userInfo/CommitCalendar";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "UserDetail",
@@ -34,13 +43,29 @@ export default {
     Nav,
     UserHead,
     UserInfo,
-    CommitCalendar,
+    CommitCalendar
+  },
+  data() {
+    return {
+      PostInfo: {
+        file:null,
+        fileName:null
+      }
+    }
   },
   computed: {
-    ...mapGetters(["getUserName", "isLoggedIn"])
+    ...mapGetters(["getUserName", "getUserId", "isLoggedIn", "getUserImgModal"]),
   },
   methods: {
-    ...mapActions(["logout"])
+    ...mapActions(["logout", "updateUserInfo"]),
+    ...mapMutations(["setUserImgModal"]),
+    onFileChange(e) {
+      const files = e.target.files;
+      if (files) {
+        this.PostInfo.file = files[0];
+        this.PostInfo.fileName = String(this.getUserId)+'.jpg'; 
+      }
+    },
   }
 };
 </script>

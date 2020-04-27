@@ -1,20 +1,21 @@
 <template>
   <v-container class="hContainer">
     <v-carousel
+      v-if="getChanList"
       :show-arrows="carOption"
       hide-delimiter-background
       delimiter-icon="mdi-minus"
       light
       height="98vh"
     >
-      <v-carousel-item v-for="(item, i) in diaryList" :key="i">
+      <v-carousel-item v-for="(item, i) in getChanList" :key="i">
         <h1>{{ item.title }}</h1>
-        <v-img :src="item.src" alt="No Image" class="cImage"></v-img>
+        <v-img :src="imgAddr+item.cover_image" alt="No Image" class="cImage"></v-img>
         <div class="cSummary">
           <h2>Summary of Diary</h2>
-          <p>{{ item.content }}</p>
+          <p>{{ item.description }}</p>
         </div>
-        <button @click="goDetail(item.title)" class="cBtn">Detail</button>
+        <button @click="goDetail(item.id)" class="cBtn">Detail</button>
       </v-carousel-item>
       <v-carousel-item>
         <h1>새 일기장</h1>
@@ -28,7 +29,7 @@
 
 <script>
 import router from "@/router";
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Home",
@@ -36,57 +37,29 @@ export default {
     return {
       wHeight: 0,
       wWidth: 0,
+      imgAddr: process.env.VUE_APP_STATIC_ADDR+"channel/",
       carOption: false,
-      diaryList: [],
       addImg:
         "https://w0.pngwave.com/png/106/279/computer-icons-medicine-health-care-plus-button-png-clip-art.png"
     };
   },
   methods: {
-    ...mapMutations(["setSelectedChan"]),
-    // 유저의 일기 목록 가져오기
-    getDiary() {
-      const gotList = [
-        {
-          title: "첫 번째",
-          content: "첫 번째 일기의 내용입니다",
-          src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg"
-        },
-        {
-          title: "두 번째",
-          content: "두 번째 일기의 내용입니다",
-          src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg"
-        },
-        {
-          title: "세 번째",
-          content: "세 번째 일기의 내용입니다",
-          src: "https://cdn.vuetifyjs.com/images/carousel/bird.jpg"
-        },
-        {
-          title: "네 번째",
-          content: "네 번째 일기의 내용입니다",
-          src: "https://cdn.vuetifyjs.com/images/carousel/planet.jpg"
-        }
-      ];
-      this.diaryList = gotList;
-    },
+    ...mapActions(["bringChanList", "bringChanDetail"]),
     goCreate() {
       router.push("createDiary");
     },
-    goDetail(channel) {
-      this.setSelectedChan(channel);
-      router.push("postList");
+    goDetail(channelId) {
+      this.bringChanDetail(channelId);
     }
   },
-  // vuex Login 연동
   computed: {
-    ...mapGetters(["isLoggedIn"])
+    ...mapGetters(["isLoggedIn", "getChanList"])
   },
-  created() {
-    if (this.isLoggedIn) {
-      this.getDiary();
-    } else {
+  async created() {
+    if (!this.isLoggedIn) {
       router.push("/login");
+    } else {
+      await this.bringChanList();
     }
   }
 };

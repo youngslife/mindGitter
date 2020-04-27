@@ -20,7 +20,10 @@ def board(request):
         return JsonResponse(serializer.data)
 
     elif request.method == 'POST':  # create a diary book
-        data = request.data.dict()
+        data = request.data
+        # # postman에서 보낼 때는 dict형으로 바꿔줘야 QueryDict is immutable 에러 안남
+        # data = request.data.dict()
+
         data.update({'create_user': request.user.id})
         serializer = ChannelSerializer(data=data)
 
@@ -31,8 +34,8 @@ def board(request):
             user.channels.add(channel)
             return JsonResponse({'message': 'success to save'}, status=201)
         else:
-            return JsonResponse({'message': 'fail to save'}, status=400)
-            # return JsonResponse({'message': serializer.errors }, status=400)
+            # return JsonResponse({'message': 'fail to save'}, status=400)
+            return JsonResponse({'message': serializer.errors }, status=400)
 
 # 채널 한 개
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -48,15 +51,17 @@ def board_title(request, id):
 
     if channel.create_user_id == request.user.id:
         if request.method == 'PUT':  # update a diary book
-            data = request.data.dict()
+            data = request.data
+            # # postman에서 보낼 때는 dict형으로 바꿔줘야 QueryDict is immutable 에러 안남
+            # data = request.data.dict()
             data.update({'create_user': request.user.id})
             serializer = ChannelSerializer(channel, data=data)
             if serializer.is_valid():
                 serializer.save()
                 return JsonResponse({'message': 'success to update'}, status=201)
             else:
-                # return JsonResponse({'message': 'fail to update'}, status=400)
-                return JsonResponse({'message': serializer.errors}, status=400)
+                return JsonResponse({'message': 'fail to update'}, status=400)
+                # return JsonResponse({'message': serializer.errors}, status=400)
 
         elif request.method == 'DELETE':  # delete a diary book
             channel.delete()

@@ -5,7 +5,7 @@ import CreateDiary from "../components/createDiary/createDiary.vue";
 import DiaryDetail from "../components/diaryDetail/DiaryDetail.vue";
 import PostList from "../components/postList/PostList.vue";
 import Login from "../components/login/Login.vue";
-import NewDiary from "../components/newDiary/NewDiary.vue";
+import NewPost from "../components/newPost/NewPost.vue";
 import UserDetail from "../components/userDetail/UserDetail.vue";
 import Signup from "../components/signup/Signup.vue";
 
@@ -33,9 +33,9 @@ const routes = [
     component: PostList
   },
   {
-    path: "/newDiary",
-    name: "NewDiary",
-    component: NewDiary
+    path: "/newPost",
+    name: "NewPost",
+    component: NewPost
   },
   {
     path: "/login",

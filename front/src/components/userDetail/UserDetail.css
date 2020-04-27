@@ -1,49 +1,70 @@
 .userDetail {
-    /* background-size: cover; */
-    width: 100vw;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-justify-content: center;
-    justify-content: center;
+  /* background-size: cover; */
+  width: 100vw;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
 }
 
 div.container.userCon {
-    margin-bottom: 30px;
-    /* padding-top: 0px; */
+  margin-bottom: 30px;
+  /* padding-top: 0px; */
 }
 
 .userName {
-    text-align: left;
-    padding-left: 20px;
-    font-size: 20px;
+  text-align: left;
+  padding-left: 20px;
+  font-size: 20px;
 }
 
 .outBtn {
-    text-align: center;
+  text-align: center;
 }
 
 div.emotion>h3 {
-    font-size: 5vw;
-    text-align: left;
+  font-size: 5vw;
+  text-align: left;
 }
 
 div.emotionDetail {
-    background-color: lightgray;
-    border-radius: 5%;
-    height: 130px;
-    margin-top: 5px;
-    margin-bottom: 10px;
+  background-color: lightgray;
+  border-radius: 5%;
+  height: 130px;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 div.tag>h3 {
-    font-size: 5vw;
-    text-align: left;
+  font-size: 5vw;
+  text-align: left;
 }
 
 div.tagDetail {
-    background-color: lightgray;
-    border-radius: 5%;
-    height: 25vh;
-    margin-top: 5px;
-    margin-bottom: 10px;
+  background-color: lightgray;
+  border-radius: 5%;
+  height: 25vh;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.v-card{
+  position: absolute;
+  margin: 10px;
+  width: 300px;
+  left: 20px;
+  z-index: 100;
+}
+
+.v-btn.save{
+  margin: 3px;
+}
+
+.v-btn.close{
+  margin: 3px;
+}
+
+input{
+  margin: 10px;
+  font-size: 12px;
 }
