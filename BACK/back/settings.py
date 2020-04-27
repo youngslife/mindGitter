@@ -85,7 +85,7 @@ INSTALLED_APPS = [
     # tag기능
     'taggit',
     # 'taggit.apps.TaggitAppConfig',
-    # 'taggit_templatetags2',
+    'taggit_templatetags2',
     'taggit_serializer',
 ]
 

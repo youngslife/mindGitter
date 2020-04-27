@@ -13,4 +13,5 @@ urlpatterns = [
     # path('tags/<str:tag>/', views.)
     path('<int:post_id>/comments/', views.CommentList.as_view(), name='comments_list'),
     path('<int:post_id>/comments/<int:comment_id>/', views.CommentDetail.as_view(), name='comments_detail'),
+    path('<int:post_id>/tagtest/', views.tagtest, name='tagtest')
 ]

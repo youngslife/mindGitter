@@ -29,7 +29,7 @@ class ProfileImageAPIView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
-    def delete(self, request):
-        profile_img = request.user.profile_img
-        profile_img.delete()
-        return Response(status=204)
+    # def delete(self, request):
+    #     profile_img = request.user.profile_img
+    #     profile_img.delete()
+    #     return Response(status=204)
