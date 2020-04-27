@@ -7,7 +7,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('/', include('accounts.urls')),
+    path('', include('accounts.urls')),
     path("api-auth/", include("rest_framework.urls")),
     # login, registration등 path 설정
     path("rest-auth/", include("rest_auth.urls")),
