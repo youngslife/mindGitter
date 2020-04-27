@@ -1,7 +1,13 @@
+/* .hCard {
+    border-radius:25px;
+} */
+
 .cImage {
-    border-radius: 20px;
-    height: 55vh;
-    background: #ffffff;
+    border-radius: 25px;
+    height: 98vh;
+    object-fit: cover;
+    object-position: center;
+    position:relative
 }
 
 .aCon {
@@ -26,15 +32,23 @@ button.v-icon.notranslate.newBtn.v-icon--link.mdi.mdi-plus.theme--light {
     height: 19vh;
 }
 
-.cBtn {
+.hMeta {
+    font-size: 0.5vw;
+    color: rgba(255,255,255,0.7)
+}
+
+
+
+/* .cBtn {
     margin-top: 10px;
     border-radius: 5px;
     width: 100%;
     height: 6vh;
     background-color: #ffe135;
-}
+} */
 
 .hContainer {
-    padding-top: 10px;
-    padding-bottom: 0;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    margin:auto;
 }
