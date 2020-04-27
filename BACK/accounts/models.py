@@ -13,7 +13,7 @@ class User(AbstractUser):
     tags = TaggableManager(through='UserTag', blank=True, related_name='tags')
     emotions = models.ManyToManyField(Emotion, through='UserEmotion')
     
-    profile_img = models.CharField(max_length=100)
+    profile_img = models.CharField(max_length=100, blank=True)
 
     class Meta:
         ordering = ['-pk']
@@ -23,7 +23,8 @@ class User(AbstractUser):
 
 
 class UserTag(TaggedItemBase):
-    content_object = models.ForeignKey('User', on_delete=models.CASCADE)
+    content_object = models.ForeignKey('User', on_delete=models.CASCADE) # user
+    count = models.IntegerField(default=1)
 
 
 class UserEmotion(models.Model):
