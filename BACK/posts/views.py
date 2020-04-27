@@ -37,9 +37,14 @@ class PostList(APIView):
     # post(일기) 생성
     def post(self, request):
         user = get_object_or_404(User, username=request.user)
+        print(1)
         serializer = PostSerializer(data=request.data)
+        print(2)
         if serializer.is_valid():
-            serializer.save(user_id=user.id, channel_id=request.data['channel_id'])         
+            print(3)
+            serializer.save(user_id=user.id, channel_id=request.data['channel_id'])
+            # serializer.save(user_id=user.id)
+            print(4)         
             posting = Post.objects.first()  # -pk 로 정렬이므로
             new_tags = posting.tags.names()
             for new_tag in new_tags:
