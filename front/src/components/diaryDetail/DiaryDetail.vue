@@ -2,11 +2,9 @@
   <div class="dairyDetail">
     <v-icon class="back" @click="goPostList">fas fa-arrow-left</v-icon>
     <h1>{{ getSelectedChan.title }}</h1>
-    <div class="video" v-for="(video, i) in videos" :key="i">
-      <video width="100%" height="100%" controls class="dvideo">
-        <source :src="selectedDiary.video_file" :type="video.type" />
-      </video>
-    </div>
+    <video width="100%" height="255px" controls class="dvideo">
+      <source :src="videoAddr+selectedDiary.video_file"/>
+    </video>
     <div class="temp"></div>
     <v-tabs fixed-tabs>
       <v-tab v-for="mode in modes" :key="mode" @click="changeMode(mode)">{{
@@ -54,14 +52,7 @@ export default {
       modes: ["Detail", "Analysis", "Comment"],
       selectedMode: "Detail",
       selectedDiary: "",
-      videoURL:
-        "https://mind-gitter-diary.s3.ap-northeast-2.amazonaws.com/diary/diary.mp4",
-      videos: [
-        {
-          name: require("../../assets/test/Clouds.mp4"),
-          type: "video/mp4"
-        }
-      ],
+      videoAddr: process.env.VUE_APP_STATIC_ADDR+"diary/",
       writer: null
     };
   },
