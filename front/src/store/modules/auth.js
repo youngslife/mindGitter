@@ -180,8 +180,7 @@ const actions = {
       }
     }
   },
-  bringUserInfoSet: ({ commit }) => {
-    commit;
+  bringUserInfoSet: ({ state, commit }) => {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
@@ -190,6 +189,10 @@ const actions = {
     };
     axios.get(`${HOST}/api/current_user`, options).then(message => {
       console.log(message.data);
+      commit("setUserInfoSet", message.data);
+      if (state.commitDates[1] > 3) {
+        const startMonth = state.commitDates[1] - 3;
+      }
     });
   },
   validation: ({ commit, dispatch }, { username, password }) => {

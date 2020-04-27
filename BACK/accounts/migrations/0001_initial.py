@@ -51,6 +51,7 @@ class Migration(migrations.Migration):
             name='UserTag',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('count', models.IntegerField()),
                 ('content_object', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
                 ('tag', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='accounts_usertag_items', to='taggit.Tag')),
             ],
