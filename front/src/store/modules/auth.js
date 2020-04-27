@@ -82,7 +82,7 @@ const actions = {
   pushError: ({ commit }, error) => {
     commit("pushError", error);
   },
-  login: ({ commit, getters, dispatch }, { username, password }) => {
+  login: ({ state, commit, getters, dispatch }, { username, password }) => {
     if (getters.isLoggedIn) {
       router.push("/");
     } else {
@@ -98,6 +98,7 @@ const actions = {
           }
         )
         .then(token => {
+          console.log(state.commitDates) // [2020, 04]
           console.log(token)
           commit("setToken", token.data.token);
           commit("setLoading", false);
