@@ -316,20 +316,21 @@ const actions = {
     console.log(res);
     commit("sets3", {});
   },
+  // async addPost({ getters }, PostInfo) {
   async addPost({ dispatch, getters }, PostInfo) {
     await dispatch("s3Init", 'diary');
     await dispatch("updates3", PostInfo);
     const token = sessionStorage.getItem("jwt");
+    const tags = PostInfo.tags
     const body = {
       title : PostInfo.title,
       context : PostInfo.context,
       video_file : PostInfo.fileName,
-      tags: [PostInfo.tags],
+      tags: "["+'"'+tags+'"'+"]",
       cover_image: PostInfo.cover_image,
-      channel_id: getters.getSelectedChan.id
+      channel_id: parseInt(getters.getSelectedChan.id)
     }
     console.log('bodybody', body)
-    console.log(getters.getSelectedChan)
     const options = {
       headers: {
         Authorization: "JWT " + token
