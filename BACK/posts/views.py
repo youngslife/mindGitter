@@ -42,9 +42,11 @@ class PostList(APIView):
     # post(일기) 생성
     def post(self, request):
         user = get_object_or_404(User, username=request.user)
+        print('데이터 넘어가나')
         serializer = PostSerializer(data=request.data)
         # user-tag serializer모르겠어서 for 문으로 저장
         if serializer.is_valid():
+            print('valid하나')
             serializer.save(user_id=user.id, channel_id=request.data['channel_id'])
             posting = Post.objects.first()  # -pk 로 정렬이므로
             posting_id = posting.id

@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from .models import Post, Emotion, Tag, Comment
 from accounts.models import User, UserEmotion
+# from accounts.serializers import UserDisplaySerializer
 from taggit_serializer.serializers import (TaggitSerializer, TagListSerializerField)
-# from accounts.serializers import UserTagSerializer, UserDisplaySerializer
+# from accounts.serializers import UserDisplaySerializer
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -37,11 +38,15 @@ class PostDateFilterSerializer(serializers.ListSerializer):
 class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     comment_set = CommentSerializer(read_only=True, many=True)
     tags = TagListSerializerField()
+    # user_set = UserDisplaySerializer(read_only=True)
+
+    # def to_representation(self, instance):
+    #     self.fields['user'] = UserDisplaySerializer(read_only=True)
+    #     return super(PostSerializer, self).to_representation(instance)
+
     class Meta:
         list_serializer_class = PostDateFilterSerializer
         model = Post
         fields = ('pk', 'title', 'cover_image', 'user_id',
                     'context', 'created_at', 'updated_at', 
-                    'video_file', 'tags', 'comment_set', 'channel_id', )   
-
-   
+                    'video_file', 'tags', 'comment_set', 'channel_id', )  

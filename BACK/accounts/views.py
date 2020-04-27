@@ -21,8 +21,8 @@ class ProfileImageAPIView(APIView):
 
     def put(self, request):  # profile_img 넘겨줘야함
         user = request.user
-        profile_img = request.user.profile_img
-        profile_img.delete()
+        # profile_img = request.user.profile_img
+        # profile_img.delete()
         serializer = ProfileImageSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()

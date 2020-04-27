@@ -19,12 +19,13 @@ def board(request):
         serializer = UserChannelSerializer(user)
         return JsonResponse(serializer.data)
 
-    elif request.method == 'POST':  # create a diary book
-        data = request.data.dict()
+    elif request.method == 'POST':
+        data = request.data
         data.update({'create_user': request.user.id})
         serializer = ChannelSerializer(data=data)
-
+        print('serializer', serializer)
         if serializer.is_valid():
+            print('valid')
             serializer.save()
             user = get_object_or_404(User, username=request.user)
             channel = Channel.objects.last()
