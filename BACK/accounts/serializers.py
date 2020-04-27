@@ -1,13 +1,15 @@
 from rest_framework import serializers
 from accounts.models import User, UserTag
 from taggit_serializer.serializers import (TaggitSerializer, TagListSerializerField)
-
+from posts.serializers import PostSerializer
 from django.contrib.contenttypes.models import ContentType
 
+
 class UserDisplaySerializer(serializers.ModelSerializer):
+    post_set = PostSerializer(many=True)
     class Meta:
         model = User
-        fields = ("id", "username", "email", "password", )
+        fields = ("id", "username", "email", "password", "post_set", )
 
 
 class ProfileImageSerializer(serializers.ModelSerializer):
