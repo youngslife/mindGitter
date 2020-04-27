@@ -22,15 +22,14 @@
     <div calss="search">
       <v-icon class="search">fas fa-search</v-icon>
       <input type="text" v-model="searchTag" />
-      <div class="sharedImage">
+      <div
+        class="sharedImage"
+        v-for="(user, i) in getSelectedChan.user_set"
+        :key="i"
+      >
         <img
           class="sharedUserProfile"
-          src="../../assets/shareduserprofile.jpg"
-          alt="sharedUserProfile"
-        />
-        <img
-          class="sharedUserProfile"
-          src="../../assets/userprofile.jpg"
+          :src="showProfile(user.profile_img)"
           alt="sharedUserProfile"
         />
       </div>
@@ -44,12 +43,18 @@
         :key="idx"
         @click="goDetail(item)"
       >
-        <!-- <div class="diaryInfo" @click="goDetail(diaries[0])"> -->
-        <img
-          src="../../assets/userprofile.jpg"
-          alt="userProfile"
-          class="uImage"
-        />
+        <div
+          class="userImage"
+          v-for="(user, i) in getSelectedChan.user_set"
+          :key="i"
+        >
+          <img
+            v-if="user.id == item.user_id"
+            :src="showProfile(user.profile_img)"
+            alt="userProfile"
+            class="uImage"
+          />
+        </div>
         <div class="content">
           <p class="title">{{ item.title }}</p>
           <span class="tag" v-for="(tag, i) in item.tags" :key="i"
@@ -74,7 +79,8 @@ export default {
       searchTag: null,
       date: new Date(),
       showAddModal: false,
-      selectedChan: null
+      selectedChan: null,
+      profileAddr: process.env.VUE_APP_STATIC_ADDR + "profile/"
     };
   },
   components: {
@@ -103,6 +109,12 @@ export default {
     },
     goDetail(diaryInfo) {
       this.bringDiaryDetail(diaryInfo);
+    },
+    showProfile(profile_img) {
+      console.log(this.profileAddr + profile_img);
+      return profile_img
+        ? this.profileAddr + profile_img
+        : require("../../assets/basic_userImage.png");
     }
   },
   beforeMount() {
