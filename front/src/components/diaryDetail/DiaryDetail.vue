@@ -3,7 +3,7 @@
     <v-icon class="back" @click="goPostList">fas fa-arrow-left</v-icon>
     <h1>{{ getSelectedChan.title }}</h1>
     <video width="100%" height="255px" controls class="dvideo">
-      <source :src="videoAddr+selectedDiary.video_file"/>
+      <source :src="videoAddr + selectedDiary.video_file" />
     </video>
     <div class="temp"></div>
     <v-tabs fixed-tabs>
@@ -15,8 +15,8 @@
       <h3>{{ selectedDiary.title }}</h3>
       <div class="tags">
         <span v-for="(tag, idx) in selectedDiary.tags" :key="idx"
-          >#{{ tag }} </span
-        >
+          >#{{ tag }}
+        </span>
       </div>
       <div class="context">
         {{ selectedDiary.context }}
@@ -36,7 +36,15 @@
     <div class="additionalInfo">
       <span>작성자: {{ getWriterInfo.username }}</span>
       <br />
-      <span>작성시간: {{ `${selectedDiary.created_at.slice(0, 10)}  ${selectedDiary.created_at.slice(11, 16)}` }}</span>
+      <span
+        >작성시간:
+        {{
+          `${selectedDiary.created_at.slice(
+            0,
+            10
+          )}  ${selectedDiary.created_at.slice(11, 16)}`
+        }}</span
+      >
     </div>
   </div>
 </template>
@@ -52,7 +60,7 @@ export default {
       modes: ["Detail", "Analysis", "Comment"],
       selectedMode: "Detail",
       selectedDiary: "",
-      videoAddr: process.env.VUE_APP_STATIC_ADDR+"diary/",
+      videoAddr: process.env.VUE_APP_STATIC_ADDR + "diary/",
       writer: null
     };
   },
@@ -69,7 +77,7 @@ export default {
   },
   created() {
     this.selectedDiary = this.getSelectedDiary;
-    console.log(this.selectedDiary.video_file)
+    console.log(this.selectedDiary.video_file);
     // console.log(this.selectedDiary)
     // console.log(this.getSelectedChan)
   }
