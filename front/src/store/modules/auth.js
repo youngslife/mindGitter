@@ -10,7 +10,10 @@ const state = {
   userName: null,
   userId: null,
   userInfoSet: null,
-  userImgModal: false
+  userImgModal: false,
+  commitDates: [new Date().getFullYear(), new Date().getMonth() + 1],
+  commitInfo: null,
+  nemos: null
 };
 
 const getters = {
@@ -20,7 +23,10 @@ const getters = {
   getUserName: state => state.userName,
   getUserId: state => state.userId,
   getUserInfoSet: state => state.userInfoSet,
-  getUserImgModal: state => state.userImgModal
+  getUserImgModal: state => state.userImgModal,
+  getCommitDates: state => state.commitDates,
+  getCommitInfo: state => state.commitInfo,
+  getNemos: state => state.nemos
 };
 
 const mutations = {
@@ -34,7 +40,31 @@ const mutations = {
   setUserName: (state, userName) => (state.userName = userName),
   setUserId: (state, userId) => (state.userId = userId),
   setUserInfoSet: (state, userInfoSet) => (state.userInfoSet = userInfoSet),
-  setUserImgModal: (state, userImgModal) => (state.userImgModal = userImgModal)
+  setUserImgModal: (state, userImgModal) => (state.userImgModal = userImgModal),
+  setNemos: (state, commitData) => {
+    let results = [];
+    for (let i = 0; i < 105; i++) {
+      results.push("nemo");
+    }
+    const pre = new Date(
+      `${commitData.commitDates[0]}-${commitData.commitDates[1]}-01`
+    ).getDay();
+    const lastDay = new Date(
+      commitData.commitDates[0],
+      commitData.commitDates[1],
+      0
+    ).getDate();
+    for (let cnt = 0; cnt < 35; cnt++) {
+      if (cnt >= pre && cnt <= lastDay) {
+        if (commitData.commitInfo[0][`${cnt}일`]) {
+          results[cnt] = "red";
+        } else {
+          results[cnt] = "nemo";
+        }
+      }
+    }
+    state.nemos = results;
+  }
 };
 
 const actions = {
@@ -63,6 +93,7 @@ const actions = {
           }
         )
         .then(token => {
+          console.log(token)
           commit("setToken", token.data.token);
           commit("setLoading", false);
           commit("setUserName", username);
