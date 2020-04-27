@@ -9,7 +9,7 @@ class UserDisplaySerializer(serializers.ModelSerializer):
     post_set = PostSerializer(many=True)
     class Meta:
         model = User
-        fields = ("id", "username", "email", "password", "post_set", )
+        fields = ("id", "username", "email", "profile_img", "post_set", )
 
 
 class ProfileImageSerializer(serializers.ModelSerializer):
@@ -18,27 +18,9 @@ class ProfileImageSerializer(serializers.ModelSerializer):
         fields = ["profile_img"]
 
 
-# class UserTagSerializer(TaggitSerializer, serializers.ModelSerializer):
-#     tags = TagListSerializerField()
-
-#     class Meta:
-#         model = User
-#         fields = ('tags',)
-
 class UserTagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserTag
         fields = ('content_object_id', 'tag_id', 'count')
 
-
-# class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
-#     # comments = CommentSerializer(many=True)
-#     tags = TagListSerializerField()
-#     # emotions = EmotionSerializer(many=True)
-#     # Channel 은 일단 생략
-#     # channel_id = 1git
-#     class Meta:
-#         model = Post
-#         fields = ('pk', 'title', 'cover_image',
-#                     'context', 'created_at', 'updated_at', 'video_file', 'tags',)   
