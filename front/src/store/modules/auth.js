@@ -2,6 +2,7 @@ const HOST = process.env.VUE_APP_SERVER_HOST;
 
 const axios = require("axios");
 import router from "../../router";
+import AWS from "aws-sdk";
 
 const state = {
   token: null,
@@ -10,7 +11,9 @@ const state = {
   userName: null,
   userId: null,
   userInfoSet: null,
-  userImgModal: false
+  userImgModal: false,
+  userProfile: null,
+  s3: {},
 };
 
 const getters = {
@@ -20,7 +23,8 @@ const getters = {
   getUserName: state => state.userName,
   getUserId: state => state.userId,
   getUserInfoSet: state => state.userInfoSet,
-  getUserImgModal: state => state.userImgModal
+  getUserImgModal: state => state.userImgModal,
+  getUserProfile: state => state.userProfile
 };
 
 const mutations = {
@@ -34,7 +38,11 @@ const mutations = {
   setUserName: (state, userName) => (state.userName = userName),
   setUserId: (state, userId) => (state.userId = userId),
   setUserInfoSet: (state, userInfoSet) => (state.userInfoSet = userInfoSet),
-  setUserImgModal: (state, userImgModal) => (state.userImgModal = userImgModal)
+  setUserImgModal: (state, userImgModal) => (state.userImgModal = userImgModal),
+  setUserProfile: (state, userProfile) => (state.userProfile = userProfile),
+  sets3: (state, s3) => {
+    state.s3 = s3;
+  },
 };
 
 const actions = {
@@ -118,7 +126,7 @@ const actions = {
               {
                 headers: {
                   "Content-Type": "application/json",
-                  Accept: "application/json"
+                  Accept: "application/json",
                 }
               }
             )
@@ -168,6 +176,60 @@ const actions = {
     } else {
       dispatch("login", { username, password });
     }
+  },
+  s3Init: ({ commit }, type) => {
+    AWS.config.update({
+      region: process.env.VUE_APP_BUCKET_REGION,
+      credentials: new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL
+      })
+    });
+    const s3 = new AWS.S3({
+      apiVersion: "2006-03-01",
+      params: { Bucket: process.env.VUE_APP_BUCKET_NAME+'/'+type }
+    });
+    commit("sets3", s3);
+  },
+  async updates3({ commit }, PostInfo) {
+    console.log('upadates3', PostInfo)
+    const s3 = state.s3;
+    const params = {
+      Key: PostInfo.fileName,
+      Body: PostInfo.file,
+      ACL: "public-read-write"
+    };
+    const res = await s3.upload(params).promise();
+    console.log(res);
+    commit("sets3", {});
+  },
+  async bringUserProfile ({ commit }) {
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    const res = await axios.get(`${HOST}/api/profile_img/`, options)
+    console.log("bringUserProfile", res.data)
+    commit("setUserProfile", res.data.profile_img)
+  },
+  async updateUserInfo ({ commit, dispatch }, PostInfo) {
+    console.log('addChannel', PostInfo)
+    await dispatch("s3Init", 'profile');
+    await dispatch("updates3", PostInfo);
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    }
+    const body = {
+      profile_img: PostInfo.fileName
+    }
+    const res = await axios.put(`${HOST}/api/profile_img/`, body, options)
+    console.log(res)
+    await dispatch("bringUserProfile")
+    commit("setUserImgModal", false)
   }
 };
 

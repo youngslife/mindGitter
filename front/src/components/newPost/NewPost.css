@@ -72,3 +72,9 @@ div.preview {
     margin-top: 15px;
     background-color: lightpink;
 }
+
+.videoPreview {
+    height:100px;
+    width: 100%;
+    margin:auto;
+}

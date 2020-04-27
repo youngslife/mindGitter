@@ -217,29 +217,27 @@ const actions = {
       commit("setChanList", message.data.channels);
     });
   },
-  addChannel: ({ commit }, PostInfo) => {
-    commit;
-    console.log(PostInfo);
+  async addChannel ({ dispatch }, PostInfo) {
+    console.log('addChannel', PostInfo)
+    await dispatch("s3Init", 'channel');
+    await dispatch("updates3", PostInfo);
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
         Authorization: "JWT " + token
       }
-    };
-    axios
-      .post(
-        HOST + "/channels/",
-        {
-          title: PostInfo.title,
-          cover_image: PostInfo.image,
-          description: PostInfo.description
-        },
-        options
-      )
-      .then(message => {
-        console.log(message);
-      });
+    }
+    const body =
+    {
+      title: PostInfo.title,
+      cover_image: PostInfo.fileName,
+      description: PostInfo.description
+    }
+    console.log('body', body)
+    const res = await axios.post(HOST + "/channels/", body, options)
+    console.log(res)
+    router.push("/");
   },
   bringChanDetail: ({ commit }, channelId) => {
     const token = sessionStorage.getItem("jwt");
@@ -293,7 +291,7 @@ const actions = {
     });
   },
   //S3 부분
-  s3Init: ({ commit }) => {
+  s3Init: ({ commit }, type) => {
     AWS.config.update({
       region: process.env.VUE_APP_BUCKET_REGION,
       credentials: new AWS.CognitoIdentityCredentials({
@@ -302,11 +300,12 @@ const actions = {
     });
     const s3 = new AWS.S3({
       apiVersion: "2006-03-01",
-      params: { Bucket: process.env.VUE_APP_BUCKET_NAME }
+      params: { Bucket: process.env.VUE_APP_BUCKET_NAME+'/'+type }
     });
     commit("sets3", s3);
   },
   async updates3({ commit }, PostInfo) {
+    console.log('upadates3', PostInfo)
     const s3 = state.s3;
     const params = {
       Key: PostInfo.fileName,
@@ -317,13 +316,29 @@ const actions = {
     console.log(res);
     commit("sets3", {});
   },
-  async addPost({ dispatch }, PostInfo) {
-    // if (PostInfo.saveVideo) {
-    //   await dispatch("s3Init");
-    //   await dispatch("updates3", PostInfo);
-    // }
-    await dispatch("s3Init");
+  // async addPost({ getters }, PostInfo) {
+  async addPost({ dispatch, getters }, PostInfo) {
+    await dispatch("s3Init", 'diary');
     await dispatch("updates3", PostInfo);
+    const token = sessionStorage.getItem("jwt");
+    const tags = PostInfo.tags
+    const body = {
+      title : PostInfo.title,
+      context : PostInfo.context,
+      video_file : PostInfo.fileName,
+      tags: "["+'"'+tags+'"'+"]",
+      cover_image: PostInfo.cover_image,
+      channel_id: parseInt(getters.getSelectedChan.id)
+    }
+    console.log('bodybody', body)
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    const res = await axios.post(HOST + "/posts/", body, options)
+    console.log('res', res)
+    router.push("/postList");
   }
 };
 
