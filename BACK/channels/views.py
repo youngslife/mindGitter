@@ -7,6 +7,8 @@ from accounts.models import User
 from accounts.serializers import UserDisplaySerializer
 from .serializers import UserChannelSerializer, ChannelSerializer
 from django.http import JsonResponse
+# notification
+from accounts.views import create_notification
 
 # Create your views here.
 
@@ -72,6 +74,10 @@ def board_join(request, id):
         user = get_object_or_404(User, username=request.user)
         channel = get_object_or_404(Channel, id=id)
         user.channels.add(channel)
+        print('채널만든사람!!!!!', channel.create_user.id)
+        # notifi
+        create_notification(channel.create_user, user, 'join')
+
         return JsonResponse({'message': 'success to join'}, status=201)
 
     elif request.method == 'DELETE':  # leave from a channel

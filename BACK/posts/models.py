@@ -28,6 +28,8 @@ class Post(models.Model):
     emotions = models.ManyToManyField(Emotion, blank=True)
     video_file = models.CharField(max_length=100)
     # summary = models.CharField(max_length=200)
+    # use_comment = models.BooleanField()
+    # save_video = models.BooleanField()
 
     class Meta:
         ordering = ['-pk']

@@ -162,3 +162,4 @@ class CommentDetail(APIView):
                 return JsonResponse({'message': 'do not exists the comment in the post'}, status=400)
         else:
             return JsonResponse({'message': 'INVALID USER'}, status=400)
+

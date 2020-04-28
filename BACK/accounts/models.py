@@ -6,6 +6,7 @@ from taggit.managers import TaggableManager
 from taggit.models import TaggedItemBase
 
 
+
 # Create your models here.
 class User(AbstractUser):
     channels = models.ManyToManyField(Channel, blank=True)
@@ -31,3 +32,15 @@ class UserEmotion(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     emotion = models.ForeignKey(Emotion, on_delete=models.CASCADE)
     count = models.IntegerField()
+
+
+
+class Notification(models.Model):
+    TYPE_CHOICES = (
+        ('join', 'Join'),
+    )
+
+    inviter = models.ForeignKey(User, on_delete=models.PROTECT, related_name='invitor')
+    to = models.ForeignKey(User, on_delete=models.PROTECT, related_name='to')
+    notification_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    
