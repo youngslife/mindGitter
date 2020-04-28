@@ -180,7 +180,7 @@ const actions = {
     await commit("setChanList", null);
     router.push("/");
   },
-  bringDiaryDetail: ({ commit, getters }, diaryInfo) => {
+  bringDiaryDetail: ({ commit, getters }, diaryPK) => {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
