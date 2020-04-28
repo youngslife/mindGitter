@@ -29,6 +29,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setUserImgModal"]),
+    ...mapActions(["bringUserProfile"]),
     showProfile() {
       console.log(this.profileAddr + this.getUserProfile);
       return this.getUserProfile
@@ -37,8 +38,10 @@ export default {
     }
   },
   computed: {
-    ...mapActions(["bringUserProfile"]),
     ...mapGetters(["getUserProfile"])
+  },
+  async created() {
+    await this.bringUserProfile();
   }
 };
 </script>

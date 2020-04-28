@@ -1,7 +1,7 @@
 <template>
-  <div class="diaryList">
+  <div class="diaryList" v-if="getSelectedChan && getDiaries">
     <div class="infoAndSetting">
-      <h1>{{ selectedChan.title }}</h1>
+      <h1>{{ getSelectedChan.title }}</h1>
       <v-icon class="plus" @click="changeShowAddModal">fas fa-user-plus</v-icon>
       <v-card v-if="showAddModal" @close="showAddModal = false">
         <v-card-title>Share Diary</v-card-title>
@@ -15,7 +15,7 @@
           <v-btn class="close" @click="changeShowAddModal">닫기</v-btn>
         </v-card-actions>
       </v-card>
-      <v-icon class="delete" @click="deleteChannel(selectedChan.id)"
+      <v-icon class="delete" @click="deleteChannel(getSelectedChan.id)"
         >fas fa-trash-alt</v-icon
       >
     </div>
@@ -39,7 +39,7 @@
     <div v-for="(diary, i) in getDiaries['dates']" :key="i">
       <div class="diaries" v-if="diary <= changeDate">
         <div class="date">
-        {{ diary }}
+          {{ diary }}
         </div>
         <div
           class="diaryInfo"
@@ -76,6 +76,7 @@
 import Nav from "../nav/Nav.vue";
 import Datepicker from "vuejs-datepicker";
 import { mapGetters, mapActions } from "vuex";
+import router from "@/router";
 
 export default {
   name: "DiaryList",
@@ -84,7 +85,6 @@ export default {
       searchTag: null,
       date: new Date(),
       showAddModal: false,
-      selectedChan: null,
       profileAddr: process.env.VUE_APP_STATIC_ADDR + "profile/"
     };
   },
@@ -93,25 +93,29 @@ export default {
     Datepicker
   },
   computed: {
-    ...mapGetters(["getSelectedChan", "getDiaries"]),
+    ...mapGetters(["getSelectedChan", "getDiaries", "getChanId"]),
     changeDate() {
       if (this.date.getMonth() > 8) {
         if (this.date.getDate() > 9) {
-          return `${this.date.getFullYear()}-${this.date.getMonth() + 1}-${this.date.getDate()}`
+          return `${this.date.getFullYear()}-${this.date.getMonth() +
+            1}-${this.date.getDate()}`;
         } else {
-          return `${this.date.getFullYear()}-${this.date.getMonth() + 1}-0${this.date.getDate()}`
+          return `${this.date.getFullYear()}-${this.date.getMonth() +
+            1}-0${this.date.getDate()}`;
         }
       } else {
         if (this.date.getDate() > 9) {
-          return `${this.date.getFullYear()}-0${this.date.getMonth() + 1}-${this.date.getDate()}`
+          return `${this.date.getFullYear()}-0${this.date.getMonth() +
+            1}-${this.date.getDate()}`;
         } else {
-          return `${this.date.getFullYear()}-0${this.date.getMonth() + 1}-0${this.date.getDate()}`
+          return `${this.date.getFullYear()}-0${this.date.getMonth() +
+            1}-0${this.date.getDate()}`;
         }
       }
     }
   },
   methods: {
-    ...mapActions(["deleteChan", "bringDiaryDetail"]),
+    ...mapActions(["deleteChan", "bringDiaryDetail", "bringChanDetail"]),
     changeShowAddModal() {
       this.showAddModal = !this.showAddModal;
     },
@@ -137,8 +141,12 @@ export default {
         : require("../../assets/basic_userImage.png");
     }
   },
-  beforeMount() {
-    this.selectedChan = this.getSelectedChan;
+  async created() {
+    if (this.getChanId) {
+      await this.bringChanDetail(this.getChanId);
+    } else {
+      router.push("/");
+    }
   }
 };
 </script>

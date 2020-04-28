@@ -33,7 +33,7 @@
 
 <script>
 import router from "@/router";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "Home",
@@ -48,12 +48,14 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["bringChanList", "bringChanDetail"]),
+    ...mapActions(["bringChanList"]),
+    ...mapMutations(["setChanId"]),
     goCreate() {
       router.push("createDiary");
     },
-    goDetail(channelId) {
-      this.bringChanDetail(channelId);
+    async goDetail(channelId) {
+      await this.setChanId(channelId);
+      router.push("/postList");
     }
   },
   computed: {
