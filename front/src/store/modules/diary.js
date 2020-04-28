@@ -208,7 +208,9 @@ const actions = {
       video_file: PostInfo.fileName,
       tags: "[" + '"' + tags + '"' + "]",
       cover_image: PostInfo.cover_image,
-      channel_id: parseInt(getters.getSelectedChan.id)
+      channel_id: parseInt(getters.getSelectedChan.id),
+      is_use_comment: PostInfo.possible,
+      is_save_video: PostInfo.saveVideo
     };
     console.log("bodybody", body);
     const options = {
