@@ -30,7 +30,7 @@ const state = {
     "Nov",
     "Dec"
   ],
-  targetMonths: null
+  targetMonths: null,
 };
 
 const getters = {
@@ -44,7 +44,7 @@ const getters = {
   getCommitDates: state => state.commitDates,
   getCommitInfo: state => state.commitInfo,
   getUserProfile: state => state.userProfile,
-  getTargetMonths: state => state.targetMonths
+  getTargetMonths: state => state.targetMonths,
 };
 
 const mutations = {
@@ -65,28 +65,41 @@ const mutations = {
   },
   setCommitInfo: (state, commitInfo) => (state.commitInfo = commitInfo),
   setIndexDict: (state, indexDict) => (state.indexDict = indexDict),
-  setTargetMonths: (state, targetMonths) => (state.targetMonths = targetMonths)
+  setTargetMonths: (state, targetMonths) => (state.targetMonths = targetMonths),
 };
 
 const actions = {
-  logout: ({ commit }) => {
+  logout: ({
+    commit
+  }) => {
     commit("setToken", null);
     commit("setUserName", null);
     sessionStorage.removeItem("jwt");
     router.push("/login");
   },
-  pushError: ({ commit }, error) => {
+  pushError: ({
+    commit
+  }, error) => {
     commit("pushError", error);
   },
-  login: ({ state, commit, getters, dispatch }, { username, password }) => {
+  login: ({
+    state,
+    commit,
+    getters,
+    dispatch
+  }, {
+    username,
+    password
+  }) => {
     if (getters.isLoggedIn) {
       router.push("/");
     } else {
       axios
         .post(
-          HOST + "/rest-auth/login/",
-          { username, password },
-          {
+          HOST + "/rest-auth/login/", {
+            username,
+            password
+          }, {
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json"
@@ -120,10 +133,16 @@ const actions = {
         });
     }
   },
-  signup: (
-    { commit, getters, dispatch },
-    { username, email, password1, password2 }
-  ) => {
+  signup: ({
+    commit,
+    getters,
+    dispatch
+  }, {
+    username,
+    email,
+    password1,
+    password2
+  }) => {
     commit("clearErrors");
     if (getters.isLoggedIn) {
       router.push("/");
@@ -141,14 +160,12 @@ const actions = {
         if (password1 === password2) {
           axios
             .post(
-              HOST + "/rest-auth/registration/",
-              {
+              HOST + "/rest-auth/registration/", {
                 username,
                 email,
                 password1,
                 password2
-              },
-              {
+              }, {
                 headers: {
                   "Content-Type": "application/json",
                   Accept: "application/json"
@@ -176,7 +193,59 @@ const actions = {
       }
     }
   },
-  preprocessingCommit({ state, commit }) {
+  changePwd: ({
+    commit,
+  }, {
+    oldPassword,
+    newPassword1,
+    newPassword2
+  }) => {
+    commit("clearErrors");
+    const token = sessionStorage.getItem('jwt');
+    if (!oldPassword) {
+      commit("pushError", "원래 비밀번호를 입력하세요.")
+    }
+    if (!newPassword1) {
+      commit("pushError", "새 비밀번호를 입력하세요.")
+    }
+    if (!newPassword2) {
+      commit("pushError", "새 비밀번호 확인하세요.")
+    }
+    if ((oldPassword == newPassword1) || (oldPassword == newPassword2)) {
+      commit("pushError", "기존의 비밀번호는 쓸 수 없습니다.")
+    }
+    if (newPassword1 != newPassword2) {
+      commit("pushError", "비밀번호가 일치하지 않습니다.")
+    } else {
+      const body = {
+        old_password: oldPassword,
+        new_password1: newPassword1,
+        new_password2: newPassword2
+      }
+      axios
+        .post(
+          HOST + "/rest-auth/password/change/", body, {
+            headers: {
+              "Authorization": "JWT " + token
+            }
+          }
+        ).then(() => {
+          console.log('비밀번호 변경 성공!')
+          router.push('/userDetail')
+        })
+        .catch(err => {
+          if (!err.response) {
+            commit("pushError", "Network Error..");
+          } else {
+            commit("pushError", "Some error occured");
+          }
+        })
+    }
+  },
+  preprocessingCommit({
+    state,
+    commit
+  }) {
     commit;
     let targetMonths = [];
     const dates = new Date(state.commitDates[0], state.commitDates[1] + 1, 0);
@@ -219,7 +288,9 @@ const actions = {
     console.log(targetMonths);
     console.log(indexDict);
   },
-  async bringUserInfoSet({ commit }) {
+  async bringUserInfoSet({
+    commit
+  }) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
@@ -239,7 +310,13 @@ const actions = {
     }
     commit("setCommitInfo", commitInfo);
   },
-  validation: ({ commit, dispatch }, { username, password }) => {
+  validation: ({
+    commit,
+    dispatch
+  }, {
+    username,
+    password
+  }) => {
     commit("setLoading", false);
     commit("clearErrors");
     if (!username) {
@@ -250,10 +327,15 @@ const actions = {
       commit("pushError", "password too short");
       commit("setLoading", false);
     } else {
-      dispatch("login", { username, password });
+      dispatch("login", {
+        username,
+        password
+      });
     }
   },
-  s3Init: ({ commit }, type) => {
+  s3Init: ({
+    commit
+  }, type) => {
     AWS.config.update({
       region: process.env.VUE_APP_BUCKET_REGION,
       credentials: new AWS.CognitoIdentityCredentials({
@@ -262,11 +344,15 @@ const actions = {
     });
     const s3 = new AWS.S3({
       apiVersion: "2006-03-01",
-      params: { Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type }
+      params: {
+        Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type
+      }
     });
     commit("sets3", s3);
   },
-  async updates3({ commit }, PostInfo) {
+  async updates3({
+    commit
+  }, PostInfo) {
     console.log("upadates3", PostInfo);
     const s3 = state.s3;
     const params = {
@@ -278,7 +364,9 @@ const actions = {
     console.log(res);
     commit("sets3", {});
   },
-  async bringUserProfile({ commit }) {
+  async bringUserProfile({
+    commit
+  }) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
@@ -289,7 +377,10 @@ const actions = {
     console.log("bringUserProfile", res.data);
     commit("setUserProfile", res.data.profile_img);
   },
-  async updateUserInfo({ commit, dispatch }, PostInfo) {
+  async updateUserInfo({
+    commit,
+    dispatch
+  }, PostInfo) {
     console.log("addChannel", PostInfo);
     await dispatch("s3Init", "profile");
     await dispatch("updates3", PostInfo);
