@@ -149,6 +149,27 @@ const actions = {
       router.push("/diaryDetail");
     });
   },
+  async deleteDiary({ getters }, postId) {
+    getters;
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    await axios
+      .delete(`${HOST}/posts/${postId}`, options)
+      .then(message => {
+        message;
+        console.log(message);
+        alert("성공적으로 삭제되었습니다.");
+      })
+      .catch(err => {
+        err;
+        alert("삭제 중에 문제가 발생하였습니다.");
+      });
+    router.push("/postList");
+  },
   //S3 부분
   s3Init: ({ commit }, type) => {
     AWS.config.update({
@@ -187,7 +208,9 @@ const actions = {
       video_file: PostInfo.fileName,
       tags: "[" + '"' + tags + '"' + "]",
       cover_image: PostInfo.cover_image,
-      channel_id: parseInt(getters.getSelectedChan.id)
+      channel_id: parseInt(getters.getSelectedChan.id),
+      is_use_comment: PostInfo.possible,
+      is_save_video: PostInfo.saveVideo
     };
     console.log("bodybody", body);
     const options = {
