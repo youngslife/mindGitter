@@ -45,7 +45,7 @@
           class="diaryInfo"
           v-for="(item, idx) in getDiaries[diary]"
           :key="idx"
-          @click="goDetail(item)"
+          @click="goDetail(item.pk)"
         >
           <div
             class="userImage"
@@ -82,7 +82,7 @@
 <script>
 import Nav from "../nav/Nav.vue";
 import Datepicker from "vuejs-datepicker";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import router from "@/router";
 
 export default {
@@ -123,6 +123,7 @@ export default {
   },
   methods: {
     ...mapActions(["deleteChan", "bringDiaryDetail", "bringChanDetail"]),
+    ...mapMutations(["setPostId"]),
     changeShowAddModal() {
       this.showAddModal = !this.showAddModal;
     },
@@ -138,8 +139,9 @@ export default {
         console.log("취소");
       }
     },
-    goDetail(diaryInfo) {
-      this.bringDiaryDetail(diaryInfo);
+    goDetail(diaryPK) {
+      this.setPostId(diaryPK);
+      this.bringDiaryDetail(diaryPK);
     },
     showProfile(profile_img) {
       console.log(this.profileAddr + profile_img);
@@ -149,8 +151,9 @@ export default {
     }
   },
   async created() {
-    if (this.getChanId) {
-      await this.bringChanDetail(this.getChanId);
+    const chanpk = sessionStorage.getItem('chan')
+    if (chanpk) {
+      await this.bringChanDetail(chanpk);
     } else {
       router.push("/");
     }
