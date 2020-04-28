@@ -68,8 +68,16 @@ input.hi{
   background-color: gray;
 }
 
+div.diaries{
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
 div.diaries>div.diaryInfo{
-  margin: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 div.diaries>div.diaryInfo>div.userImage{
@@ -91,4 +99,10 @@ div.diaries>div.diaryInfo>div.content{
 
 div.diaryList{
   height: 700px;
+}
+
+div.date{
+  font-size: 15px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: cadetblue;
 }

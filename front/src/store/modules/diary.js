@@ -10,28 +10,34 @@ import AWS from "aws-sdk";
 
 const state = {
   chanList: null,
+  chanId: null,
   selectedChan: null,
   selectedDiary: null,
   s3: {},
-  writerInfo: null
+  writerInfo: null,
+  diaries: { dates: null }
 };
 
 const getters = {
   getChanList: state => state.chanList,
+  getChanId: state => state.chanId,
   getSelectedChan: state => state.selectedChan,
   getSelectedDiary: state => state.selectedDiary,
   getS3: state => state.s3,
-  getWriterInfo: state => state.writerInfo
+  getWriterInfo: state => state.writerInfo,
+  getDiaries: state => state.diaries
 };
 
 const mutations = {
   setChanList: (state, chanList) => (state.chanList = chanList),
+  setChanId: (state, chanId) => (state.chanId = chanId),
   setSelectedChan: (state, channel) => (state.selectedChan = channel),
   setSelectedDiary: (state, diary) => (state.selectedDiary = diary),
   sets3: (state, s3) => {
     state.s3 = s3;
   },
-  setWriterInfo: (state, writerInfo) => (state.writerInfo = writerInfo)
+  setWriterInfo: (state, writerInfo) => (state.writerInfo = writerInfo),
+  setDiaries: (state, diaries) => (state.diaries = diaries)
 };
 
 const actions = {
@@ -77,8 +83,32 @@ const actions = {
     };
     axios.get(`${HOST}/channels/${channelId}`, options).then(message => {
       commit("setSelectedChan", message.data);
-      // console.log(message.data.title)
-      router.push("postList");
+      const temp = {};
+      for (const post of message.data.post_set) {
+        if (temp[post.created_at.slice(0, 10)]) {
+          temp[post.created_at.slice(0, 10)].push({
+            pk: post.pk,
+            title: post.title,
+            tags: post.tags,
+            user_id: post.user_id
+          });
+        } else {
+          temp[post.created_at.slice(0, 10)] = [
+            {
+              pk: post.pk,
+              title: post.title,
+              tags: post.tags,
+              user_id: post.user_id
+            }
+          ];
+        }
+      }
+      const dates = Object.keys(temp).sort(function(a, b) {
+        return b - a;
+      });
+      temp["dates"] = dates;
+      commit("setDiaries", temp);
+      // console.log(temp)
     });
   },
   async deleteChan({ dispatch }, channelId) {
