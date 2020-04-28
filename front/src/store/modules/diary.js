@@ -16,7 +16,8 @@ const state = {
   s3: {},
   writerInfo: null,
   diaries: { dates: null },
-  editDiary: null
+  editDiary: null,
+  editChan: null
 };
 
 const getters = {
@@ -27,7 +28,8 @@ const getters = {
   getS3: state => state.s3,
   getWriterInfo: state => state.writerInfo,
   getDiaries: state => state.diaries,
-  getEditDiary: state => state.editDiary
+  getEditDiary: state => state.editDiary,
+  getEditChan: state => state.editChan
 };
 
 const mutations = {
@@ -40,7 +42,8 @@ const mutations = {
   },
   setWriterInfo: (state, writerInfo) => (state.writerInfo = writerInfo),
   setDiaries: (state, diaries) => (state.diaries = diaries),
-  setEditDiary: (state, editDiary) => (state.editDiary = editDiary)
+  setEditDiary: (state, editDiary) => (state.editDiary = editDiary),
+  setEditChan: (state, editChan) => (state.editChan = editChan)
 };
 
 const actions = {
@@ -132,6 +135,35 @@ const actions = {
         alert("삭제 중에 문제가 발생하였습니다.");
       });
     await dispatch("bringChanList");
+    router.push("/");
+  },
+  async editChannel({ dispatch, commit }, PostInfo) {
+    console.log(PostInfo);
+    dispatch;
+    commit;
+    if (PostInfo.file) {
+      console.log('파일 변경');
+      await dispatch("s3Init", "channel");
+      await dispatch("updates3", PostInfo);
+    } else {
+      console.log('파일 변경 안함');
+    }
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "JWT " + token
+      }
+    };
+    const body = {
+      title: PostInfo.title,
+      cover_image: PostInfo.fileName,
+      description: PostInfo.description
+    };
+    console.log("body", body);
+    const res = await axios.put(`${HOST}/channels/${PostInfo.channelId}/`, body, options);
+    console.log(res);
+    await commit("setChanList", null);
     router.push("/");
   },
   bringDiaryDetail: ({ commit, getters }, diaryInfo) => {

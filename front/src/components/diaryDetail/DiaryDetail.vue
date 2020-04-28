@@ -4,7 +4,7 @@
     <v-icon class="etc" @click="changeShowModal">fas fa-ellipsis-v</v-icon>
     <v-card v-if="showModal" @close="showModal = false">
       <div class="edit" @click="editPost(selectedDiary)">
-        <v-icon>fas fa-pen</v-icon>수정
+        <v-icon>fas fa-feather-alt</v-icon>수정
       </div>
       <div class="delete" @click="deletePost(selectedDiary.pk)">
         <v-icon>fas fa-trash-alt</v-icon>삭제
