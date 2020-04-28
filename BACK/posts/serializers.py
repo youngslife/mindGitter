@@ -40,8 +40,6 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     class Meta:
         model = Post
-        fields = ('pk', 'title', 'cover_image', 'user_id',
-                    'context', 'created_at', 'updated_at', 
-                    'video_file', 'tags', 'comment_set', 'channel_id', )   
-
-   
+        fields = ('pk', 'title', 'video_file', 'context', 'emotion', 'summary', 'tags',
+        'created_at', 'updated_at', 'channel_id', 'user_id', 'comment_set',
+        'is_use_comment', 'is_save_video')
