@@ -10,7 +10,7 @@
         <div class="editChan" @click="editChan(getSelectedChan)">
           <v-icon>fas fa-feather-alt</v-icon>일기장 수정
         </div>
-        <div class="withdraw" @click="deletePost(selectedDiary.pk)">
+        <div class="withdraw" @click="withdraw(getSelectedChan.id)">
           <v-icon>fas fa-sign-out-alt</v-icon>일기장 탈퇴하기
         </div>
         <div class="delete" @click="deleteChannel(getSelectedChan.id)">
@@ -134,7 +134,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["deleteChan", "bringDiaryDetail", "bringChanDetail"]),
+    ...mapActions([
+      "deleteChan",
+      "bringDiaryDetail",
+      "bringChanDetail",
+      "leaveChannel"
+    ]),
     ...mapMutations(["setEditChan"]),
     changeShowAddModal() {
       this.showModal = false;
@@ -164,6 +169,20 @@ export default {
       return profile_img
         ? this.profileAddr + profile_img
         : require("../../assets/basic_userImage.png");
+    },
+    async withdraw(channelId) {
+      this.showModal = !this.showModal;
+      if (
+        confirm(
+          "일기장에서 탈퇴하시면 이 곳에서 작성한 일기는 다시 볼 수 없습니다.\n정말로 떠나시겠습니까?"
+        )
+      ) {
+        console.log("탈퇴");
+        await this.leaveChannel(channelId);
+        // router.push("/");
+      } else {
+        console.log("취소");
+      }
     },
     async editChan(channelInfo) {
       await this.setEditChan(channelInfo);

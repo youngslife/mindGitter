@@ -142,11 +142,11 @@ const actions = {
     dispatch;
     commit;
     if (PostInfo.file) {
-      console.log('파일 변경');
+      console.log("파일 변경");
       await dispatch("s3Init", "channel");
       await dispatch("updates3", PostInfo);
     } else {
-      console.log('파일 변경 안함');
+      console.log("파일 변경 안함");
     }
     const token = sessionStorage.getItem("jwt");
     const options = {
@@ -161,7 +161,11 @@ const actions = {
       description: PostInfo.description
     };
     console.log("body", body);
-    const res = await axios.put(`${HOST}/channels/${PostInfo.channelId}/`, body, options);
+    const res = await axios.put(
+      `${HOST}/channels/${PostInfo.channelId}/`,
+      body,
+      options
+    );
     console.log(res);
     await commit("setChanList", null);
     router.push("/");
@@ -204,6 +208,27 @@ const actions = {
         alert("삭제 중에 문제가 발생하였습니다.");
       });
     router.push("/postList");
+  },
+  async leaveChannel({ getters }, ChannelId) {
+    getters;
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    await axios
+      .delete(`${HOST}/channels/${ChannelId}/join/`, options)
+      .then(message => {
+        message;
+        console.log(message);
+        alert("일기장 탈퇴가 성공적으로 이뤄졌습니다.");
+      })
+      .catch(err => {
+        err;
+        alert("일기장 탈퇴 도중 문제가 발생하였습니다.");
+      });
+    router.push("/");
   },
   //S3 부분
   s3Init: ({ commit }, type) => {
