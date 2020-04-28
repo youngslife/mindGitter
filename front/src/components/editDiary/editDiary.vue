@@ -1,9 +1,9 @@
 <template>
   <div class="createDiary">
     <v-icon class="back" @click="goHome">fas fa-arrow-left</v-icon>
-    <form class="AddDiaryForm" @submit.prevent="addChannel(PostInfo)">
+    <form class="AddDiaryForm" @submit.prevent="editChannel(PostInfo)">
       <div class="AddDiaryForm">
-        <h1>Add Diary</h1>
+        <h1>Edit Diary</h1>
         <ul id="diarytitle">
           <label for="diarytitle">Diary Title</label
           ><br />
@@ -29,7 +29,7 @@
           ><br />
           <input type="file" id="diaryimage" @change="onFileChange" />
         </ul>
-        <button class="submit">만들기</button>
+        <button class="submit">수정하기</button>
       </div>
     </form>
   </div>
@@ -47,15 +47,16 @@ export default {
         title: null,
         description: null,
         file: null,
-        fileName: null
+        fileName: null,
+        channelId: null
       }
     };
   },
   computed: {
-    ...mapGetters(["getUserId"])
+    ...mapGetters(["getSelectedChan"])
   },
   methods: {
-    ...mapActions(["addChannel"]),
+    ...mapActions(["editChannel"]),
     onFileChange(e) {
       const files = e.target.files;
       if (files) {
@@ -67,8 +68,14 @@ export default {
     goHome() {
       router.push("/");
     }
+  },
+  async created() {
+    this.PostInfo.title = this.getSelectedChan.title;
+    this.PostInfo.description = this.getSelectedChan.description;
+    this.PostInfo.fileName = this.getSelectedChan.cover_image;
+    this.PostInfo.channelId = this.getSelectedChan.id;
   }
 };
 </script>
 
-<style src="./createDiary.css" scoped></style>
+<style src="./editDiary.css" scoped></style>

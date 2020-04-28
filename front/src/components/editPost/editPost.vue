@@ -8,7 +8,7 @@
         ><h1>{{ getSelectedChan.title }}</h1></v-col
       >
     </v-row>
-    <form class="AddPostForm" @submit.prevent="addPost(postInfo)">
+    <form class="AddPostForm" @submit.prevent="editPost(postInfo)">
       <div class="AddPostForm">
         <ul id="posttitle">
           <label for="posttitle">Title</label
@@ -61,24 +61,27 @@ import { mapGetters, mapActions } from "vuex";
 import router from "@/router";
 
 export default {
-  name: "createDiary",
+  name: "editPost",
   data() {
     return {
       postInfo: {
         title: null,
+        video: null,
         tags: null,
         context: "context",
         cover_image: "cover_image",
         possible: false,
         saveVideo: false,
         file: null,
-        fileName: null
+        fileName: null,
+        post_id: null
       },
+      videoAddr: process.env.VUE_APP_STATIC_ADDR + "diary/",
       videoTempUrl: null
     };
   },
   methods: {
-    ...mapActions(["addPost"]),
+    ...mapActions(["editPost"]),
     goList() {
       router.push("/postList");
     },
@@ -95,9 +98,18 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getUserId", "getSelectedChan"])
+    ...mapGetters(["getSelectedChan", "getEditDiary"])
+  },
+  async created() {
+    this.postInfo.title = this.getEditDiary.title;
+    this.postInfo.tags = this.getEditDiary.tags;
+    this.postInfo.possible = this.getEditDiary.is_use_comment;
+    this.postInfo.saveVideo = this.getEditDiary.is_save_video;
+    this.videoTempUrl = this.videoAddr + this.getEditDiary.video_file;
+    this.postInfo.fileName = this.getEditDiary.video_file;
+    this.postInfo.post_id = this.getEditDiary.pk;
   }
 };
 </script>
 
-<style src="./NewPost.css" scoped></style>
+<style src="./editPost.css" scoped></style>

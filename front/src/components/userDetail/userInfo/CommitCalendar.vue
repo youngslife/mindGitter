@@ -1,52 +1,39 @@
 <template>
   <div class="commitCalendar">
-    <v-container @click="check">
-      <!-- <v-row>
-        <div class="first"></div>
-        <div class="first">Mon</div>
-        <div class="first"></div>
-        <div class="first">Wed</div>
-        <div class="first"></div>
-        <div class="first">Fri</div>
-        <div class="first"></div>
-      </v-row>
-      <v-row>
-        <div :class="nemo" v-for="(nemo, i) in commitData.nemos.slice(0, 7)" :key="i"></div>
-      </v-row>
-      <v-row>
-        <div :class="nemo" v-for="(nemo, i) in commitData.nemos.slice(7, 14)" :key="i"></div>
-      </v-row>
-      <v-row>
-        <div :class="nemo" v-for="(nemo, i) in commitData.nemos.slice(14, 21)" :key="i"></div>
-      </v-row>
-      <v-row>
-        <div :class="nemo" v-for="(nemo, i) in commitData.nemos.slice(21, 28)" :key="i"></div>
-      </v-row>
-      <v-row>
-        <div :class="nemo" v-for="(nemo, i) in commitData.nemos.slice(28, 35)" :key="i"></div>
-      </v-row> -->
+    <v-container v-if="getCommitInfo">
       <!-- 월 -->
       <v-row class="month">
         <v-col class="first"></v-col>
         <v-col></v-col>
         <v-col></v-col>
         <v-col>
-          <div class="first">Feb</div>
+          <div class="first">{{ getTargetMonths[4].slice(7) }}</div>
         </v-col>
-        <v-col></v-col>
         <v-col></v-col>
         <v-col></v-col>
         <v-col></v-col>
         <v-col>
-          <div class="first">Mar</div>
+          <div class="first">{{ getTargetMonths[3].slice(7) }}</div>
         </v-col>
-        <v-col></v-col>
         <v-col></v-col>
         <v-col></v-col>
         <v-col></v-col>
         <v-col>
-          <div class="first">Apr</div>
+          <div class="first">{{ getTargetMonths[2].slice(7) }}</div>
         </v-col>
+        <v-col></v-col>
+        <v-col></v-col>
+        <v-col></v-col>
+        <v-col>
+          <div class="first">{{ getTargetMonths[1].slice(7) }}</div>
+        </v-col>
+        <v-col></v-col>
+        <v-col></v-col>
+        <v-col></v-col>
+        <v-col>
+          <div class="first">{{ getTargetMonths[0].slice(7) }}</div>
+        </v-col>
+        <v-col></v-col>
         <v-col></v-col>
         <v-col></v-col>
       </v-row>
@@ -60,111 +47,10 @@
           <div class="first">Fri</div>
           <div class="first"></div>
         </v-col>
-        <!-- 2월 -->
-        <v-col>
+        <v-col v-for="(cnt, i) in count" :key="i">
           <div
             :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
-            :key="i"
-          ></div>
-        </v-col>
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(7, 14)"
-            :key="i"
-          ></div>
-        </v-col>
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(14, 21)"
-            :key="i"
-          ></div>
-        </v-col>
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(21, 28)"
-            :key="i"
-          ></div>
-        </v-col>
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
-            :key="i"
-          ></div>
-        </v-col>
-        <!-- 3월 -->
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
-            :key="i"
-          ></div>
-        </v-col>
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
-            :key="i"
-          ></div>
-        </v-col>
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
-            :key="i"
-          ></div>
-        </v-col>
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
-            :key="i"
-          ></div>
-        </v-col>
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
-            :key="i"
-          ></div>
-        </v-col>
-        <!-- 4월 -->
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
-            :key="i"
-          ></div>
-        </v-col>
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
-            :key="i"
-          ></div>
-        </v-col>
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
-            :key="i"
-          ></div>
-        </v-col>
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
-            :key="i"
-          ></div>
-        </v-col>
-        <v-col>
-          <div
-            :class="nemo"
-            v-for="(nemo, i) in commitData.nemos.slice(0, 7)"
+            v-for="(nemo, i) in getCommitInfo.slice(cnt * 7 + 0, cnt * 7 + 7)"
             :key="i"
           ></div>
         </v-col>
@@ -174,12 +60,35 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "commitCalendar",
   data() {
     return {
+      count: [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
       commitData: {
         commitInfo: null,
         commitDates: null,
@@ -188,19 +97,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getCommitInfo", "getCommitDates", "getNemos"])
+    ...mapGetters(["getCommitInfo", "getTargetMonths"])
   },
   methods: {
-    ...mapMutations(["setNemos"]),
-    check() {
-      this.setNemos(this.commitData);
-      this.commitData.nemos = this.getNemos;
-    }
+    ...mapActions(["bringUserInfoSet"])
   },
-  created() {
-    this.commitData.commitInfo = this.getCommitInfo;
-    this.commitData.commitDates = this.getCommitDates;
-    this.commitData.nemos = this.getNemos;
+  async created() {
+    this.bringUserInfoSet();
   }
 };
 </script>
