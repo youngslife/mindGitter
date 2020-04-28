@@ -13,36 +13,54 @@ const state = {
   selectedChan: null,
   selectedDiary: null,
   s3: {},
-  writerInfo: null
+  writerInfo: null,
 };
 
 const getters = {
-  getChanList: state => state.chanList,
-  getSelectedChan: state => state.selectedChan,
-  getSelectedDiary: state => state.selectedDiary,
-  getS3: state => state.s3,
-  getWriterInfo: state => state.writerInfo
+  getChanList: (state) => state.chanList,
+  getSelectedChan: (state) => state.selectedChan,
+  getSelectedDiary: (state) => state.selectedDiary,
+  getS3: (state) => state.s3,
+  getWriterInfo: (state) => state.writerInfo,
 };
 
 const mutations = {
   setChanList: (state, chanList) => (state.chanList = chanList),
-  setSelectedChan: (state, channel) => (state.selectedChan = channel),
-  setSelectedDiary: (state, diary) => (state.selectedDiary = diary),
+  setSelectedChan: (state, channel) => {
+    state.selectedChan = channel;
+    sessionStorage.setItem("chan", channel.id);
+  },
+  setSelectedDiary: (state, diary) => {
+    state.selectedDiary = diary;
+    sessionStorage.setItem("post", diary.id);
+  },
   sets3: (state, s3) => {
     state.s3 = s3;
   },
-  setWriterInfo: (state, writerInfo) => (state.writerInfo = writerInfo)
+  setWriterInfo: (state, writerInfo) => (state.writerInfo = writerInfo),
 };
 
 const actions = {
+  refreshPage: ({ commit }) => {
+    const chanid = sessionStorage.getItem("chan");
+    const postid = sessionStorage.getItem("post");
+    if (postid) {
+      commit("setSelectedDiary", postid);
+      
+    }
+    if (chanid) {
+      commit("setSelectedChan", chanid);
+      this.bringChanDetail(chanid);
+    }
+  },
   async bringChanList({ commit }) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
-    await axios.get(HOST + "/channels/", options).then(message => {
+    await axios.get(HOST + "/channels/", options).then((message) => {
       commit("setChanList", message.data.channels);
     });
   },
@@ -54,13 +72,13 @@ const actions = {
     const options = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
     const body = {
       title: PostInfo.title,
       cover_image: PostInfo.fileName,
-      description: PostInfo.description
+      description: PostInfo.description,
     };
     console.log("body", body);
     const res = await axios.post(HOST + "/channels/", body, options);
@@ -72,12 +90,12 @@ const actions = {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
-    axios.get(`${HOST}/channels/${channelId}`, options).then(message => {
+    axios.get(`${HOST}/channels/${channelId}`, options).then((message) => {
       commit("setSelectedChan", message.data);
-      // console.log(message.data.title)
+      console.log(message);
       router.push("postList");
     });
   },
@@ -85,16 +103,16 @@ const actions = {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
     await axios
       .delete(`${HOST}/channels/${channelId}`, options)
-      .then(message => {
+      .then((message) => {
         message;
         alert("성공적으로 삭제되었습니다.");
       })
-      .catch(message => {
+      .catch((message) => {
         message;
         alert("삭제 중에 문제가 발생하였습니다.");
       });
@@ -105,10 +123,10 @@ const actions = {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
-    axios.get(`${HOST}/posts/${diaryInfo.pk}`, options).then(message => {
+    axios.get(`${HOST}/posts/${diaryInfo.pk}`, options).then((message) => {
       commit("setSelectedDiary", message.data);
       const selectedChanUser = getters.getSelectedChan.user_set;
       for (let idx = 0; idx < selectedChanUser.length; idx++) {
@@ -119,17 +137,31 @@ const actions = {
       router.push("/diaryDetail");
     });
   },
+  async addComment({ getters }, reviewContext) {
+    const token = sessionStorage.getItem("jwt");
+    const postpk = getters.getSelectedDiary.pk;
+    const options = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "JWT " + token,
+      },
+    };
+    const body = {
+      context: reviewContext,
+    };
+    await axios.post(`${HOST}/posts/${postpk}/comments/`, body, options);
+  },
   //S3 부분
   s3Init: ({ commit }, type) => {
     AWS.config.update({
       region: process.env.VUE_APP_BUCKET_REGION,
       credentials: new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL
-      })
+        IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL,
+      }),
     });
     const s3 = new AWS.S3({
       apiVersion: "2006-03-01",
-      params: { Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type }
+      params: { Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type },
     });
     commit("sets3", s3);
   },
@@ -139,7 +171,7 @@ const actions = {
     const params = {
       Key: PostInfo.fileName,
       Body: PostInfo.file,
-      ACL: "public-read-write"
+      ACL: "public-read-write",
     };
     const res = await s3.upload(params).promise();
     console.log(res);
@@ -157,23 +189,23 @@ const actions = {
       video_file: PostInfo.fileName,
       tags: "[" + '"' + tags + '"' + "]",
       cover_image: PostInfo.cover_image,
-      channel_id: parseInt(getters.getSelectedChan.id)
+      channel_id: parseInt(getters.getSelectedChan.id),
     };
     console.log("bodybody", body);
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
     const res = await axios.post(HOST + "/posts/", body, options);
     console.log("res", res);
     router.push("/postList");
-  }
+  },
 };
 
 export default {
   state,
   getters,
   mutations,
-  actions
+  actions,
 };

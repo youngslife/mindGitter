@@ -31,7 +31,8 @@
       <span>{{ selectedMode }}</span>
     </div>
     <div class="text" v-if="selectedMode == 'Comment'">
-      <span>{{ selectedMode }}</span>
+      <!-- <span>{{ selectedMode }}</span> -->
+      <Comments />
     </div>
     <div class="additionalInfo">
       <span>작성자: {{ getWriterInfo.username }}</span>
@@ -52,9 +53,13 @@
 <script>
 import router from "@/router";
 import { mapGetters } from "vuex";
+import Comments from "./Comments/Comments.vue"
 
 export default {
   name: "DiaryDetail",
+  components: {
+    Comments
+  },
   data() {
     return {
       modes: ["Detail", "Analysis", "Comment"],
@@ -77,7 +82,7 @@ export default {
   },
   created() {
     this.selectedDiary = this.getSelectedDiary;
-    console.log(this.selectedDiary.video_file);
+    // console.log(this.selectedDiary.video_file);
     // console.log(this.selectedDiary)
     // console.log(this.getSelectedChan)
   }
