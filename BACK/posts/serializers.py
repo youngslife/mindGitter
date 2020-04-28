@@ -31,28 +31,14 @@ class PostDateFilterSerializer(serializers.ListSerializer):
         today = datetime.now()
         six_months_ago = today + relativedelta(months=-6)
         data = data.filter(created_at__lte=today).filter(created_at__gte=six_months_ago)
-        if data:
-            first_p = data[0]
-            list_post_created = [{ first_p.created_at.strftime('%Y-%m-%d'): [first_p.id] }]
-
-            for posting in data[1:]: # 각 포스트 데이터
-                ddate = posting.created_at.strftime('%Y-%m-%d')
-                for post_created in list_post_created:
-                    if ddate in post_created.keys():
-                        post_created[ddate].append(posting.id); break
-                    else:
-                        list_post_created.append({ddate: [posting.id]}); break
-
-            return list_post_created
-        else:
-            return super(PostDateFilterSerializer, self).to_representation(data)
+        
+        return super(PostDateFilterSerializer, self).to_representation(data)
 
 
 class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     comment_set = CommentSerializer(read_only=True, many=True)
     tags = TagListSerializerField()
     class Meta:
-        list_serializer_class = PostDateFilterSerializer
         model = Post
         fields = ('pk', 'title', 'cover_image', 'user_id',
                     'context', 'created_at', 'updated_at', 
