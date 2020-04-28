@@ -21,6 +21,9 @@ def board(request):
 
     elif request.method == 'POST':  # create a diary book
         data = request.data
+        # # postman에서 보낼 때는 dict형으로 바꿔줘야 QueryDict is immutable 에러 안남
+        # data = request.data.dict()
+
         data.update({'create_user': request.user.id})
         serializer = ChannelSerializer(data=data)
 
@@ -48,7 +51,9 @@ def board_title(request, id):
 
     if channel.create_user_id == request.user.id:
         if request.method == 'PUT':  # update a diary book
-            data = request.data.dict()
+            data = request.data
+            # # postman에서 보낼 때는 dict형으로 바꿔줘야 QueryDict is immutable 에러 안남
+            # data = request.data.dict()
             data.update({'create_user': request.user.id})
             serializer = ChannelSerializer(channel, data=data)
             if serializer.is_valid():

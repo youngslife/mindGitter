@@ -84,7 +84,7 @@ const actions = {
     } else {
       axios
         .post(
-          HOST + "/api/rest-auth/login/",
+          HOST + "/rest-auth/login/",
           { username, password },
           {
             headers: {
@@ -141,7 +141,7 @@ const actions = {
         if (password1 === password2) {
           axios
             .post(
-              HOST + "/api/rest-auth/registration/",
+              HOST + "/rest-auth/registration/",
               {
                 username,
                 email,
@@ -226,7 +226,7 @@ const actions = {
         Authorization: "JWT " + token
       }
     };
-    const message = await axios.get(`${HOST}/api/current_user`, options);
+    const message = await axios.get(`${HOST}/current_user`, options);
     commit("setUserInfoSet", message.data);
     let commitInfo = [];
     for (let i = 0; i < 147; i++) {
@@ -285,7 +285,7 @@ const actions = {
         Authorization: "JWT " + token
       }
     };
-    const res = await axios.get(`${HOST}/api/profile_img/`, options);
+    const res = await axios.get(`${HOST}/profile_img/`, options);
     console.log("bringUserProfile", res.data);
     commit("setUserProfile", res.data.profile_img);
   },
@@ -302,7 +302,7 @@ const actions = {
     const body = {
       profile_img: PostInfo.fileName
     };
-    const res = await axios.put(`${HOST}/api/profile_img/`, body, options);
+    const res = await axios.put(`${HOST}/profile_img/`, body, options);
     console.log(res);
     await dispatch("bringUserProfile");
     commit("setUserImgModal", false);
