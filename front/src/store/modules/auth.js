@@ -3,7 +3,6 @@ const HOST = process.env.VUE_APP_SERVER_HOST;
 const axios = require("axios");
 import router from "../../router";
 import AWS from "aws-sdk";
-
 const state = {
   token: null,
   errors: [],
@@ -12,8 +11,26 @@ const state = {
   userId: null,
   userInfoSet: null,
   userImgModal: false,
+  commitDates: [new Date().getFullYear(), new Date().getMonth()],
+  commitInfo: null,
+  indexDict: null,
   userProfile: null,
   s3: {},
+  months: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec"
+  ],
+  targetMonths: null
 };
 
 const getters = {
@@ -24,7 +41,10 @@ const getters = {
   getUserId: state => state.userId,
   getUserInfoSet: state => state.userInfoSet,
   getUserImgModal: state => state.userImgModal,
-  getUserProfile: state => state.userProfile
+  getCommitDates: state => state.commitDates,
+  getCommitInfo: state => state.commitInfo,
+  getUserProfile: state => state.userProfile,
+  getTargetMonths: state => state.targetMonths
 };
 
 const mutations = {
@@ -43,6 +63,9 @@ const mutations = {
   sets3: (state, s3) => {
     state.s3 = s3;
   },
+  setCommitInfo: (state, commitInfo) => (state.commitInfo = commitInfo),
+  setIndexDict: (state, indexDict) => (state.indexDict = indexDict),
+  setTargetMonths: (state, targetMonths) => (state.targetMonths = targetMonths)
 };
 
 const actions = {
@@ -55,13 +78,13 @@ const actions = {
   pushError: ({ commit }, error) => {
     commit("pushError", error);
   },
-  login: ({ commit, getters, dispatch }, { username, password }) => {
+  login: ({ state, commit, getters, dispatch }, { username, password }) => {
     if (getters.isLoggedIn) {
       router.push("/");
     } else {
       axios
         .post(
-          HOST + "/api/rest-auth/login/",
+          HOST + "/rest-auth/login/",
           { username, password },
           {
             headers: {
@@ -71,11 +94,13 @@ const actions = {
           }
         )
         .then(token => {
+          console.log(state.commitDates); // [2020, 04]
+          console.log(token);
           commit("setToken", token.data.token);
           commit("setLoading", false);
           commit("setUserName", username);
           commit("setUserId", token.data.user.pk);
-          dispatch("bringUserInfoSet");
+          dispatch("preprocessingCommit");
           router.push("/");
         })
         .catch(err => {
@@ -116,7 +141,7 @@ const actions = {
         if (password1 === password2) {
           axios
             .post(
-              HOST + "/api/rest-auth/registration/",
+              HOST + "/rest-auth/registration/",
               {
                 username,
                 email,
@@ -126,7 +151,7 @@ const actions = {
               {
                 headers: {
                   "Content-Type": "application/json",
-                  Accept: "application/json",
+                  Accept: "application/json"
                 }
               }
             )
@@ -151,17 +176,68 @@ const actions = {
       }
     }
   },
-  bringUserInfoSet: ({ commit }) => {
+  preprocessingCommit({ state, commit }) {
     commit;
+    let targetMonths = [];
+    const dates = new Date(state.commitDates[0], state.commitDates[1] + 1, 0);
+    const nowEndYoil = dates.getDay();
+
+    dates.setDate(dates.getDate() + 6 - nowEndYoil);
+
+    const temp = new Date(state.commitDates[0], state.commitDates[1], 1);
+    dates.setDate(dates.getDate() - 146);
+
+    for (let i = 0; i < 5; i++) {
+      targetMonths.push(
+        `${temp.getFullYear()} - ${state.months[temp.getMonth()]}`
+      );
+      temp.setMonth(temp.getMonth() - 1);
+    }
+    commit("setTargetMonths", targetMonths);
+
+    let indexDict = {};
+
+    for (let i = 0; i < 147; i++) {
+      if (dates.getMonth() < 9) {
+        indexDict[
+          `${dates.getFullYear()}-0${dates.getMonth() + 1}-${dates.getDate()}`
+        ] = i;
+      } else {
+        indexDict[
+          `${dates.getFullYear()}-${dates.getMonth() + 1}-${dates.getDate()}`
+        ] = i;
+      }
+      dates.setDate(dates.getDate() + 1);
+    }
+    commit("setIndexDict", indexDict);
+    let commitInfo = [];
+    for (let i = 0; i < 147; i++) {
+      commitInfo.push("nemo");
+    }
+    commit("setCommitInfo", commitInfo);
+
+    console.log(targetMonths);
+    console.log(indexDict);
+  },
+  async bringUserInfoSet({ commit }) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
     };
-    axios.get(`${HOST}/api/current_user`, options).then(message => {
-      console.log(message.data);
-    });
+    const message = await axios.get(`${HOST}/current_user`, options);
+    commit("setUserInfoSet", message.data);
+    let commitInfo = [];
+    for (let i = 0; i < 147; i++) {
+      commitInfo.push("nemo");
+    }
+    for (const post of message.data.post_set) {
+      if (commitInfo[state.indexDict[post.created_at.slice(0, 10)]] == "nemo") {
+        commitInfo[state.indexDict[post.created_at.slice(0, 10)]] = "done";
+      }
+    }
+    commit("setCommitInfo", commitInfo);
   },
   validation: ({ commit, dispatch }, { username, password }) => {
     commit("setLoading", false);
@@ -186,12 +262,12 @@ const actions = {
     });
     const s3 = new AWS.S3({
       apiVersion: "2006-03-01",
-      params: { Bucket: process.env.VUE_APP_BUCKET_NAME+'/'+type }
+      params: { Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type }
     });
     commit("sets3", s3);
   },
   async updates3({ commit }, PostInfo) {
-    console.log('upadates3', PostInfo)
+    console.log("upadates3", PostInfo);
     const s3 = state.s3;
     const params = {
       Key: PostInfo.fileName,
@@ -202,34 +278,34 @@ const actions = {
     console.log(res);
     commit("sets3", {});
   },
-  async bringUserProfile ({ commit }) {
+  async bringUserProfile({ commit }) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
     };
-    const res = await axios.get(`${HOST}/api/profile_img/`, options)
-    console.log("bringUserProfile", res.data)
-    commit("setUserProfile", res.data.profile_img)
+    const res = await axios.get(`${HOST}/profile_img/`, options);
+    console.log("bringUserProfile", res.data);
+    commit("setUserProfile", res.data.profile_img);
   },
-  async updateUserInfo ({ commit, dispatch }, PostInfo) {
-    console.log('addChannel', PostInfo)
-    await dispatch("s3Init", 'profile');
+  async updateUserInfo({ commit, dispatch }, PostInfo) {
+    console.log("addChannel", PostInfo);
+    await dispatch("s3Init", "profile");
     await dispatch("updates3", PostInfo);
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
-    }
+    };
     const body = {
       profile_img: PostInfo.fileName
-    }
-    const res = await axios.put(`${HOST}/api/profile_img/`, body, options)
-    console.log(res)
-    await dispatch("bringUserProfile")
-    commit("setUserImgModal", false)
+    };
+    const res = await axios.put(`${HOST}/profile_img/`, body, options);
+    console.log(res);
+    await dispatch("bringUserProfile");
+    commit("setUserImgModal", false);
   }
 };
 
