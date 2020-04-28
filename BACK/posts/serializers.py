@@ -29,8 +29,9 @@ class EmotionSerializer(serializers.ModelSerializer):
 class PostDateFilterSerializer(serializers.ListSerializer):
     def to_representation(self, data):
         today = datetime.now()
-        three_month_ago = today + relativedelta(months=-6)
-        data = data.filter(created_at__lte=today).filter(created_at__gte=three_month_ago)
+        six_months_ago = today + relativedelta(months=-6)
+        data = data.filter(created_at__lte=today).filter(created_at__gte=six_months_ago)
+        
         return super(PostDateFilterSerializer, self).to_representation(data)
 
 
@@ -38,7 +39,6 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     comment_set = CommentSerializer(read_only=True, many=True)
     tags = TagListSerializerField()
     class Meta:
-        list_serializer_class = PostDateFilterSerializer
         model = Post
         fields = ('pk', 'title', 'cover_image', 'user_id',
                     'context', 'created_at', 'updated_at', 

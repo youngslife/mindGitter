@@ -2,19 +2,29 @@ const HOST = process.env.VUE_APP_SERVER_HOST;
 
 const axios = require("axios");
 import router from "../../router";
+import AWS from "aws-sdk";
 
 const state = {
   token: null,
   errors: [],
   loading: false,
-  userName: null
+  userName: null,
+  userId: null,
+  userInfoSet: null,
+  userImgModal: false,
+  userProfile: null,
+  s3: {},
 };
 
 const getters = {
   isLoggedIn: state => !!state.token,
   getErrors: state => state.errors,
   isLoading: state => state.loading,
-  getUserName: state => state.userName
+  getUserName: state => state.userName,
+  getUserId: state => state.userId,
+  getUserInfoSet: state => state.userInfoSet,
+  getUserImgModal: state => state.userImgModal,
+  getUserProfile: state => state.userProfile
 };
 
 const mutations = {
@@ -25,7 +35,14 @@ const mutations = {
   },
   pushError: (state, error) => state.errors.push(error),
   clearErrors: state => (state.errors = []),
-  setUserName: (state, userName) => (state.userName = userName)
+  setUserName: (state, userName) => (state.userName = userName),
+  setUserId: (state, userId) => (state.userId = userId),
+  setUserInfoSet: (state, userInfoSet) => (state.userInfoSet = userInfoSet),
+  setUserImgModal: (state, userImgModal) => (state.userImgModal = userImgModal),
+  setUserProfile: (state, userProfile) => (state.userProfile = userProfile),
+  sets3: (state, s3) => {
+    state.s3 = s3;
+  },
 };
 
 const actions = {
@@ -35,12 +52,10 @@ const actions = {
     sessionStorage.removeItem("jwt");
     router.push("/login");
   },
-
   pushError: ({ commit }, error) => {
     commit("pushError", error);
   },
-
-  login: ({ commit, getters }, { username, password }) => {
+  login: ({ commit, getters, dispatch }, { username, password }) => {
     if (getters.isLoggedIn) {
       router.push("/");
     } else {
@@ -59,6 +74,8 @@ const actions = {
           commit("setToken", token.data.token);
           commit("setLoading", false);
           commit("setUserName", username);
+          commit("setUserId", token.data.user.pk);
+          dispatch("bringUserInfoSet");
           router.push("/");
         })
         .catch(err => {
@@ -109,7 +126,7 @@ const actions = {
               {
                 headers: {
                   "Content-Type": "application/json",
-                  Accept: "application/json"
+                  Accept: "application/json",
                 }
               }
             )
@@ -134,11 +151,17 @@ const actions = {
       }
     }
   },
-  initialLogin: ({ commit }) => {
+  bringUserInfoSet: ({ commit }) => {
+    commit;
     const token = sessionStorage.getItem("jwt");
-    if (token) {
-      commit("setToken", token);
-    }
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    axios.get(`${HOST}/api/current_user`, options).then(message => {
+      console.log(message.data);
+    });
   },
   validation: ({ commit, dispatch }, { username, password }) => {
     commit("setLoading", false);
@@ -153,6 +176,60 @@ const actions = {
     } else {
       dispatch("login", { username, password });
     }
+  },
+  s3Init: ({ commit }, type) => {
+    AWS.config.update({
+      region: process.env.VUE_APP_BUCKET_REGION,
+      credentials: new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL
+      })
+    });
+    const s3 = new AWS.S3({
+      apiVersion: "2006-03-01",
+      params: { Bucket: process.env.VUE_APP_BUCKET_NAME+'/'+type }
+    });
+    commit("sets3", s3);
+  },
+  async updates3({ commit }, PostInfo) {
+    console.log('upadates3', PostInfo)
+    const s3 = state.s3;
+    const params = {
+      Key: PostInfo.fileName,
+      Body: PostInfo.file,
+      ACL: "public-read-write"
+    };
+    const res = await s3.upload(params).promise();
+    console.log(res);
+    commit("sets3", {});
+  },
+  async bringUserProfile ({ commit }) {
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    const res = await axios.get(`${HOST}/api/profile_img/`, options)
+    console.log("bringUserProfile", res.data)
+    commit("setUserProfile", res.data.profile_img)
+  },
+  async updateUserInfo ({ commit, dispatch }, PostInfo) {
+    console.log('addChannel', PostInfo)
+    await dispatch("s3Init", 'profile');
+    await dispatch("updates3", PostInfo);
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    }
+    const body = {
+      profile_img: PostInfo.fileName
+    }
+    const res = await axios.put(`${HOST}/api/profile_img/`, body, options)
+    console.log(res)
+    await dispatch("bringUserProfile")
+    commit("setUserImgModal", false)
   }
 };
 

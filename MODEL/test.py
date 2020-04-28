@@ -8,18 +8,16 @@ from models.simple_cnn import SimpleCNN
 from keras.losses import categorical_crossentropy
 from sklearn.metrics import confusion_matrix, classification_report
 
-
-if args.is_train == 'True':
-  raise ValueError('You are trying to run test with train option. Check options again.')
-
 # save configs
 utils.save_logs()
 
 # load dataset
 if args.is_data_video == 'True':
-  preprocess.load_video()
+  xtest, ytest = preprocess.load_video()
 elif args.is_data_video == 'False':
   xtest, ytest = preprocess.load_image()
+else:
+  print('Check argument is data video. It must be True or False')
 
 #hyper parameters
 num_features = 64
@@ -31,7 +29,7 @@ epochs = 15
 # Select Model 
 if args.model == 'sCNN':
   model = SimpleCNN(num_features, num_labels, size)
-  model.load_weights(args.checkpoint_path)
+  model.load_weights(os.path.join(args.model_dir, f'{args.model}.best.hdf5'))
   model.summary()
 else:
   raise ValueError(f'There is no valid model named {args.model}. Check again models.')

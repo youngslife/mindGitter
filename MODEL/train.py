@@ -13,7 +13,8 @@ utils.save_logs()
 
 # data preprocessing
 if args.is_data_video == 'True':
-  preprocess.load_video()
+  # send 데이터가 오면 lstm모델 훈련을 위해 preprocess 부분을 다르게 짤 예정
+  pass
 elif args.is_data_video == 'False':
   xtrain, xvalid, ytrain, yvalid = preprocess.load_image()
 else:
