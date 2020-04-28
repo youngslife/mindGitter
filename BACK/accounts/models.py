@@ -38,6 +38,7 @@ class UserEmotion(models.Model):
 class Notification(models.Model):
     TYPE_CHOICES = (
         ('join', 'Join'),
+        # ('comment', 'Comment')
     )
 
     inviter = models.ForeignKey(User, on_delete=models.PROTECT, related_name='invitor')

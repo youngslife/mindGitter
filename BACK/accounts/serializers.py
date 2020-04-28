@@ -26,7 +26,8 @@ class UserTagSerializer(serializers.ModelSerializer):
 
 
 class NotificationSerializer(serializers.ModelSerializer):
-    inviter = UserDisplaySerializer()
+    # inviter = UserDisplaySerializer()
+    # to = UserDisplaySerializer()
     class Meta:
         model = Notification
         fields = '__all__'
