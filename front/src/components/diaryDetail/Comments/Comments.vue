@@ -20,7 +20,7 @@
         v-for="(comment, i) in getSelectedDiary.comment_set"
         :key="i"
       >
-        <div class="userName">{{ comment.user }}</div>
+        <UserName :userpk="comment.user" />
         <div class="context">{{ comment.context }}</div>
         <div class="btn">
           <button class="delBtn" @click="deleteComment(comment)">DEL</button>
@@ -32,9 +32,12 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-
+import UserName from "./userName/UserName.vue"
 export default {
   name: "newComment",
+  components: {
+    UserName
+  },
   data() {
     return {
       context: null,
