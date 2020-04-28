@@ -15,7 +15,8 @@ const state = {
   selectedDiary: null,
   s3: {},
   writerInfo: null,
-  diaries: { dates: null }
+  diaries: { dates: null },
+  editDiary: null
 };
 
 const getters = {
@@ -25,7 +26,8 @@ const getters = {
   getSelectedDiary: state => state.selectedDiary,
   getS3: state => state.s3,
   getWriterInfo: state => state.writerInfo,
-  getDiaries: state => state.diaries
+  getDiaries: state => state.diaries,
+  getEditDiary: state => state.editDiary
 };
 
 const mutations = {
@@ -37,7 +39,8 @@ const mutations = {
     state.s3 = s3;
   },
   setWriterInfo: (state, writerInfo) => (state.writerInfo = writerInfo),
-  setDiaries: (state, diaries) => (state.diaries = diaries)
+  setDiaries: (state, diaries) => (state.diaries = diaries),
+  setEditDiary: (state, editDiary) => (state.editDiary = editDiary)
 };
 
 const actions = {
@@ -219,6 +222,39 @@ const actions = {
       }
     };
     const res = await axios.post(HOST + "/posts/", body, options);
+    console.log("res", res);
+    router.push("/postList");
+  },
+  async editPost({ dispatch }, PostInfo) {
+    if (PostInfo.file) {
+      console.log("file 변경 있음");
+      await dispatch("s3Init", "diary");
+      await dispatch("updates3", PostInfo);
+    } else {
+      console.log("file 변경 없음");
+    }
+    const token = sessionStorage.getItem("jwt");
+    const tags = PostInfo.tags;
+    const body = {
+      title: PostInfo.title,
+      context: PostInfo.context,
+      video_file: PostInfo.fileName,
+      tags: "[" + '"' + tags + '"' + "]",
+      cover_image: PostInfo.cover_image,
+      is_use_comment: PostInfo.possible,
+      is_save_video: PostInfo.saveVideo
+    };
+    console.log("bodybody", body);
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    const res = await axios.put(
+      `${HOST}/posts/${PostInfo.post_id}/`,
+      body,
+      options
+    );
     console.log("res", res);
     router.push("/postList");
   }

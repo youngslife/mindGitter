@@ -8,6 +8,7 @@ import Login from "../components/login/Login.vue";
 import NewPost from "../components/newPost/NewPost.vue";
 import UserDetail from "../components/userDetail/UserDetail.vue";
 import Signup from "../components/signup/Signup.vue";
+import EditPost from "../components/editPost/editPost.vue";
 
 Vue.use(VueRouter);
 
@@ -51,6 +52,11 @@ const routes = [
     path: "/",
     name: "home",
     component: Home
+  },
+  {
+    path: "/editPost",
+    name: "editPost",
+    component: EditPost
   }
 ];
 
