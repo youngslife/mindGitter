@@ -3,7 +3,7 @@
     <v-icon class="back" @click="goPostList">fas fa-arrow-left</v-icon>
     <v-icon class="etc" @click="changeShowModal">fas fa-ellipsis-v</v-icon>
     <v-card v-if="showModal" @close="showModal = false">
-      <div class="edit" @click="changeShowModal">
+      <div class="edit" @click="editPost(selectedDiary)">
         <v-icon>fas fa-pen</v-icon>수정
       </div>
       <div class="delete" @click="deletePost(selectedDiary.pk)">
@@ -66,7 +66,7 @@
 
 <script>
 import router from "@/router";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "DiaryDetail",
@@ -85,6 +85,7 @@ export default {
   },
   methods: {
     ...mapActions(["deleteDiary"]),
+    ...mapMutations(["setEditDiary"]),
     goPostList() {
       router.push("/postList");
     },
@@ -95,7 +96,6 @@ export default {
       this.showModal = !this.showModal;
     },
     deletePost(postId) {
-      postId;
       this.showModal = !this.showModal;
       if (
         confirm("삭제된 내용은 복구가 불가능합니다\n정말 삭제하시겠습니까?")
@@ -105,6 +105,10 @@ export default {
       } else {
         console.log("취소");
       }
+    },
+    async editPost(diaryInfo) {
+      await this.setEditDiary(diaryInfo);
+      router.push("/editPost");
     }
   },
   created() {
