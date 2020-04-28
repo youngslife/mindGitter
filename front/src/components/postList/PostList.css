@@ -19,7 +19,7 @@ div.infoAndSetting>.v-icon.delete{
   position: absolute;
   margin: 10px;
   width: 300px;
-  left: 20px;
+  right: 20px;
   z-index: 100;
 }
 
