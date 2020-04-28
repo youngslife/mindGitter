@@ -2,8 +2,22 @@
   <div class="diaryList" v-if="getSelectedChan && getDiaries">
     <div class="infoAndSetting">
       <h1>{{ getSelectedChan.title }}</h1>
-      <v-icon class="plus" @click="changeShowAddModal">fas fa-user-plus</v-icon>
-      <v-card v-if="showAddModal" @close="showAddModal = false">
+      <v-icon class="settings" @click="changeShowModal">fas fa-cog</v-icon>
+      <v-card v-if="showModal" @close="showModal = false" class="settings">
+        <div class="addFri" @click="changeShowAddModal">
+          <v-icon>fas fa-user-plus</v-icon>친구 초대
+        </div>
+        <div class="editChan" @click="editChan(getSelectedChan)">
+          <v-icon>fas fa-feather-alt</v-icon>일기장 수정
+        </div>
+        <div class="withdraw" @click="withdraw(getSelectedChan.id)">
+          <v-icon>fas fa-sign-out-alt</v-icon>일기장 탈퇴하기
+        </div>
+        <div class="delete" @click="deleteChannel(getSelectedChan.id)">
+          <v-icon>fas fa-trash-alt</v-icon>일기장 삭제
+        </div>
+      </v-card>
+      <v-card v-if="showAddModal" @close="showAddModal = false" class="invite">
         <v-card-title>Share Diary</v-card-title>
         <v-card-text>
           친구 아이디
@@ -15,9 +29,6 @@
           <v-btn class="close" @click="changeShowAddModal">닫기</v-btn>
         </v-card-actions>
       </v-card>
-      <v-icon class="delete" @click="deleteChannel(getSelectedChan.id)"
-        >fas fa-trash-alt</v-icon
-      >
     </div>
     <div calss="search">
       <v-icon class="search">fas fa-search</v-icon>
@@ -82,7 +93,7 @@
 <script>
 import Nav from "../nav/Nav.vue";
 import Datepicker from "vuejs-datepicker";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import router from "@/router";
 
 export default {
@@ -92,6 +103,7 @@ export default {
       searchTag: null,
       date: new Date(),
       showAddModal: false,
+      showModal: false,
       profileAddr: process.env.VUE_APP_STATIC_ADDR + "profile/"
     };
   },
@@ -122,11 +134,22 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["deleteChan", "bringDiaryDetail", "bringChanDetail"]),
+    ...mapActions([
+      "deleteChan",
+      "bringDiaryDetail",
+      "bringChanDetail",
+      "leaveChannel"
+    ]),
+    ...mapMutations(["setEditChan"]),
     changeShowAddModal() {
+      this.showModal = false;
       this.showAddModal = !this.showAddModal;
     },
+    changeShowModal() {
+      this.showModal = !this.showModal;
+    },
     deleteChannel(channelId) {
+      this.showModal = !this.showModal;
       if (
         confirm(
           "일기장이 삭제되면 지금까지 작성하신 일기가 모두 삭제됩니다.\n삭제하시겠습니까?"
@@ -146,6 +169,24 @@ export default {
       return profile_img
         ? this.profileAddr + profile_img
         : require("../../assets/basic_userImage.png");
+    },
+    async withdraw(channelId) {
+      this.showModal = !this.showModal;
+      if (
+        confirm(
+          "일기장에서 탈퇴하시면 이 곳에서 작성한 일기는 다시 볼 수 없습니다.\n정말로 떠나시겠습니까?"
+        )
+      ) {
+        console.log("탈퇴");
+        await this.leaveChannel(channelId);
+        // router.push("/");
+      } else {
+        console.log("취소");
+      }
+    },
+    async editChan(channelInfo) {
+      await this.setEditChan(channelInfo);
+      router.push("/editChan");
     }
   },
   async created() {
