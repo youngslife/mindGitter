@@ -17,17 +17,22 @@ class Emotion(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=50)
-    cover_image = models.CharField(max_length=100)
-    context = models.CharField(max_length=200)
+    video_file = models.CharField(max_length=100)
+    context = models.CharField(max_length=200, blank=True)
+    # emotions 분석 결과는 csv 파일에서 직접 확인하게 됨으로써
+    # manytomany가 아닌 csv의 s3 url로 저장 후 프론트에 전달, 따라서 char field로 변경
+    emotion = models.CharField(max_length=200, blank=True)
+    summary = models.CharField(max_length=200, blank=True)
+    tags = TaggableManager(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # channel blank=True 지워야함!1!!!연결안해놔서 테스트할려구 해둔거임
     channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    tags = TaggableManager(blank=True)
-    emotions = models.ManyToManyField(Emotion, blank=True)
-    video_file = models.CharField(max_length=100)
-    # summary = models.CharField(max_length=200)
+    is_use_comment = models.BooleanField() # 코멘트 허용 여부
+    is_save_video = models.BooleanField() # 영상 저장 여부
+    # 후에 cover_image 삭제
+    # cover_image = models.CharField(max_length=100)
+    # emotions = models.ManyToManyField(Emotion, blank=True)
 
     class Meta:
         ordering = ['-pk']
@@ -40,3 +45,5 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    class Meta:
+        ordering = ['-pk']

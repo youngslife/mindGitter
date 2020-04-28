@@ -10,49 +10,40 @@ import AWS from "aws-sdk";
 
 const state = {
   chanList: null,
+  chanId: null,
   selectedChan: null,
   selectedDiary: null,
   s3: {},
   writerInfo: null,
+  diaries: { dates: null },
+  editDiary: null,
 };
 
 const getters = {
   getChanList: (state) => state.chanList,
+  getChanId: (state) => state.chanId,
   getSelectedChan: (state) => state.selectedChan,
   getSelectedDiary: (state) => state.selectedDiary,
   getS3: (state) => state.s3,
   getWriterInfo: (state) => state.writerInfo,
+  getDiaries: (state) => state.diaries,
+  getEditDiary: (state) => state.editDiary,
 };
 
 const mutations = {
   setChanList: (state, chanList) => (state.chanList = chanList),
-  setSelectedChan: (state, channel) => {
-    state.selectedChan = channel;
-    sessionStorage.setItem("chan", channel.id);
-  },
-  setSelectedDiary: (state, diary) => {
-    state.selectedDiary = diary;
-    sessionStorage.setItem("post", diary.id);
-  },
+  setChanId: (state, chanId) => (state.chanId = chanId),
+  setSelectedChan: (state, channel) => (state.selectedChan = channel),
+  setSelectedDiary: (state, diary) => (state.selectedDiary = diary),
   sets3: (state, s3) => {
     state.s3 = s3;
   },
   setWriterInfo: (state, writerInfo) => (state.writerInfo = writerInfo),
+  setDiaries: (state, diaries) => (state.diaries = diaries),
+  setEditDiary: (state, editDiary) => (state.editDiary = editDiary),
 };
 
 const actions = {
-  refreshPage: ({ commit }) => {
-    const chanid = sessionStorage.getItem("chan");
-    const postid = sessionStorage.getItem("post");
-    if (postid) {
-      commit("setSelectedDiary", postid);
-      
-    }
-    if (chanid) {
-      commit("setSelectedChan", chanid);
-      this.bringChanDetail(chanid);
-    }
-  },
   async bringChanList({ commit }) {
     const token = sessionStorage.getItem("jwt");
     const options = {
@@ -95,8 +86,34 @@ const actions = {
     };
     axios.get(`${HOST}/channels/${channelId}`, options).then((message) => {
       commit("setSelectedChan", message.data);
-      console.log(message);
-      router.push("postList");
+      // console.log(message);
+      // router.push("postList");
+      const temp = {};
+      for (const post of message.data.post_set) {
+        if (temp[post.created_at.slice(0, 10)]) {
+          temp[post.created_at.slice(0, 10)].push({
+            pk: post.pk,
+            title: post.title,
+            tags: post.tags,
+            user_id: post.user_id,
+          });
+        } else {
+          temp[post.created_at.slice(0, 10)] = [
+            {
+              pk: post.pk,
+              title: post.title,
+              tags: post.tags,
+              user_id: post.user_id,
+            },
+          ];
+        }
+      }
+      const dates = Object.keys(temp).sort(function(a, b) {
+        return b - a;
+      });
+      temp["dates"] = dates;
+      commit("setDiaries", temp);
+      // console.log(temp)
     });
   },
   async deleteChan({ dispatch }, channelId) {
@@ -150,6 +167,29 @@ const actions = {
       context: reviewContext,
     };
     await axios.post(`${HOST}/posts/${postpk}/comments/`, body, options);
+    router.push("/diaryDetail");
+  },
+
+  async deleteDiary({ getters }, postId) {
+    getters;
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token,
+      },
+    };
+    await axios
+      .delete(`${HOST}/posts/${postId}`, options)
+      .then((message) => {
+        message;
+        console.log(message);
+        alert("성공적으로 삭제되었습니다.");
+      })
+      .catch((err) => {
+        err;
+        alert("삭제 중에 문제가 발생하였습니다.");
+      });
+    router.push("/postList");
   },
   //S3 부분
   s3Init: ({ commit }, type) => {
@@ -190,6 +230,8 @@ const actions = {
       tags: "[" + '"' + tags + '"' + "]",
       cover_image: PostInfo.cover_image,
       channel_id: parseInt(getters.getSelectedChan.id),
+      is_use_comment: PostInfo.possible,
+      is_save_video: PostInfo.saveVideo,
     };
     console.log("bodybody", body);
     const options = {
@@ -198,6 +240,39 @@ const actions = {
       },
     };
     const res = await axios.post(HOST + "/posts/", body, options);
+    console.log("res", res);
+    router.push("/postList");
+  },
+  async editPost({ dispatch }, PostInfo) {
+    if (PostInfo.file) {
+      console.log("file 변경 있음");
+      await dispatch("s3Init", "diary");
+      await dispatch("updates3", PostInfo);
+    } else {
+      console.log("file 변경 없음");
+    }
+    const token = sessionStorage.getItem("jwt");
+    const tags = PostInfo.tags;
+    const body = {
+      title: PostInfo.title,
+      context: PostInfo.context,
+      video_file: PostInfo.fileName,
+      tags: "[" + '"' + tags + '"' + "]",
+      cover_image: PostInfo.cover_image,
+      is_use_comment: PostInfo.possible,
+      is_save_video: PostInfo.saveVideo,
+    };
+    console.log("bodybody", body);
+    const options = {
+      headers: {
+        Authorization: "JWT " + token,
+      },
+    };
+    const res = await axios.put(
+      `${HOST}/posts/${PostInfo.post_id}/`,
+      body,
+      options
+    );
     console.log("res", res);
     router.push("/postList");
   },
