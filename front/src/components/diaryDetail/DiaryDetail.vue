@@ -41,7 +41,7 @@
       <span>{{ selectedMode }}</span>
     </div>
     <div class="text" v-if="selectedMode == 'Comment'">
-      <!-- <span>{{ selectedMode }}</span> -->  
+      <!-- <span>{{ selectedMode }}</span> -->
       <div v-if="selectedDiary.is_use_comment">
         <Comments />
       </div>
@@ -67,7 +67,7 @@
 
 <script>
 import router from "@/router";
-import Comments from "./Comments/Comments.vue"
+import Comments from "./Comments/Comments.vue";
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {

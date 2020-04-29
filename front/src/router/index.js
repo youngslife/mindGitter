@@ -14,7 +14,8 @@ import ChangePwd from "../components/userDetail/ChangePwd.vue";
 
 Vue.use(VueRouter);
 
-const routes = [{
+const routes = [
+  {
     path: "/signup",
     name: "Signup",
     component: Signup
