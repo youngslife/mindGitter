@@ -38,3 +38,10 @@ button.v-icon.notranslate.newBtn.v-icon--link.mdi.mdi-plus.theme--light {
     padding-top: 10px;
     padding-bottom: 0;
 }
+
+.userPageBtn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+

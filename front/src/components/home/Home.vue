@@ -8,6 +8,11 @@
       light
       height="98vh"
     >
+      <template>
+        <v-btn @click="goUserDetail" class="userPageBtn" fab small absolute>
+              <v-icon>mdi-account-circle</v-icon>
+        </v-btn>
+      </template>
       <v-carousel-item v-for="(item, i) in getChanList" :key="i">
         <h1>{{ item.title }}</h1>
         <v-img
@@ -52,6 +57,10 @@ export default {
     ...mapMutations(["setChanId"]),
     goCreate() {
       router.push("createDiary");
+    },
+    //은영추가
+    goUserDetail() {
+      router.push("userDetail");
     },
     async goDetail(channelId) {
       await this.setChanId(channelId);
