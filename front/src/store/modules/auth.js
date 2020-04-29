@@ -52,6 +52,7 @@ const getters = {
 const mutations = {
   setLoading: (state, flag) => (state.loading = flag),
   setToken: (state, token) => {
+    console.log(token);
     state.token = token;
     sessionStorage.setItem("jwt", token);
   },

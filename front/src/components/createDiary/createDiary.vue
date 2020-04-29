@@ -1,11 +1,8 @@
 <template>
   <v-container class="hnContainer">
     <div class="hnDiary">
-      <v-card
-        dark
-        style="border-radius:17px"
-      >
-        <v-img 
+      <v-card dark style="border-radius:17px">
+        <v-img
           src="../../assets/create.jpg"
           gradient="to bottom, rgba(0,0,0,.2), rgba(0,0,0,.1)"
           alt="No Image"
@@ -14,10 +11,10 @@
           <form @submit.prevent="addChannel(PostInfo)">
             <div class="hnDiaryForm">
               <ul id="diarytitle">
-                <v-text-field 
-                  label="diarytitle" 
-                  :rules="titleRules" 
-                  hide-details="auto" 
+                <v-text-field
+                  label="diarytitle"
+                  :rules="titleRules"
+                  hide-details="auto"
                   counter="50"
                   v-model="PostInfo.title"
                   id="diarytitle"
@@ -34,7 +31,13 @@
                 ></v-textarea>
               </ul>
               <ul id="diaryimage">
-                <v-file-input small-chips accept="image/*" label="diaryimage" clearable=true prepend-icon="mdi-camera"></v-file-input>
+                <v-file-input
+                  small-chips
+                  accept="image/*"
+                  label="diaryimage"
+                  clearable="true"
+                  prepend-icon="mdi-camera"
+                ></v-file-input>
               </ul>
               <button class="submit">만들기</button>
             </div>
@@ -61,12 +64,13 @@ export default {
         fileName: null
       },
       titleRules: [
-        value => !!value || '제목을 입력해 주세요 :)',
-        value => (value && value.length <= 50) || '제목은 최대 50자까지입니다.'
-      ], 
+        value => !!value || "제목을 입력해 주세요 :)",
+        value => (value && value.length <= 50) || "제목은 최대 50자까지입니다."
+      ],
       desRules: [
-        value => !!value || '설명을 입력해 주세요 :)',
-        value => (value && value.length <= 200) || '설명은 최대 200자까지입니다.'
+        value => !!value || "설명을 입력해 주세요 :)",
+        value =>
+          (value && value.length <= 200) || "설명은 최대 200자까지입니다."
       ]
     };
   },

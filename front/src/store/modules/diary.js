@@ -110,7 +110,6 @@ const actions = {
       commit("setSelectedChan", message.data);
       commit("setChanName", message.data.title);
       // console.log(message);
-      
       const temp = {};
       for (const post of message.data.post_set) {
         if (temp[post.created_at.slice(0, 10)]) {
