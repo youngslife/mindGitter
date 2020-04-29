@@ -110,7 +110,7 @@ export default {
       this.postInfo.fileName = this.getEditDiary.video_file;
       this.postInfo.post_id = this.getEditDiary.pk;
     } else {
-      router.push("/postList")
+      router.push("/postList");
     }
   }
 };

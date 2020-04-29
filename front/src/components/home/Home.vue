@@ -10,7 +10,7 @@
     >
       <template>
         <v-btn @click="goUserDetail" class="userPageBtn" fab small absolute>
-              <v-icon>mdi-account-circle</v-icon>
+          <v-icon>mdi-account-circle</v-icon>
         </v-btn>
       </template>
       <v-carousel-item v-for="(item, i) in getChanList" :key="i">
