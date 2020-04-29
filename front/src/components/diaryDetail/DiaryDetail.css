@@ -11,6 +11,33 @@ h1{
   position: relative;
 }
 
+.v-icon.etc{
+  font-size: 30px;
+  position: absolute;
+  right: 15px;
+  margin: 10px;
+  z-index: 200;
+}
+
+.v-card{
+  position: absolute;
+  margin: 20px;
+  padding: 10px;
+  width: 90px;
+  top: 20px;
+  right: 20px;
+  z-index: 250;
+}
+
+.v-card>div{
+  margin-bottom: 10px;
+}
+
+.v-card>div>.v-icon{
+  margin-right: 10px;
+  font-size: 15px;
+}
+
 div.video{
   height: 255px;
   top: 100px;
@@ -25,7 +52,7 @@ div.temp{
 }
 
 div.text{
-  margin: 15px;
+  margin: 5px;
 }
 
 div.text>h3{

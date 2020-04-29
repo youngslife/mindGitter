@@ -1,38 +1,53 @@
 <template>
-  <div class="createDiary">
-    <v-icon class="back" @click="goHome">fas fa-arrow-left</v-icon>
-    <form class="AddDiaryForm" @submit.prevent="addChannel(PostInfo)">
-      <div class="AddDiaryForm">
-        <h1>Add Diary</h1>
-        <ul id="diarytitle">
-          <label for="diarytitle">Diary Title</label
-          ><br />
-          <input
-            v-model="PostInfo.title"
-            type="text"
-            id="diarytitle"
-            placeholder="제목"
-          />
-        </ul>
-        <ul id="diarydescription">
-          <label for="diarydescription">Description</label
-          ><br />
-          <input
-            v-model="PostInfo.description"
-            type="text"
-            id="diarydescription"
-            placeholder="다이어리 설명"
-          />
-        </ul>
-        <ul id="diaryimage">
-          <label for="diaryimage">Image</label
-          ><br />
-          <input type="file" id="diaryimage" @change="onFileChange" />
-        </ul>
-        <button class="submit">만들기</button>
-      </div>
-    </form>
-  </div>
+  <v-container class="hnContainer">
+    <div class="hnDiary">
+      <v-card dark style="border-radius:17px">
+        <v-img
+          src="../../assets/create.jpg"
+          gradient="to bottom, rgba(0,0,0,.2), rgba(0,0,0,.1)"
+          alt="No Image"
+          class="hnImage"
+        >
+          <form @submit.prevent="addChannel(PostInfo)">
+            <div class="hnDiaryForm">
+              <ul id="diarytitle">
+                <v-text-field
+                  label="diarytitle"
+                  :rules="titleRules"
+                  hide-details="auto"
+                  counter="50"
+                  v-model="PostInfo.title"
+                  id="diarytitle"
+                ></v-text-field>
+              </ul>
+              <ul id="diarydescription">
+                <v-textarea
+                  name="input-7-1"
+                  counter="200"
+                  :rules="desRules"
+                  label="diarydescription"
+                  v-model="PostInfo.description"
+                  id="diarydescription"
+                ></v-textarea>
+              </ul>
+              <ul id="diaryimage">
+                <v-file-input
+                  small-chips
+                  accept="image/*"
+                  label="diaryimage"
+                  prepend-icon="mdi-camera"
+                  @change="onFileChange"
+                  clearable
+                ></v-file-input>
+              </ul>
+              <button class="submit">만들기</button>
+            </div>
+          </form>
+        </v-img>
+        <v-icon class="back" @click="goHome">fas fa-arrow-left</v-icon>
+      </v-card>
+    </div>
+  </v-container>
 </template>
 
 <script>
@@ -48,7 +63,16 @@ export default {
         description: null,
         file: null,
         fileName: null
-      }
+      },
+      titleRules: [
+        value => !!value || "제목을 입력해 주세요 :)",
+        value => (value && value.length <= 50) || "제목은 최대 50자까지입니다."
+      ],
+      desRules: [
+        value => !!value || "설명을 입력해 주세요 :)",
+        value =>
+          (value && value.length <= 200) || "설명은 최대 200자까지입니다."
+      ]
     };
   },
   computed: {
@@ -56,12 +80,13 @@ export default {
   },
   methods: {
     ...mapActions(["addChannel"]),
-    onFileChange(e) {
-      const files = e.target.files;
-      if (files) {
-        this.PostInfo.file = files[0];
+    onFileChange(file) {
+      if (file) {
+        this.PostInfo.file = file;
         this.PostInfo.fileName =
           String(this.getUserId) + new Date().getTime() + ".jpg";
+      } else {
+        this.PostInfo.fileName = null;
       }
     },
     goHome() {

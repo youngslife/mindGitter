@@ -153,7 +153,7 @@ class PostDetail(APIView):
 class CommentList(APIView):
     permission_classes = (IsAuthenticated, )
     def post(self, request, post_id):
-        data = request.data.dict()
+        data = request.data
         data.update({'user': request.user.id})
         data.update({'post': post_id})
         serializer = CommentSerializer(data=data)

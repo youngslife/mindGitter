@@ -3,23 +3,38 @@ h1{
   position: relative;
 }
 
-div.infoAndSetting>.v-icon.plus{
-  position: absolute;
-  top: 15px;
-  right: 50px;
-}
-
-div.infoAndSetting>.v-icon.delete{
+div.infoAndSetting>.v-icon.settings{
   position: absolute;
   top: 15px;
   right: 15px;
+  font-size: 25px;
 }
 
-.v-card{
+.v-card.settings{
+  position: absolute;
+  margin: 20px;
+  padding: 10px;
+  width: 165px;
+  top: 20px;
+  right: 20px;
+  z-index: 250;
+  text-align: left;
+}
+
+.v-card.settings>div{
+  margin-bottom: 10px;
+}
+
+.v-card.settings>div>.v-icon{
+  margin-right: 10px;
+  font-size: 15px;
+}
+
+.v-card.invite{
   position: absolute;
   margin: 10px;
   width: 300px;
-  left: 20px;
+  right: 20px;
   z-index: 100;
 }
 
