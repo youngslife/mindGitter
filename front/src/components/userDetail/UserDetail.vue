@@ -103,6 +103,14 @@ export default {
     } else {
       router.push("/");
     }
+  },
+  destroyed() {
+    if (this.getUserInfoModal) {
+      this.setUserInfoModal();
+    }
+    if (this.getUserImgModal) {
+      this.setUserImgModal();
+    }
   }
 };
 </script>

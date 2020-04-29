@@ -31,8 +31,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import UserName from "./userName/UserName.vue";
+import router from "@/router";
+
 export default {
   name: "newComment",
   components: {
@@ -46,10 +48,19 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["addComment", "deleteComment"])
+    ...mapActions(["addComment", "deleteComment"]),
+    ...mapMutations(["setUserName"])
   },
   computed: {
     ...mapGetters(["getSelectedDiary", "getUserName", "getSelectedChan"])
+  },
+  async created() {
+    const username = sessionStorage.getItem("userName");
+    if (username) {
+      await this.setUserName(username);
+    } else {
+      router.push("/");
+    }
   }
 };
 </script>
