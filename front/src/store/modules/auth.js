@@ -11,6 +11,7 @@ const state = {
   userId: null,
   userInfoSet: null,
   userImgModal: false,
+  userInfoModal: false,
   commitDates: [new Date().getFullYear(), new Date().getMonth()],
   commitInfo: null,
   indexDict: null,
@@ -41,6 +42,7 @@ const getters = {
   getUserId: state => state.userId,
   getUserInfoSet: state => state.userInfoSet,
   getUserImgModal: state => state.userImgModal,
+  getUserInfoModal: state => state.userInfoModal,
   getCommitDates: state => state.commitDates,
   getCommitInfo: state => state.commitInfo,
   getUserProfile: state => state.userProfile,
@@ -58,7 +60,8 @@ const mutations = {
   setUserName: (state, userName) => (state.userName = userName),
   setUserId: (state, userId) => (state.userId = userId),
   setUserInfoSet: (state, userInfoSet) => (state.userInfoSet = userInfoSet),
-  setUserImgModal: (state, userImgModal) => (state.userImgModal = userImgModal),
+  setUserImgModal: state => (state.userImgModal = !state.userImgModal),
+  setUserInfoModal: state => (state.userInfoModal = !state.userInfoModal),
   setUserProfile: (state, userProfile) => (state.userProfile = userProfile),
   sets3: (state, s3) => {
     state.s3 = s3;
@@ -70,11 +73,11 @@ const mutations = {
 
 const actions = {
   initialLogin: ({ commit }) => {
-    const token = sessionStorage.getItem('jwt')
+    const token = sessionStorage.getItem("jwt");
     if (token) {
-        commit('setToken', token)
+      commit("setToken", token);
     }
-},
+  },
   logout: ({ commit }) => {
     commit("setToken", null);
     commit("setUserName", null);
@@ -91,7 +94,10 @@ const actions = {
       axios
         .post(
           HOST + "/rest-auth/login/",
-          { username, password },
+          {
+            username,
+            password
+          },
           {
             headers: {
               "Content-Type": "application/json",
@@ -182,6 +188,49 @@ const actions = {
       }
     }
   },
+  changePwd: ({ commit }, { oldPassword, newPassword1, newPassword2 }) => {
+    commit("clearErrors");
+    const token = sessionStorage.getItem("jwt");
+    if (!oldPassword) {
+      commit("pushError", "원래 비밀번호를 입력하세요.");
+    }
+    if (!newPassword1) {
+      commit("pushError", "새 비밀번호를 입력하세요.");
+    }
+    if (!newPassword2) {
+      commit("pushError", "새 비밀번호 확인하세요.");
+    }
+    if (oldPassword == newPassword1 || oldPassword == newPassword2) {
+      commit("pushError", "기존의 비밀번호는 쓸 수 없습니다.");
+    }
+    if (newPassword1 != newPassword2) {
+      commit("pushError", "비밀번호가 일치하지 않습니다.");
+    } else {
+      const body = {
+        old_password: oldPassword,
+        new_password1: newPassword1,
+        new_password2: newPassword2
+      };
+      axios
+        .post(HOST + "/rest-auth/password/change/", body, {
+          headers: {
+            Authorization: "JWT " + token
+          }
+        })
+        .then(message => {
+          message;
+          console.log("비밀번호 변경 성공!");
+          router.push("/userDetail");
+        })
+        .catch(err => {
+          if (!err.response) {
+            commit("pushError", "Network Error..");
+          } else {
+            commit("pushError", "Some error occured");
+          }
+        });
+    }
+  },
   preprocessingCommit({ state, commit }) {
     commit;
     let targetMonths = [];
@@ -256,7 +305,10 @@ const actions = {
       commit("pushError", "password too short");
       commit("setLoading", false);
     } else {
-      dispatch("login", { username, password });
+      dispatch("login", {
+        username,
+        password
+      });
     }
   },
   s3Init: ({ commit }, type) => {
@@ -268,7 +320,9 @@ const actions = {
     });
     const s3 = new AWS.S3({
       apiVersion: "2006-03-01",
-      params: { Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type }
+      params: {
+        Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type
+      }
     });
     commit("sets3", s3);
   },

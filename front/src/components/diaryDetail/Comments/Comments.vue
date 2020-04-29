@@ -32,7 +32,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import UserName from "./userName/UserName.vue"
+import UserName from "./userName/UserName.vue";
 export default {
   name: "newComment",
   components: {
@@ -42,15 +42,15 @@ export default {
     return {
       context: null,
       commentList: Array,
-      channelInfo: Object,
+      channelInfo: Object
     };
   },
   methods: {
-    ...mapActions(["addComment", "deleteComment"]),
+    ...mapActions(["addComment", "deleteComment"])
   },
   computed: {
-    ...mapGetters(["getSelectedDiary", "getUserName", "getSelectedChan"]),
-  },
+    ...mapGetters(["getSelectedDiary", "getUserName", "getSelectedChan"])
+  }
 };
 </script>
 

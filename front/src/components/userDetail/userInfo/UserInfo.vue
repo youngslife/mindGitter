@@ -1,12 +1,7 @@
 <template>
   <v-row>
     <v-col cols="3">
-      <img
-        class="userProfile"
-        :src="showProfile()"
-        alt="userprofile"
-        @click="setUserImgModal(true)"
-      />
+      <img class="userProfile" :src="showProfile()" alt="userprofile" />
     </v-col>
     <v-col class="userSummary" cols="9">
       <v-row>
@@ -19,7 +14,7 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 // src="../../../assets/basic_userImage.png"
 export default {
   data() {
@@ -28,7 +23,6 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["setUserImgModal"]),
     ...mapActions(["bringUserProfile"]),
     showProfile() {
       console.log(this.profileAddr + this.getUserProfile);
