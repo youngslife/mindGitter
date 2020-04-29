@@ -101,7 +101,7 @@ export default {
     if (userName) {
       this.setUserName(userName);
     } else {
-      router.push('/')
+      router.push("/");
     }
   }
 };

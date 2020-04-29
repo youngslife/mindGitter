@@ -17,9 +17,12 @@ const state = {
   selectedDiary: null,
   s3: {},
   writerInfo: null,
-  diaries: { dates: null },
+  diaries: {
+    dates: null
+  },
   editDiary: null,
-  editChan: null
+  editChan: null,
+  postLoading: false
 };
 
 const getters = {
@@ -32,7 +35,8 @@ const getters = {
   getWriterInfo: state => state.writerInfo,
   getDiaries: state => state.diaries,
   getEditDiary: state => state.editDiary,
-  getEditChan: state => state.editChan
+  getEditChan: state => state.editChan,
+  getPostLoading: state => state.postLoading
 };
 
 const mutations = {
@@ -57,7 +61,8 @@ const mutations = {
   setWriterInfo: (state, writerInfo) => (state.writerInfo = writerInfo),
   setDiaries: (state, diaries) => (state.diaries = diaries),
   setEditDiary: (state, editDiary) => (state.editDiary = editDiary),
-  setEditChan: (state, editChan) => (state.editChan = editChan)
+  setEditChan: (state, editChan) => (state.editChan = editChan),
+  setPostLoading: (state, flag) => (state.postLoading = flag)
 };
 
 const actions = {
@@ -105,7 +110,6 @@ const actions = {
       commit("setSelectedChan", message.data);
       commit("setChanName", message.data.title);
       // console.log(message);
-      // router.push("postList");
       const temp = {};
       for (const post of message.data.post_set) {
         if (temp[post.created_at.slice(0, 10)]) {
@@ -131,7 +135,6 @@ const actions = {
       });
       temp["dates"] = dates;
       commit("setDiaries", temp);
-      console.log(temp)
     });
   },
   async deleteChan({ dispatch }, channelId) {
@@ -195,12 +198,12 @@ const actions = {
       }
     };
     const message = await axios.get(`${HOST}/posts/${diaryPK}/`, options);
-    console.log(message.data)
     await commit("setSelectedDiary", message.data);
-    const mess = await axios.get(`${HOST}/user/${message.data.user_id}/`, options);
-    console.log(mess.data)
-    await commit("setWriterInfo", mess.data)
-    // router.push("/diaryDetail");
+    const mess = await axios.get(
+      `${HOST}/user/${message.data.user_id}/`,
+      options
+    );
+    await commit("setWriterInfo", mess.data);
   },
   async addComment({ commit, getters }, reviewContext) {
     const token = sessionStorage.getItem("jwt");
@@ -309,7 +312,9 @@ const actions = {
     });
     const s3 = new AWS.S3({
       apiVersion: "2006-03-01",
-      params: { Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type }
+      params: {
+        Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type
+      }
     });
     commit("sets3", s3);
   },
@@ -325,17 +330,33 @@ const actions = {
     console.log(res);
     commit("sets3", {});
   },
-  // async addPost({ getters }, PostInfo) {
-  async addPost({ dispatch, getters }, PostInfo) {
+  async addPost({ dispatch, getters, commit }, PostInfo) {
+    commit("setPostLoading", true);
     await dispatch("s3Init", "diary");
     await dispatch("updates3", PostInfo);
     const token = sessionStorage.getItem("jwt");
-    const tags = PostInfo.tags;
+    // 태그 분리
+    let tags = PostInfo.tags;
+    if (tags == null) {
+      tags = "[]";
+    } else {
+      if (tags.includes("#"))
+        tags = tags
+          .replace(/(\s*)/g, "")
+          .split("#")
+          .slice(1);
+      else if (tags.includes(",")) tags = tags.replace(/(\s*)/g, "").split(",");
+      else if (tags.includes(" ")) tags = tags.split(" ");
+
+      if (typeof tags == "object") tags = JSON.stringify(tags);
+      else tags = '["' + tags + '"]';
+    }
+
     const body = {
       title: PostInfo.title,
       context: PostInfo.context,
       video_file: PostInfo.fileName,
-      tags: "[" + '"' + tags + '"' + "]",
+      tags: tags,
       cover_image: PostInfo.cover_image,
       channel_id: parseInt(getters.getSelectedChan.id),
       is_use_comment: PostInfo.possible,
@@ -348,11 +369,13 @@ const actions = {
       }
     };
     const res = await axios.post(HOST + "/posts/", body, options);
+    commit("setPostLoading", false);
     console.log("res", res);
     router.push("/postList");
   },
-  async editPost({ dispatch }, PostInfo) {
+  async editPost({ dispatch, commit }, PostInfo) {
     if (PostInfo.file) {
+      commit("setPostLoading", true);
       console.log("file 변경 있음");
       await dispatch("s3Init", "diary");
       await dispatch("updates3", PostInfo);
@@ -360,12 +383,27 @@ const actions = {
       console.log("file 변경 없음");
     }
     const token = sessionStorage.getItem("jwt");
-    const tags = PostInfo.tags;
+    // 태그 분리
+    let tags = PostInfo.tags;
+    if (tags == null) {
+      tags = "[]";
+    } else {
+      if (tags.includes("#"))
+        tags = tags
+          .replace(/(\s*)/g, "")
+          .split("#")
+          .slice(1);
+      else if (tags.includes(",")) tags = tags.replace(/(\s*)/g, "").split(",");
+      else if (tags.includes(" ")) tags = tags.split(" ");
+
+      if (typeof tags == "object") tags = JSON.stringify(tags);
+      else tags = '["' + tags + '"]';
+    }
     const body = {
       title: PostInfo.title,
       context: PostInfo.context,
       video_file: PostInfo.fileName,
-      tags: "[" + '"' + tags + '"' + "]",
+      tags: tags,
       cover_image: PostInfo.cover_image,
       is_use_comment: PostInfo.possible,
       is_save_video: PostInfo.saveVideo
@@ -381,6 +419,7 @@ const actions = {
       body,
       options
     );
+    commit("setPostLoading", false);
     console.log("res", res);
     router.push("/postList");
   }

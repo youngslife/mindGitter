@@ -1,5 +1,8 @@
 <template>
-  <div class="dairyDetail" v-if="getSelectedDiary && getChanName && getWriterInfo">
+  <div
+    class="dairyDetail"
+    v-if="getSelectedDiary && getChanName && getWriterInfo"
+  >
     <v-icon class="back" @click="goPostList">fas fa-arrow-left</v-icon>
     <v-icon class="etc" @click="changeShowModal">fas fa-ellipsis-v</v-icon>
     <v-card v-if="showModal" @close="showModal = false">
