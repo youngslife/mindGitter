@@ -36,12 +36,22 @@
           >#{{ tag }}
         </span>
       </div>
-      <div class="context">
-        {{ getSelectedDiary.context }}
+      <div class="context" v-if="getSelectedDiary.summary">
+        {{ getSelectedDiary.summary }}
+      </div>
+      <div class="context" v-else>
+        아직 영상에 대한 분석이 끝나지 않았습니다.<br /><br />
+        조금만 기다려주세요 :D
       </div>
     </div>
     <div class="text" v-if="selectedMode == 'Analysis'">
-      <span>{{ selectedMode }}</span>
+      <div class="analysis" v-if="getSelectedDiary.emotion">
+        <span>{{ getSelectedDiary.emotion }}</span>
+      </div>
+      <div class="analysis" v-else>
+        아직 영상에 대한 분석이 끝나지 않았습니다.<br /><br />
+        조금만 기다려주세요 :D
+      </div>
     </div>
     <div class="text" v-if="selectedMode == 'Comment'">
       <!-- <span>{{ selectedMode }}</span> -->
