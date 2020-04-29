@@ -9,7 +9,7 @@
       </div>
     </v-col>
     <v-col cols="2" class="outBtn">
-      <button class="settings" @click="setUserInfoModal(true)">
+      <button class="settings" @click="changeModal">
         <v-icon>fas fa-cog</v-icon>
       </button>
     </v-col>
@@ -22,10 +22,17 @@ import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "UserHead",
   computed: {
-    ...mapGetters(["getUserName", "isLoggedIn"])
+    ...mapGetters(["getUserName", "isLoggedIn", "getUserImgModal"])
   },
   methods: {
-    ...mapMutations(["setUserImgModal", "setUserInfoModal"])
+    ...mapMutations(["setUserImgModal", "setUserInfoModal", "setUserImgModal"]),
+    async changeModal() {
+      console.log(this.getUserImgModal)
+      if (this.getUserImgModal) {
+        await this.setUserImgModal();
+      }
+      this.setUserInfoModal();
+    }
   }
 };
 </script>

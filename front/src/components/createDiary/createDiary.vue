@@ -35,7 +35,6 @@
                   small-chips
                   accept="image/*"
                   label="diaryimage"
-                  clearable="true"
                   prepend-icon="mdi-camera"
                   @change="onFileChange"
                 ></v-file-input>
