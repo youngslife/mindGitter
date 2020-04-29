@@ -6,7 +6,8 @@ const HOST = process.env.VUE_APP_SERVER_HOST;
 // const IDENTIFYPOOL = process.env.VUE_APP_IDENTIFYPOOL
 
 const axios = require("axios");
-import AWS from "aws-sdk";
+// ★★★★★★★★★★★★ 나중에 다시 풀기
+// import AWS from "aws-sdk";
 
 const state = {
   chanList: null,
@@ -192,14 +193,10 @@ const actions = {
     await commit("setChanList", null);
     router.push("/");
   },
-<<<<<<< HEAD
   bringDiaryDetail: ({
     commit,
     getters
-  }, diaryInfo) => {
-=======
-  bringDiaryDetail: ({ commit, getters }, diaryPK) => {
->>>>>>> eb7c721a6b434bbcb73d4a194f34c9ae1a799f82
+  }, diaryPK) => {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
@@ -217,12 +214,10 @@ const actions = {
       router.push("/diaryDetail");
     });
   },
-<<<<<<< HEAD
-  async deleteDiary({
+  async addComment({
+    commit,
     getters
-  }, postId) {
-=======
-  async addComment({ commit, getters }, reviewContext) {
+  }, reviewContext) {
     const token = sessionStorage.getItem("jwt");
     const postpk = getters.getSelectedDiary.pk;
     const options = {
@@ -246,7 +241,10 @@ const actions = {
       })
     );
   },
-  deleteComment({ getters, commit }, commentInfo) {
+  deleteComment({
+    getters,
+    commit
+  }, commentInfo) {
     const token = sessionStorage.getItem("jwt");
     const postpk = getters.getSelectedDiary.pk;
     const options = {
@@ -277,8 +275,9 @@ const actions = {
       });
   },
 
-  async deleteDiary({ getters }, postId) {
->>>>>>> eb7c721a6b434bbcb73d4a194f34c9ae1a799f82
+  async deleteDiary({
+    getters
+  }, postId) {
     getters;
     const token = sessionStorage.getItem("jwt");
     const options = {
@@ -323,44 +322,48 @@ const actions = {
     router.push("/");
   },
   //S3 부분
-  s3Init: ({
-    commit
-  }, type) => {
-    AWS.config.update({
-      region: process.env.VUE_APP_BUCKET_REGION,
-      credentials: new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL
-      })
-    });
-    const s3 = new AWS.S3({
-      apiVersion: "2006-03-01",
-      params: {
-        Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type
-      }
-    });
-    commit("sets3", s3);
-  },
-  async updates3({
-    commit
-  }, PostInfo) {
-    console.log("upadates3", PostInfo);
-    const s3 = state.s3;
-    const params = {
-      Key: PostInfo.fileName,
-      Body: PostInfo.file,
-      ACL: "public-read-write"
-    };
-    const res = await s3.upload(params).promise();
-    console.log(res);
-    commit("sets3", {});
-  },
+  // ★★★★★★★★★★★★ 나중에 다시 풀기
+  // s3Init: ({
+  //   commit
+  // }, type) => {
+  //   AWS.config.update({
+  //     region: process.env.VUE_APP_BUCKET_REGION,
+  //     credentials: new AWS.CognitoIdentityCredentials({
+  //       IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL
+  //     })
+  //   });
+  //   const s3 = new AWS.S3({
+  //     apiVersion: "2006-03-01",
+  //     params: {
+  //       Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type
+  //     }
+  //   });
+  //   commit("sets3", s3);
+  // },
+  // async updates3({
+  //   commit
+  // }, PostInfo) {
+  //   console.log("upadates3", PostInfo);
+  //   const s3 = state.s3;
+  //   const params = {
+  //     Key: PostInfo.fileName,
+  //     Body: PostInfo.file,
+  //     ACL: "public-read-write"
+  //   };
+  //   const res = await s3.upload(params).promise();
+  //   console.log(res);
+  //   commit("sets3", {});
+  // },
+
   // async addPost({ getters }, PostInfo) {
   async addPost({
-    dispatch,
+    // ★★★★★★★★★★★★ 나중에 다시 풀기
+    // dispatch,
     getters
   }, PostInfo) {
-    await dispatch("s3Init", "diary");
-    await dispatch("updates3", PostInfo);
+    // ★★★★★★★★★★★★ 나중에 다시 풀기
+    // await dispatch("s3Init", "diary");
+    // await dispatch("updates3", PostInfo);
     const token = sessionStorage.getItem("jwt");
     // 태그 분리
     let tags = PostInfo.tags;
@@ -368,6 +371,7 @@ const actions = {
       tags = "[]"
     } else {
       if (tags.includes("#")) tags = tags.replace(/(\s*)/g, "").split("#").slice(1)
+      else if (tags.includes(",")) tags = tags.replace(/(\s*)/g, "").split(",")
       else if (tags.includes(" ")) tags = tags.split(" ")
 
       if (typeof tags == "object") tags = JSON.stringify(tags)
@@ -405,12 +409,23 @@ const actions = {
       console.log("file 변경 없음");
     }
     const token = sessionStorage.getItem("jwt");
-    const tags = PostInfo.tags;
+    // 태그 분리
+    let tags = PostInfo.tags;
+    if (tags == null) {
+      tags = "[]"
+    } else {
+      if (tags.includes("#")) tags = tags.replace(/(\s*)/g, "").split("#").slice(1)
+      else if (tags.includes(",")) tags = tags.replace(/(\s*)/g, "").split(",")
+      else if (tags.includes(" ")) tags = tags.split(" ")
+
+      if (typeof tags == "object") tags = JSON.stringify(tags)
+      else tags = '["' + tags + '"]'
+    }
     const body = {
       title: PostInfo.title,
       context: PostInfo.context,
       video_file: PostInfo.fileName,
-      tags: "[" + '"' + tags + '"' + "]",
+      tags: tags,
       cover_image: PostInfo.cover_image,
       is_use_comment: PostInfo.possible,
       is_save_video: PostInfo.saveVideo
