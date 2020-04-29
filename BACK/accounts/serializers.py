@@ -3,7 +3,9 @@ from accounts.models import User, UserTag
 from taggit_serializer.serializers import (TaggitSerializer, TagListSerializerField)
 from posts.serializers import PostSerializer
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth import get_user_model
 
+UserModel = get_user_model()
 
 class UserDisplaySerializer(serializers.ModelSerializer):
     post_set = PostSerializer(many=True)
@@ -24,3 +26,7 @@ class UserTagSerializer(serializers.ModelSerializer):
         model = UserTag
         fields = ('content_object_id', 'tag_id', 'count')
 
+class UserNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserModel
+        fields = ('id', 'username')

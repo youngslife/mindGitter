@@ -1,0 +1,46 @@
+div.reviewInput {
+    display: inline-block;
+    width: 60%;
+    margin-right: 2%;
+}
+
+div.userName {
+    display: inline-block;
+    width: 23%;
+    font-size: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+div.btn {
+    display: inline-block;
+    width: 15%;
+    font-size: 15px;
+}
+
+button.reviewBtn {
+    font-size: 15px;
+    background-color: lightgreen;
+}
+
+hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+input.context {
+    background-color: lightgoldenrodyellow;
+    width: 100%;
+}
+
+div.context {
+    display: inline-block;
+    width: 60%;
+    margin-right: 2%;
+}
+
+button.delBtn {
+    background-color: red;
+    color: white;
+}

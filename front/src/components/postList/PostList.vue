@@ -56,7 +56,7 @@
           class="diaryInfo"
           v-for="(item, idx) in getDiaries[diary]"
           :key="idx"
-          @click="goDetail(item)"
+          @click="goDetail(item.pk)"
         >
           <div
             class="userImage"
@@ -104,12 +104,12 @@ export default {
       date: new Date(),
       showAddModal: false,
       showModal: false,
-      profileAddr: process.env.VUE_APP_STATIC_ADDR + "profile/"
+      profileAddr: process.env.VUE_APP_STATIC_ADDR + "profile/",
     };
   },
   components: {
     Nav,
-    Datepicker
+    Datepicker,
   },
   computed: {
     ...mapGetters(["getSelectedChan", "getDiaries", "getChanId"]),
@@ -131,16 +131,16 @@ export default {
             1}-0${this.date.getDate()}`;
         }
       }
-    }
+    },
   },
   methods: {
+    ...mapMutations(["setPostId", "setEditChan"]),
     ...mapActions([
       "deleteChan",
       "bringDiaryDetail",
       "bringChanDetail",
-      "leaveChannel"
+      "leaveChannel",
     ]),
-    ...mapMutations(["setEditChan"]),
     changeShowAddModal() {
       this.showModal = false;
       this.showAddModal = !this.showAddModal;
@@ -161,8 +161,9 @@ export default {
         console.log("취소");
       }
     },
-    goDetail(diaryInfo) {
-      this.bringDiaryDetail(diaryInfo);
+    goDetail(diaryPK) {
+      this.setPostId(diaryPK);
+      this.bringDiaryDetail(diaryPK);
     },
     showProfile(profile_img) {
       console.log(this.profileAddr + profile_img);
@@ -187,15 +188,16 @@ export default {
     async editChan(channelInfo) {
       await this.setEditChan(channelInfo);
       router.push("/editChan");
-    }
+    },
   },
   async created() {
-    if (this.getChanId) {
-      await this.bringChanDetail(this.getChanId);
+    const chanpk = sessionStorage.getItem("chan");
+    if (chanpk) {
+      await this.bringChanDetail(chanpk);
     } else {
       router.push("/");
     }
-  }
+  },
 };
 </script>
 

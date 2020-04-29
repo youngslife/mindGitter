@@ -11,6 +11,7 @@ import AWS from "aws-sdk";
 const state = {
   chanList: null,
   chanId: null,
+  postId: null,
   selectedChan: null,
   selectedDiary: null,
   s3: {},
@@ -34,7 +35,14 @@ const getters = {
 
 const mutations = {
   setChanList: (state, chanList) => (state.chanList = chanList),
-  setChanId: (state, chanId) => (state.chanId = chanId),
+  setChanId: (state, chanId) => {
+    state.chanId = chanId;
+    sessionStorage.setItem("chan", chanId);
+  },
+  setPostId: (state, postId) => {
+    state.postId = postId;
+    sessionStorage.setItem("post", postId);
+  },
   setSelectedChan: (state, channel) => (state.selectedChan = channel),
   setSelectedDiary: (state, diary) => (state.selectedDiary = diary),
   sets3: (state, s3) => {
@@ -51,10 +59,10 @@ const actions = {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
-    await axios.get(HOST + "/channels/", options).then(message => {
+    await axios.get(HOST + "/channels/", options).then((message) => {
       commit("setChanList", message.data.channels);
     });
   },
@@ -66,13 +74,13 @@ const actions = {
     const options = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
     const body = {
       title: PostInfo.title,
       cover_image: PostInfo.fileName,
-      description: PostInfo.description
+      description: PostInfo.description,
     };
     console.log("body", body);
     const res = await axios.post(HOST + "/channels/", body, options);
@@ -84,11 +92,13 @@ const actions = {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
-    axios.get(`${HOST}/channels/${channelId}`, options).then(message => {
+    axios.get(`${HOST}/channels/${channelId}`, options).then((message) => {
       commit("setSelectedChan", message.data);
+      // console.log(message);
+      // router.push("postList");
       const temp = {};
       for (const post of message.data.post_set) {
         if (temp[post.created_at.slice(0, 10)]) {
@@ -96,7 +106,7 @@ const actions = {
             pk: post.pk,
             title: post.title,
             tags: post.tags,
-            user_id: post.user_id
+            user_id: post.user_id,
           });
         } else {
           temp[post.created_at.slice(0, 10)] = [
@@ -104,8 +114,8 @@ const actions = {
               pk: post.pk,
               title: post.title,
               tags: post.tags,
-              user_id: post.user_id
-            }
+              user_id: post.user_id,
+            },
           ];
         }
       }
@@ -121,16 +131,16 @@ const actions = {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
     await axios
       .delete(`${HOST}/channels/${channelId}`, options)
-      .then(message => {
+      .then((message) => {
         message;
         alert("성공적으로 삭제되었습니다.");
       })
-      .catch(message => {
+      .catch((message) => {
         message;
         alert("삭제 중에 문제가 발생하였습니다.");
       });
@@ -170,14 +180,14 @@ const actions = {
     await commit("setChanList", null);
     router.push("/");
   },
-  bringDiaryDetail: ({ commit, getters }, diaryInfo) => {
+  bringDiaryDetail: ({ commit, getters }, diaryPK) => {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
-    axios.get(`${HOST}/posts/${diaryInfo.pk}`, options).then(message => {
+    axios.get(`${HOST}/posts/${diaryPK}`, options).then((message) => {
       commit("setSelectedDiary", message.data);
       const selectedChanUser = getters.getSelectedChan.user_set;
       for (let idx = 0; idx < selectedChanUser.length; idx++) {
@@ -188,22 +198,77 @@ const actions = {
       router.push("/diaryDetail");
     });
   },
+  async addComment({ commit, getters }, reviewContext) {
+    const token = sessionStorage.getItem("jwt");
+    const postpk = getters.getSelectedDiary.pk;
+    const options = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "JWT " + token,
+      },
+    };
+    const body = {
+      context: reviewContext,
+    };
+    await axios.post(`${HOST}/posts/${postpk}/comments/`, body, options).then(
+      axios.get(`${HOST}/posts/${postpk}`, options).then((message) => {
+        commit("setSelectedDiary", message.data);
+        const selectedChanUser = getters.getSelectedChan.user_set;
+        for (let idx = 0; idx < selectedChanUser.length; idx++) {
+          if (selectedChanUser[idx].id === message.data.user_id) {
+            commit("setWriterInfo", selectedChanUser[idx]);
+          }
+        }
+      })
+    );
+  },
+  deleteComment({ getters, commit }, commentInfo) {
+    const token = sessionStorage.getItem("jwt");
+    const postpk = getters.getSelectedDiary.pk;
+    const options = {
+      headers: {
+        Authorization: "JWT " + token,
+      },
+    };
+    console.log(postpk, commentInfo.id);
+    axios
+      .delete(`${HOST}/posts/${postpk}/comments/${commentInfo.id}`, options)
+      .then((message) => {
+        message;
+        console.log(message);
+        alert("성공적으로 삭제되었습니다.");
+        axios.get(`${HOST}/posts/${postpk}`, options).then((message) => {
+          commit("setSelectedDiary", message.data);
+          const selectedChanUser = getters.getSelectedChan.user_set;
+          for (let idx = 0; idx < selectedChanUser.length; idx++) {
+            if (selectedChanUser[idx].id === message.data.user_id) {
+              commit("setWriterInfo", selectedChanUser[idx]);
+            }
+          }
+        });
+      })
+      .catch((err) => {
+        err;
+        alert("삭제 중에 문제가 발생하였습니다.");
+      });
+  },
+
   async deleteDiary({ getters }, postId) {
     getters;
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
     await axios
       .delete(`${HOST}/posts/${postId}`, options)
-      .then(message => {
+      .then((message) => {
         message;
         console.log(message);
         alert("성공적으로 삭제되었습니다.");
       })
-      .catch(err => {
+      .catch((err) => {
         err;
         alert("삭제 중에 문제가 발생하였습니다.");
       });
@@ -235,12 +300,12 @@ const actions = {
     AWS.config.update({
       region: process.env.VUE_APP_BUCKET_REGION,
       credentials: new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL
-      })
+        IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL,
+      }),
     });
     const s3 = new AWS.S3({
       apiVersion: "2006-03-01",
-      params: { Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type }
+      params: { Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type },
     });
     commit("sets3", s3);
   },
@@ -250,7 +315,7 @@ const actions = {
     const params = {
       Key: PostInfo.fileName,
       Body: PostInfo.file,
-      ACL: "public-read-write"
+      ACL: "public-read-write",
     };
     const res = await s3.upload(params).promise();
     console.log(res);
@@ -270,13 +335,13 @@ const actions = {
       cover_image: PostInfo.cover_image,
       channel_id: parseInt(getters.getSelectedChan.id),
       is_use_comment: PostInfo.possible,
-      is_save_video: PostInfo.saveVideo
+      is_save_video: PostInfo.saveVideo,
     };
     console.log("bodybody", body);
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
     const res = await axios.post(HOST + "/posts/", body, options);
     console.log("res", res);
@@ -299,13 +364,13 @@ const actions = {
       tags: "[" + '"' + tags + '"' + "]",
       cover_image: PostInfo.cover_image,
       is_use_comment: PostInfo.possible,
-      is_save_video: PostInfo.saveVideo
+      is_save_video: PostInfo.saveVideo,
     };
     console.log("bodybody", body);
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
     const res = await axios.put(
       `${HOST}/posts/${PostInfo.post_id}/`,
@@ -314,12 +379,12 @@ const actions = {
     );
     console.log("res", res);
     router.push("/postList");
-  }
+  },
 };
 
 export default {
   state,
   getters,
   mutations,
-  actions
+  actions,
 };
