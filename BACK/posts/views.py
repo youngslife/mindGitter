@@ -193,3 +193,16 @@ class CommentDetail(APIView):
                 return JsonResponse({'message': 'do not exists the comment in the post'}, status=400)
         else:
             return JsonResponse({'message': 'INVALID USER'}, status=400)
+
+# Searching Tag
+# class SearchTags(APIView):
+#     permission_classes = (IsAuthenticated, )
+#     def get(self, request, tag):
+#         posts = list(Post.objects.filter(tags__name=tag))
+#         serializer = PostSerializer(data=posts, many=True)
+#         print(serializer)
+#         if serializer.is_valid():
+#             return JsonResponse(serializer.data, status=200)
+#         else:
+#             return JsonResponse({'message': serializer.errors}, status=400)
+
