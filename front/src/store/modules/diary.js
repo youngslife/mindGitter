@@ -6,8 +6,7 @@ const HOST = process.env.VUE_APP_SERVER_HOST;
 // const IDENTIFYPOOL = process.env.VUE_APP_IDENTIFYPOOL
 
 const axios = require("axios");
-// ★★★★★★★★★★★★ 나중에 다시 풀기
-// import AWS from "aws-sdk";
+import AWS from "aws-sdk";
 
 const state = {
   chanList: null,
@@ -322,48 +321,45 @@ const actions = {
     router.push("/");
   },
   //S3 부분
-  // ★★★★★★★★★★★★ 나중에 다시 풀기
-  // s3Init: ({
-  //   commit
-  // }, type) => {
-  //   AWS.config.update({
-  //     region: process.env.VUE_APP_BUCKET_REGION,
-  //     credentials: new AWS.CognitoIdentityCredentials({
-  //       IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL
-  //     })
-  //   });
-  //   const s3 = new AWS.S3({
-  //     apiVersion: "2006-03-01",
-  //     params: {
-  //       Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type
-  //     }
-  //   });
-  //   commit("sets3", s3);
-  // },
-  // async updates3({
-  //   commit
-  // }, PostInfo) {
-  //   console.log("upadates3", PostInfo);
-  //   const s3 = state.s3;
-  //   const params = {
-  //     Key: PostInfo.fileName,
-  //     Body: PostInfo.file,
-  //     ACL: "public-read-write"
-  //   };
-  //   const res = await s3.upload(params).promise();
-  //   console.log(res);
-  //   commit("sets3", {});
-  // },
+  s3Init: ({
+    commit
+  }, type) => {
+    AWS.config.update({
+      region: process.env.VUE_APP_BUCKET_REGION,
+      credentials: new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL
+      })
+    });
+    const s3 = new AWS.S3({
+      apiVersion: "2006-03-01",
+      params: {
+        Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type
+      }
+    });
+    commit("sets3", s3);
+  },
+  async updates3({
+    commit
+  }, PostInfo) {
+    console.log("upadates3", PostInfo);
+    const s3 = state.s3;
+    const params = {
+      Key: PostInfo.fileName,
+      Body: PostInfo.file,
+      ACL: "public-read-write"
+    };
+    const res = await s3.upload(params).promise();
+    console.log(res);
+    commit("sets3", {});
+  },
 
   // async addPost({ getters }, PostInfo) {
   async addPost({
-    // ★★★★★★★★★★★★ 나중에 다시 풀기
-    // dispatch,
+    dispatch,
     getters
   }, PostInfo) {
-    // ★★★★★★★★★★★★ 나중에 다시 풀기
-    // await dispatch("s3Init", "diary");
-    // await dispatch("updates3", PostInfo);
+    await dispatch("s3Init", "diary");
+    await dispatch("updates3", PostInfo);
     const token = sessionStorage.getItem("jwt");
     // 태그 분리
     let tags = PostInfo.tags;
