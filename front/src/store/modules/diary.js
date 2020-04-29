@@ -11,6 +11,7 @@ import AWS from "aws-sdk";
 const state = {
   chanList: null,
   chanId: null,
+  chanName: null,
   postId: null,
   selectedChan: null,
   selectedDiary: null,
@@ -24,6 +25,7 @@ const state = {
 const getters = {
   getChanList: state => state.chanList,
   getChanId: state => state.chanId,
+  getChanName: state => state.chanName,
   getSelectedChan: state => state.selectedChan,
   getSelectedDiary: state => state.selectedDiary,
   getS3: state => state.s3,
@@ -38,6 +40,10 @@ const mutations = {
   setChanId: (state, chanId) => {
     state.chanId = chanId;
     sessionStorage.setItem("chan", chanId);
+  },
+  setChanName: (state, chanName) => {
+    state.chanName = chanName;
+    sessionStorage.setItem("chanName", chanName);
   },
   setPostId: (state, postId) => {
     state.postId = postId;
@@ -97,6 +103,7 @@ const actions = {
     };
     axios.get(`${HOST}/channels/${channelId}`, options).then(message => {
       commit("setSelectedChan", message.data);
+      commit("setChanName", message.data.title);
       // console.log(message);
       // router.push("postList");
       const temp = {};
@@ -124,7 +131,7 @@ const actions = {
       });
       temp["dates"] = dates;
       commit("setDiaries", temp);
-      // console.log(temp)
+      console.log(temp)
     });
   },
   async deleteChan({ dispatch }, channelId) {
@@ -180,23 +187,20 @@ const actions = {
     await commit("setChanList", null);
     router.push("/");
   },
-  bringDiaryDetail: ({ commit, getters }, diaryPK) => {
+  async bringDiaryDetail({ commit }, diaryPK) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
     };
-    axios.get(`${HOST}/posts/${diaryPK}`, options).then(message => {
-      commit("setSelectedDiary", message.data);
-      const selectedChanUser = getters.getSelectedChan.user_set;
-      for (let idx = 0; idx < selectedChanUser.length; idx++) {
-        if (selectedChanUser[idx].id === message.data.user_id) {
-          commit("setWriterInfo", selectedChanUser[idx]);
-        }
-      }
-      router.push("/diaryDetail");
-    });
+    const message = await axios.get(`${HOST}/posts/${diaryPK}/`, options);
+    console.log(message.data)
+    await commit("setSelectedDiary", message.data);
+    const mess = await axios.get(`${HOST}/user/${message.data.user_id}/`, options);
+    console.log(mess.data)
+    await commit("setWriterInfo", mess.data)
+    // router.push("/diaryDetail");
   },
   async addComment({ commit, getters }, reviewContext) {
     const token = sessionStorage.getItem("jwt");

@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="10" class="userName">
-      <div v-if="isLoggedIn">
+      <div v-if="getUserName">
         {{ getUserName }}
       </div>
       <div v-else>
