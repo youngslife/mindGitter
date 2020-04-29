@@ -11,6 +11,7 @@ const state = {
   userId: null,
   userInfoSet: null,
   userImgModal: false,
+  userInfoModal: false,
   commitDates: [new Date().getFullYear(), new Date().getMonth()],
   commitInfo: null,
   indexDict: null,
@@ -41,6 +42,7 @@ const getters = {
   getUserId: state => state.userId,
   getUserInfoSet: state => state.userInfoSet,
   getUserImgModal: state => state.userImgModal,
+  getUserInfoModal: state => state.userInfoModal,
   getCommitDates: state => state.commitDates,
   getCommitInfo: state => state.commitInfo,
   getUserProfile: state => state.userProfile,
@@ -58,7 +60,8 @@ const mutations = {
   setUserName: (state, userName) => (state.userName = userName),
   setUserId: (state, userId) => (state.userId = userId),
   setUserInfoSet: (state, userInfoSet) => (state.userInfoSet = userInfoSet),
-  setUserImgModal: (state, userImgModal) => (state.userImgModal = userImgModal),
+  setUserImgModal: state => (state.userImgModal = !state.userImgModal),
+  setUserInfoModal: state => (state.userInfoModal = !state.userInfoModal),
   setUserProfile: (state, userProfile) => (state.userProfile = userProfile),
   sets3: (state, s3) => {
     state.s3 = s3;

@@ -9,15 +9,15 @@
       </div>
     </v-col>
     <v-col cols="2" class="outBtn">
-      <button class="settings" @click.prevent="logout">
-        <v-icon>fas fa-sign-out-alt</v-icon>
+      <button class="settings" @click="setUserInfoModal(true)">
+        <v-icon>fas fa-cog</v-icon>
       </button>
     </v-col>
   </v-row>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "UserHead",
@@ -25,7 +25,7 @@ export default {
     ...mapGetters(["getUserName", "isLoggedIn"])
   },
   methods: {
-    ...mapActions(["logout"])
+    ...mapMutations(["setUserImgModal", "setUserInfoModal"])
   }
 };
 </script>

@@ -1,16 +1,34 @@
 <template>
   <div class="userDetail">
     <v-container class="userCon">
+      <v-card
+        v-if="getUserInfoModal"
+        @close="setUserInfoModal"
+        class="userInfoModal"
+      >
+        <div class="change-pwd" @click="changePwd">
+          <v-icon>fas fa-key</v-icon>비밀번호 변경
+        </div>
+        <div class="change-profil" @click="changeModal">
+          <v-icon>fas fa-user-circle</v-icon>프로필사진 변경
+        </div>
+        <div class="logout" @click="logout">
+          <v-icon>fas fa-sign-out-alt</v-icon>로그아웃
+        </div>
+      </v-card>
       <UserHead />
       <UserInfo />
-      <v-card v-if="getUserImgModal" @close="setUserImgModal(false)">
+      <v-card
+        v-if="getUserImgModal"
+        @close="setUserImgModal"
+        class="userImgModal"
+      >
         <v-card-title>프로필 사진</v-card-title>
         <input type="file" @change="onFileChange" />
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="change-pwd" @click="changePwd">비밀번호변경</v-btn>
           <v-btn class="save" @click="updateUserInfo(PostInfo)">저장</v-btn>
-          <v-btn class="close" @click="setUserImgModal(false)">닫기</v-btn>
+          <v-btn class="close" @click="setUserImgModal">닫기</v-btn>
         </v-card-actions>
       </v-card>
       <CommitCalendar />
@@ -52,11 +70,17 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUserName", "getUserId", "isLoggedIn", "getUserImgModal"])
+    ...mapGetters([
+      "getUserName",
+      "getUserId",
+      "isLoggedIn",
+      "getUserImgModal",
+      "getUserInfoModal"
+    ])
   },
   methods: {
-    ...mapActions(["logout", "updateUserInfo"]),
-    ...mapMutations(["setUserImgModal"]),
+    ...mapActions(["logout", "updateUserInfo", "logout"]),
+    ...mapMutations(["setUserImgModal", "setUserInfoModal"]),
     onFileChange(e) {
       const files = e.target.files;
       if (files) {
@@ -66,6 +90,10 @@ export default {
     },
     changePwd() {
       router.push("/changePwd");
+    },
+    async changeModal() {
+      await this.setUserInfoModal();
+      this.setUserImgModal();
     }
   }
 };
