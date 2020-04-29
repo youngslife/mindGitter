@@ -98,7 +98,7 @@ const actions = {
     axios.get(`${HOST}/channels/${channelId}`, options).then((message) => {
       commit("setSelectedChan", message.data);
       // console.log(message);
-      // router.push("postList");
+      
       const temp = {};
       for (const post of message.data.post_set) {
         if (temp[post.created_at.slice(0, 10)]) {
