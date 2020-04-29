@@ -41,7 +41,9 @@ class Notification(models.Model):
         # ('comment', 'Comment')
     )
 
-    inviter = models.ForeignKey(User, on_delete=models.PROTECT, related_name='invitor')
-    to = models.ForeignKey(User, on_delete=models.PROTECT, related_name='to')
-    notification_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    inviter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inviter')
+    guest = models.ForeignKey(User, on_delete=models.CASCADE, related_name='guest')
+    notice_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
+    accept_or_not = models.CharField(max_length=2) # "1" = accept, "0" = refuse
     

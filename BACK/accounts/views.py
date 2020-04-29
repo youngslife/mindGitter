@@ -46,23 +46,20 @@ class UserNameAPIView(APIView):
         return Response(user_serializer.data)
 
 
-class NotificationAPIView(APIView):
+class NotificationAPIView(APIView): 
     permission_classes = (IsAuthenticated,)
-    def get(self, request, format=None):
-        user = request.user
-        notifications = Notification.objects.filter(to=user)
-        serializer = NotificationSerializer(notification, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-    
 
     def post(self, request): # Body(user, channel_id, notification_type)
-        to = get_object_or_404(User, username=request.data.get('username'))
+        guest = get_object_or_404(User, username=request.data.get('username'))
         channel = get_object_or_404(Channel, id=request.data.get('channel_id'))
-        inviter = channel.create_user.id
-        data = {'inviter': inviter,
-                'to': to.id,
-                'notification_type': request.data.get('notification_type')
+        inviter = get_object_or_404(User, id=request.user.id)
+        data = {'inviter': inviter.id,
+                'guest': guest.id,
+                'notice_type': request.data.get('notice_type'),
+                'channel': channel.id,
+                'accept_or_not': "0",
                 }
+        print('##########', data)
         
         notifications = NotificationSerializer(data=data)
         if notifications.is_valid():
@@ -74,8 +71,37 @@ class NotificationAPIView(APIView):
         #             # comment = comment
         #         )
         
-            return Response(notifications.data)
+            return Response(notifications.data, status=status.HTTP_201_CREATED)  # 응답 굳이 이형태로 주지 않아도 될듯
         return Response(notifications.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class NoticeDetail(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request, notice_id):
+        notification = Notification.objects.filter(id=notice_id)
+        serializer = NotificationSerializer(notification, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+    def put(self, request, notice_id):
+        
+        notification = Notification.objects.get(id=notice_id)
+        data = request.data.dict()
+
+        data.update({'inviter': notification.inviter.id,
+                    'guest': notification.guest.id,
+                    'channel': notification.channel.id,
+                    'notice_type': notification.notice_type
+                })
+        # data.update({'guest': notification.guest.id})
+        # data.update({'channel': notification.channel.id})
+        # data.update({'notice_type': notification.notice_type})
+
+        serializer = NotificationSerializer(instance=notification, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
