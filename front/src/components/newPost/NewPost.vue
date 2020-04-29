@@ -5,7 +5,7 @@
         ><v-icon class="back" @click="goList">fas fa-arrow-left</v-icon></v-col
       >
       <v-col cols="10" class="diaryName"
-        ><h1>{{ getSelectedChan.title }}</h1></v-col
+        ><h1>{{ getChanName }}</h1></v-col
       >
     </v-row>
     <form class="AddPostForm" @submit.prevent="addPost(postInfo)">
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import router from "@/router";
 
 export default {
@@ -79,6 +79,7 @@ export default {
   },
   methods: {
     ...mapActions(["addPost"]),
+    ...mapMutations(["setChanName"]),
     goList() {
       router.push("/postList");
     },
@@ -95,7 +96,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getUserId", "getSelectedChan"])
+    ...mapGetters(["getUserId", "getChanName"])
+  },
+  async created() {
+    const chanName = sessionStorage.getItem("chanName");
+    if (chanName) {
+      this.setChanName(chanName);
+    } else {
+      router.push("/")
+    }
   }
 };
 </script>

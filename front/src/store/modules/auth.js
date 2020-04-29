@@ -57,7 +57,10 @@ const mutations = {
   },
   pushError: (state, error) => state.errors.push(error),
   clearErrors: state => (state.errors = []),
-  setUserName: (state, userName) => (state.userName = userName),
+  setUserName: (state, userName) => {
+    state.userName = userName;
+    sessionStorage.setItem("userName", userName);
+  },
   setUserId: (state, userId) => (state.userId = userId),
   setUserInfoSet: (state, userInfoSet) => (state.userInfoSet = userInfoSet),
   setUserImgModal: state => (state.userImgModal = !state.userImgModal),
@@ -87,7 +90,7 @@ const actions = {
   pushError: ({ commit }, error) => {
     commit("pushError", error);
   },
-  login: ({ state, commit, getters, dispatch }, { username, password }) => {
+  login: ({ state, commit, getters }, { username, password }) => {
     if (getters.isLoggedIn) {
       router.push("/");
     } else {
@@ -112,7 +115,6 @@ const actions = {
           commit("setLoading", false);
           commit("setUserName", username);
           commit("setUserId", token.data.user.pk);
-          dispatch("preprocessingCommit");
           router.push("/");
         })
         .catch(err => {

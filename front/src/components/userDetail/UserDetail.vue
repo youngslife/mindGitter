@@ -80,7 +80,7 @@ export default {
   },
   methods: {
     ...mapActions(["logout", "updateUserInfo", "logout"]),
-    ...mapMutations(["setUserImgModal", "setUserInfoModal"]),
+    ...mapMutations(["setUserImgModal", "setUserInfoModal", "setUserName"]),
     onFileChange(e) {
       const files = e.target.files;
       if (files) {
@@ -94,6 +94,14 @@ export default {
     async changeModal() {
       await this.setUserInfoModal();
       this.setUserImgModal();
+    }
+  },
+  async created() {
+    const userName = sessionStorage.getItem("userName");
+    if (userName) {
+      this.setUserName(userName);
+    } else {
+      router.push('/')
     }
   }
 };

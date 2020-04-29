@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container v-if="getSelectedChan">
     <v-row>
       <v-col cols="2"
         ><v-icon class="back" @click="goList">fas fa-arrow-left</v-icon></v-col
@@ -101,13 +101,17 @@ export default {
     ...mapGetters(["getSelectedChan", "getEditDiary"])
   },
   async created() {
-    this.postInfo.title = this.getEditDiary.title;
-    this.postInfo.tags = this.getEditDiary.tags;
-    this.postInfo.possible = this.getEditDiary.is_use_comment;
-    this.postInfo.saveVideo = this.getEditDiary.is_save_video;
-    this.videoTempUrl = this.videoAddr + this.getEditDiary.video_file;
-    this.postInfo.fileName = this.getEditDiary.video_file;
-    this.postInfo.post_id = this.getEditDiary.pk;
+    if (this.getEditDiary) {
+      this.postInfo.title = this.getEditDiary.title;
+      this.postInfo.tags = this.getEditDiary.tags;
+      this.postInfo.possible = this.getEditDiary.is_use_comment;
+      this.postInfo.saveVideo = this.getEditDiary.is_save_video;
+      this.videoTempUrl = this.videoAddr + this.getEditDiary.video_file;
+      this.postInfo.fileName = this.getEditDiary.video_file;
+      this.postInfo.post_id = this.getEditDiary.pk;
+    } else {
+      router.push("/postList")
+    }
   }
 };
 </script>

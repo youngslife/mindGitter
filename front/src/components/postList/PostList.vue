@@ -161,9 +161,10 @@ export default {
         console.log("취소");
       }
     },
-    goDetail(diaryPK) {
-      this.setPostId(diaryPK);
-      this.bringDiaryDetail(diaryPK);
+    async goDetail(diaryPK) {
+      await this.setPostId(diaryPK);
+      await this.bringDiaryDetail(diaryPK);
+      router.push("/diaryDetail");
     },
     showProfile(profile_img) {
       console.log(this.profileAddr + profile_img);
