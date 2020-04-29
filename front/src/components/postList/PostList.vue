@@ -22,10 +22,15 @@
         <v-card-text>
           친구 아이디
         </v-card-text>
-        <input />
+        <input
+          type="text"
+          v-model="noticeInfo.username"
+          @keydown.enter="pushNotice(getSelectedChan.id)"
+          placeholder="친구이름검색"
+        />
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="search" @click="changeShowAddModal">공유</v-btn>
+          <v-btn class="search" @click="pushNotice(getSelectedChan.id)">공유</v-btn>
           <v-btn class="close" @click="changeShowAddModal">닫기</v-btn>
         </v-card-actions>
       </v-card>
@@ -100,6 +105,11 @@ export default {
   name: "DiaryList",
   data() {
     return {
+      //은영
+      noticeInfo: {
+        username: "",
+        channel_id: "",
+      },
       searchTag: null,
       date: new Date(),
       showAddModal: false,
@@ -139,8 +149,30 @@ export default {
       "deleteChan",
       "bringDiaryDetail",
       "bringChanDetail",
-      "leaveChannel"
+      "leaveChannel",
+      //은영
+      "addNotification",
     ]),
+    //은영
+    pushNotice(channelId) {
+      this.noticeInfo.channel_id = channelId
+      console.log(channelId);
+        console.log(this.noticeInfo);
+      if (
+        confirm(
+          "00님과 공유하시겠습니까?"
+        )
+      ) {
+        console.log("공유");
+        console.log(channelId);
+        console.log(this.noticeInfo);
+        
+        this.addNotification(this.noticeInfo)
+      } else {
+        console.log("공유취소");
+      }
+    },
+    //
     changeShowAddModal() {
       this.showModal = false;
       this.showAddModal = !this.showAddModal;

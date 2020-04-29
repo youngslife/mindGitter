@@ -59,6 +59,11 @@
         </v-card>
       </v-carousel-item>
     </v-carousel>
+    <template>
+        <v-btn @click="goNotification" class="userPageBtn" fab small absolute>
+          <v-icon>mdi-alarm</v-icon>
+        </v-btn>
+      </template>
   </v-container>
 </template>
 
@@ -92,6 +97,9 @@ export default {
       // this.bringChanDetail(channelId);
       await this.setChanId(channelId);
       router.push("/postList");
+    },
+    goNotification() {
+      router.push("/notification");
     },
     getDate(stringd) {
       const d = new Date(stringd);
