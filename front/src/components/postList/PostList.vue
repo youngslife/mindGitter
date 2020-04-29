@@ -19,9 +19,7 @@
       </v-card>
       <v-card v-if="showAddModal" @close="showAddModal = false" class="invite">
         <v-card-title>Share Diary</v-card-title>
-        <v-card-text>
-          친구 아이디
-        </v-card-text>
+        <v-card-text>친구 아이디</v-card-text>
         <input />
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -32,37 +30,28 @@
     </div>
     <div calss="search">
       <v-icon class="search">fas fa-search</v-icon>
-      <input type="text" v-model="searchTag" />
-      <div
-        class="sharedImage"
-        v-for="(user, i) in getSelectedChan.user_set"
-        :key="i"
-      >
-        <img
-          class="sharedUserProfile"
-          :src="showProfile(user.profile_img)"
-          alt="sharedUserProfile"
-        />
+      <input
+        type="text"
+        v-model="searchParams.searchKwd"
+        @keydown.enter="searchingTag(searchParams)"
+        placeholder="search tag"
+      />
+      <div class="sharedImage" v-for="(user, i) in getSelectedChan.user_set" :key="i">
+        <img class="sharedUserProfile" :src="showProfile(user.profile_img)" alt="sharedUserProfile" />
       </div>
     </div>
     <datepicker v-model="date" input-class="hi"></datepicker>
     <v-divider></v-divider>
     <div v-for="(diary, i) in getDiaries['dates']" :key="i">
       <div class="diaries" v-if="diary <= changeDate">
-        <div class="date">
-          {{ diary }}
-        </div>
+        <div class="date">{{ diary }}</div>
         <div
           class="diaryInfo"
           v-for="(item, idx) in getDiaries[diary]"
           :key="idx"
           @click="goDetail(item.pk)"
         >
-          <div
-            class="userImage"
-            v-for="(user, i) in getSelectedChan.user_set"
-            :key="i"
-          >
+          <div class="userImage" v-for="(user, i) in getSelectedChan.user_set" :key="i">
             <img
               v-if="user.id == item.user_id"
               :src="showProfile(user.profile_img)"
@@ -73,9 +62,7 @@
           <div class="content">
             <p class="title">{{ item.title }}</p>
             <div v-if="item.tags[0] != 'null'">
-              <span class="tag" v-for="(tag, j) in item.tags" :key="j"
-                >#{{ tag }}
-              </span>
+              <span class="tag" v-for="(tag, j) in item.tags" :key="j">#{{ tag }}</span>
             </div>
             <div v-else>
               <span class="tag">
@@ -100,7 +87,10 @@ export default {
   name: "DiaryList",
   data() {
     return {
-      searchTag: null,
+      searchParams: {
+        searchKwd: null,
+        channId: null
+      },
       date: new Date(),
       showAddModal: false,
       showModal: false,

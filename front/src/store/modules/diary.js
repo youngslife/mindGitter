@@ -66,7 +66,9 @@ const mutations = {
 };
 
 const actions = {
-  async bringChanList({ commit }) {
+  async bringChanList({
+    commit
+  }) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
@@ -77,7 +79,10 @@ const actions = {
       commit("setChanList", message.data.channels);
     });
   },
-  async addChannel({ dispatch, commit }, PostInfo) {
+  async addChannel({
+    dispatch,
+    commit
+  }, PostInfo) {
     if (PostInfo.title && PostInfo.fileName && PostInfo.description) {
       console.log("addChannel", PostInfo);
       await dispatch("s3Init", "channel");
@@ -123,7 +128,9 @@ const actions = {
       );
     }
   },
-  bringChanDetail: ({ commit }, channelId) => {
+  bringChanDetail: ({
+    commit
+  }, channelId) => {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
@@ -144,24 +151,25 @@ const actions = {
             user_id: post.user_id
           });
         } else {
-          temp[post.created_at.slice(0, 10)] = [
-            {
-              pk: post.pk,
-              title: post.title,
-              tags: post.tags,
-              user_id: post.user_id
-            }
-          ];
+          temp[post.created_at.slice(0, 10)] = [{
+            pk: post.pk,
+            title: post.title,
+            tags: post.tags,
+            user_id: post.user_id
+          }];
         }
       }
-      const dates = Object.keys(temp).sort(function(a, b) {
+      const dates = Object.keys(temp).sort(function (a, b) {
         return b - a;
       });
       temp["dates"] = dates;
+      console.log(temp)
       commit("setDiaries", temp);
     });
   },
-  async deleteChan({ dispatch }, channelId) {
+  async deleteChan({
+    dispatch
+  }, channelId) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
@@ -181,7 +189,10 @@ const actions = {
     await dispatch("bringChanList");
     router.push("/");
   },
-  async editChannel({ dispatch, commit }, PostInfo) {
+  async editChannel({
+    dispatch,
+    commit
+  }, PostInfo) {
     console.log(PostInfo);
     dispatch;
     commit;
@@ -214,7 +225,9 @@ const actions = {
     await commit("setChanList", null);
     router.push("/");
   },
-  async bringDiaryDetail({ commit }, diaryPK) {
+  async bringDiaryDetail({
+    commit
+  }, diaryPK) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
@@ -229,7 +242,10 @@ const actions = {
     );
     await commit("setWriterInfo", mess.data);
   },
-  async addComment({ commit, getters }, reviewContext) {
+  async addComment({
+    commit,
+    getters
+  }, reviewContext) {
     const token = sessionStorage.getItem("jwt");
     const postpk = getters.getSelectedDiary.pk;
     const options = {
@@ -253,7 +269,10 @@ const actions = {
       })
     );
   },
-  deleteComment({ getters, commit }, commentInfo) {
+  deleteComment({
+    getters,
+    commit
+  }, commentInfo) {
     const token = sessionStorage.getItem("jwt");
     const postpk = getters.getSelectedDiary.pk;
     const options = {
@@ -284,7 +303,9 @@ const actions = {
       });
   },
 
-  async deleteDiary({ getters }, postId) {
+  async deleteDiary({
+    getters
+  }, postId) {
     getters;
     const token = sessionStorage.getItem("jwt");
     const options = {
@@ -305,7 +326,9 @@ const actions = {
       });
     router.push("/postList");
   },
-  async leaveChannel({ getters }, ChannelId) {
+  async leaveChannel({
+    getters
+  }, ChannelId) {
     getters;
     const token = sessionStorage.getItem("jwt");
     const options = {
@@ -327,7 +350,9 @@ const actions = {
     router.push("/");
   },
   //S3 부분
-  s3Init: ({ commit }, type) => {
+  s3Init: ({
+    commit
+  }, type) => {
     AWS.config.update({
       region: process.env.VUE_APP_BUCKET_REGION,
       credentials: new AWS.CognitoIdentityCredentials({
@@ -342,7 +367,9 @@ const actions = {
     });
     commit("sets3", s3);
   },
-  async updates3({ commit }, PostInfo) {
+  async updates3({
+    commit
+  }, PostInfo) {
     console.log("upadates3", PostInfo);
     const s3 = state.s3;
     const params = {
@@ -354,7 +381,11 @@ const actions = {
     console.log(res);
     commit("sets3", {});
   },
-  async addPost({ dispatch, getters, commit }, PostInfo) {
+  async addPost({
+    dispatch,
+    getters,
+    commit
+  }, PostInfo) {
     commit("setPostLoading", true);
     await dispatch("s3Init", "diary");
     await dispatch("updates3", PostInfo);
@@ -366,9 +397,9 @@ const actions = {
     } else {
       if (tags.includes("#"))
         tags = tags
-          .replace(/(\s*)/g, "")
-          .split("#")
-          .slice(1);
+        .replace(/(\s*)/g, "")
+        .split("#")
+        .slice(1);
       else if (tags.includes(",")) tags = tags.replace(/(\s*)/g, "").split(",");
       else if (tags.includes(" ")) tags = tags.split(" ");
 
@@ -397,7 +428,10 @@ const actions = {
     console.log("res", res);
     router.push("/postList");
   },
-  async editPost({ dispatch, commit }, PostInfo) {
+  async editPost({
+    dispatch,
+    commit
+  }, PostInfo) {
     if (PostInfo.file) {
       commit("setPostLoading", true);
       console.log("file 변경 있음");
@@ -414,9 +448,9 @@ const actions = {
     } else {
       if (tags.includes("#"))
         tags = tags
-          .replace(/(\s*)/g, "")
-          .split("#")
-          .slice(1);
+        .replace(/(\s*)/g, "")
+        .split("#")
+        .slice(1);
       else if (tags.includes(",")) tags = tags.replace(/(\s*)/g, "").split(",");
       else if (tags.includes(" ")) tags = tags.split(" ");
 
@@ -446,6 +480,46 @@ const actions = {
     commit("setPostLoading", false);
     console.log("res", res);
     router.push("/postList");
+  },
+  searchingTag: ({
+    commit
+  }, searchParams) => {
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token,
+      }
+    };
+    const channId = sessionStorage.getItem("chan");
+    console.log(searchParams)
+    axios.get(`${HOST}/channels/${channId}/tags/?search=${searchParams.searchKwd}`, options)
+      .then(message => {
+        console.log(searchParams.searchKwd, '요청 완료')
+        const temp = {};
+        for (const post of message.data) {
+          if (temp[post.created_at.slice(0, 10)]) {
+            temp[post.created_at.slice(0, 10)].push({
+              pk: post.pk,
+              title: post.title,
+              tags: post.tags,
+              user_id: post.user_id
+            });
+          } else {
+            temp[post.created_at.slice(0, 10)] = [{
+              pk: post.pk,
+              title: post.title,
+              tags: post.tags,
+              user_id: post.user_id
+            }];
+          }
+        }
+        const dates = Object.keys(temp).sort(function (a, b) {
+          return b - a;
+        });
+        temp["dates"] = dates;
+        console.log(temp)
+        commit("setDiaries", temp);
+      })
   }
 };
 
