@@ -8,6 +8,7 @@
         <input type="file" @change="onFileChange" />
         <v-card-actions>
           <v-spacer></v-spacer>
+          <v-btn class="change-pwd" @click="changePwd">비밀번호변경</v-btn>
           <v-btn class="save" @click="updateUserInfo(PostInfo)">저장</v-btn>
           <v-btn class="close" @click="setUserImgModal(false)">닫기</v-btn>
         </v-card-actions>
@@ -15,15 +16,11 @@
       <CommitCalendar />
       <div class="emotion">
         <h3>Emotion</h3>
-        <div class="emotionDetail">
-          감정 분석 결과
-        </div>
+        <div class="emotionDetail">감정 분석 결과</div>
       </div>
       <div class="tag">
         <h3>Tag</h3>
-        <div class="tagDetail">
-          tag 분석 결과
-        </div>
+        <div class="tagDetail">tag 분석 결과</div>
       </div>
     </v-container>
     <Nav />
@@ -36,6 +33,7 @@ import UserHead from "./userInfo/UserHead.vue";
 import UserInfo from "./userInfo/UserInfo.vue";
 import CommitCalendar from "./userInfo/CommitCalendar";
 import { mapGetters, mapMutations, mapActions } from "vuex";
+import router from "@/router";
 
 export default {
   name: "UserDetail",
@@ -65,6 +63,9 @@ export default {
         this.PostInfo.file = files[0];
         this.PostInfo.fileName = String(this.getUserId) + ".jpg";
       }
+    },
+    changePwd() {
+      router.push("/changePwd");
     }
   }
 };
