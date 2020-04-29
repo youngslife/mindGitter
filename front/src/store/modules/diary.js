@@ -182,9 +182,6 @@ const actions = {
     router.push("/");
   },
   async editChannel({ dispatch, commit }, PostInfo) {
-    console.log(PostInfo);
-    dispatch;
-    commit;
     if (PostInfo.file) {
       console.log("파일 변경");
       await dispatch("s3Init", "channel");
@@ -354,48 +351,57 @@ const actions = {
     console.log(res);
     commit("sets3", {});
   },
-  async addPost({ dispatch, getters, commit }, PostInfo) {
-    commit("setPostLoading", true);
-    await dispatch("s3Init", "diary");
-    await dispatch("updates3", PostInfo);
-    const token = sessionStorage.getItem("jwt");
-    // 태그 분리
-    let tags = PostInfo.tags;
-    if (tags == null) {
-      tags = "[]";
-    } else {
-      if (tags.includes("#"))
-        tags = tags
-          .replace(/(\s*)/g, "")
-          .split("#")
-          .slice(1);
-      else if (tags.includes(",")) tags = tags.replace(/(\s*)/g, "").split(",");
-      else if (tags.includes(" ")) tags = tags.split(" ");
+  async addPost({ dispatch, commit }, PostInfo) {
+    if (PostInfo.title && PostInfo.fileName) {
+      commit("setPostLoading", true);
+      await dispatch("s3Init", "diary");
+      await dispatch("updates3", PostInfo);
+      const token = sessionStorage.getItem("jwt");
+      // 태그 분리
+      let tags = PostInfo.tags;
+      if (tags == null) {
+        tags = "[]";
+      } else {
+        if (tags.includes("#"))
+          tags = tags
+            .replace(/(\s*)/g, "")
+            .split("#")
+            .slice(1);
+        else if (tags.includes(","))
+          tags = tags.replace(/(\s*)/g, "").split(",");
+        else if (tags.includes(" ")) tags = tags.split(" ");
 
-      if (typeof tags == "object") tags = JSON.stringify(tags);
-      else tags = '["' + tags + '"]';
-    }
-
-    const body = {
-      title: PostInfo.title,
-      context: PostInfo.context,
-      video_file: PostInfo.fileName,
-      tags: tags,
-      cover_image: PostInfo.cover_image,
-      channel_id: parseInt(getters.getSelectedChan.id),
-      is_use_comment: PostInfo.possible,
-      is_save_video: PostInfo.saveVideo
-    };
-    console.log("bodybody", body);
-    const options = {
-      headers: {
-        Authorization: "JWT " + token
+        if (typeof tags == "object") tags = JSON.stringify(tags);
+        else tags = '["' + tags + '"]';
       }
-    };
-    const res = await axios.post(HOST + "/posts/", body, options);
-    commit("setPostLoading", false);
-    console.log("res", res);
-    router.push("/postList");
+      const chanId = sessionStorage.getItem("chan");
+      const body = {
+        title: PostInfo.title,
+        context: PostInfo.context,
+        video_file: PostInfo.fileName,
+        tags: tags,
+        cover_image: PostInfo.cover_image,
+        channel_id: parseInt(chanId),
+        is_use_comment: PostInfo.possible,
+        is_save_video: PostInfo.saveVideo
+      };
+      console.log("bodybody", body);
+      const options = {
+        headers: {
+          Authorization: "JWT " + token
+        }
+      };
+      const res = await axios.post(HOST + "/posts/", body, options);
+      commit("setPostLoading", false);
+      console.log("res", res);
+      router.push("/postList");
+    } else if (PostInfo.title) {
+      alert("! 분석할 영상을 첨부해주세요.");
+    } else if (PostInfo.fileName) {
+      alert("! 일기의 제목을 작성해주세요.");
+    } else {
+      alert("! 일기의 제목을 작성해주세요.\n! 분석할 영상을 첨부해주세요..");
+    }
   },
   async editPost({ dispatch, commit }, PostInfo) {
     if (PostInfo.file) {
