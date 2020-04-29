@@ -8,11 +8,6 @@
       white
       height="98vh"
     >
-      <template>
-        <v-btn @click="goUserDetail" class="userPageBtn" fab small absolute>
-          <v-icon>mdi-account-circle</v-icon>
-        </v-btn>
-      </template>
       <v-carousel-item v-for="(item, i) in getChanList" :key="i">
         <v-card dark style="border-radius:17px" @click="goDetail(item.id)">
           <v-img
@@ -50,7 +45,7 @@
                 >mdi-text-box-plus-outline</v-icon
               >
             </div>
-            <div class="hNewBtn hBtnRight">
+            <div class="hNewBtn hBtnRight" @click="goUserDetail">
               <v-icon color="rgba(255, 255, 255, 0.4)" small
                 >mdi-account</v-icon
               >

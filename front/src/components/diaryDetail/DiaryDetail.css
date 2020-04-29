@@ -1,23 +1,176 @@
-.v-icon.back{
-  font-size: 30px;
-  position: absolute;
-  left: 15px;
-  margin: 10px;
-  z-index: 200;
+p {
+  color: rgba(0, 0, 0, 0.6)
 }
 
-h1{
-  z-index: 100;
+.ddContainer {
+  margin: 1vh 1vw;
+  width: 98vw;
+  height: 98vh;
+  border-radius: 17px;
+  background-color: rgba(255, 255, 255, 0.3);
+  -webkit-box-shadow: 19px -6px 24px -15px rgba(0,0,0,0.75);
+  -moz-box-shadow: 19px -6px 24px -15px rgba(0,0,0,0.75);
+  box-shadow: 19px -6px 24px -15px rgba(0,0,0,0.75);
+}
+
+.ddBar {
+  height: 8vh;
+  width: 100%;
+  background-color: white;
   position: relative;
+  border-top-left-radius: 17px;
+  border-top-right-radius: 17px;
 }
 
-.v-icon.etc{
-  font-size: 30px;
-  position: absolute;
-  right: 15px;
-  margin: 10px;
-  z-index: 200;
+.ddBtn {
+  height: 8vw; 
+  width: 8vw; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+  z-index:99999999999999999999999999;
 }
+
+.ddBackBtn {
+  position:absolute;
+  top:4vh; left:9vw; 
+  transform: translate(-50%, -50%); 
+}
+
+.ddHamBtn {
+  position:absolute;
+  top:4vh; left:91vw; 
+  transform: translate(-50%, -50%); 
+}
+
+.ddDate {
+  font-size: large;
+  font-weight: 600;
+  color: rgba(0,0,0,0.65);
+  line-height: 8vh;
+  text-align: center;
+}
+
+.ddContentBox {
+  width: 98%;
+  margin: 0% 1%;
+  height: 84vh;
+
+}
+
+.ddTabBar {
+  width:100%; height:4vh; display:flex; justify-content:space-around;   margin-bottom: 1.5vh;
+}
+
+.ddTab {
+  -webkit-box-shadow: 2px -2px 1px 0px rgba(0,0,0,0.1);
+  -moz-box-shadow: 2px -2px 1px 0px rgba(0,0,0,0.1);
+  box-shadow: 2px -2px 1px 0px rgba(0,0,0,0.1);
+  width:33%;height:100%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.ddTab:hover {
+  -webkit-box-shadow: inset 2px 2px 1px 0px rgba(0,0,0,0.1);
+  -moz-box-shadow: inset 2px 2px 1px 0px rgba(0,0,0,0.1);
+  box-shadow: inset 2px 2px 1px 0px rgba(0,0,0,0.1);
+  transition: all 0.4s ease 0s;
+}
+
+.ddSelectedTab {
+  -webkit-box-shadow: inset 2px 2px 1px 0px rgba(0,0,0,0.1);
+  -moz-box-shadow: inset 2px 2px 1px 0px rgba(0,0,0,0.1);
+  box-shadow: inset 2px 2px 1px 0px rgba(0,0,0,0.1);
+  width:33%;height:100%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+
+.ddTabText {
+  line-height:5vh; text-align:center; color:rgba(0, 0, 0, 0.2);
+  font-weight: 550;
+}
+
+.ddTabText:hover {
+  color:rgba(0, 0, 0, 0.6);
+  transition: all 0.4s ease 0s;
+}
+
+.ddSelectedTabText {
+  line-height:5vh; text-align:center; color:rgba(0, 0, 0, 0.6);
+  font-weight: 550;
+}
+
+.ddContent {
+  height: 49vh;
+  width: 100%;
+  margin: auto;
+  padding: 15px;
+  white-space: wrap;
+  overflow: auto;  
+}
+
+.ddContentBox::-webkit-scrollbar {
+  display: none;
+}
+
+.ddTitle {
+  height:7vh; display:flex; justify-content:center
+}
+
+.ddTitle > p {
+  line-height:10vh; margin: 0 5px; font-weight:550;
+}
+
+.ddAbb {
+  font-size:small; margin:2vh 5vw 3vh
+  
+}
+
+.ddAbb > p {
+  color:rgba(0,0,0, 0.5); text-align:left; line-height:1.8em
+}
+
+.ddTags {
+  height:5vh;
+}
+
+.ddTags > span {
+  font-size:1.8vh; color:#4682B4; font-weight:550
+}
+
+.ddExpandBtn {
+  -webkit-box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.1);
+  -moz-box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.1);
+  box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.1);
+  border-radius: 25px;
+  margin-left:50vw;
+  width: 110px;
+  height: 30px
+}
+
+.ddExpandBtn > p {
+  font-size:1.8vh; margin:0 2vw;line-height:30px; font-weight:550; color:rgba(0,0,0,0.4)
+}
+
+.ddContext {
+  font-size:small; margin: 3vh 5vw
+}
+
+.ddContext > p {
+  color:rgba(0,0,0, 0.5); text-align:left; line-height:1.8em;
+}
+
+.ddMeta {
+  font-size:1.7vh; height:6vh; text-align:center;
+}
+
+.ddMeta > p {
+  color:rgba(0,0,0,0.3); line-height:6vh
+}
+
 
 .v-card{
   position: absolute;
@@ -38,36 +191,6 @@ h1{
   font-size: 15px;
 }
 
-div.video{
-  height: 255px;
-  top: 100px;
-  left: 0;
-  right: 0;
-  position: absolute;
-  background-color: gray;
-}
-
-div.temp{
-  height: 220px;
-}
-
-div.text{
-  margin: 5px;
-}
-
-div.text>h3{
-  margin: 15px;
-}
-
-div.text>div{
-  margin: 10px;
-}
-
-video.dvideo {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
 
 div.additionalInfo {
   position: absolute;
