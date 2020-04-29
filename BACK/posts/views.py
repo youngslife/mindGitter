@@ -59,7 +59,7 @@ class PostList(APIView):
             # new_tags = posting.tags.names()
             # for new_tag in new_tags:
             #     user.tags.add(new_tag)
-
+            
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
       
