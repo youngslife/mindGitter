@@ -49,6 +49,13 @@ class UserNameAPIView(APIView):
 class NotificationAPIView(APIView): 
     permission_classes = (IsAuthenticated,)
 
+    def get(self, request): # 해당 user가 guest인 모든 notification
+        user = get_object_or_404(User, id=request.user.id)
+        notifications = Notification.objects.filter(guest=user.id)
+        serializer = NotificationSerializer(notifications, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
     def post(self, request): # Body(user, channel_id, notification_type)
         guest = get_object_or_404(User, username=request.data.get('username'))
         channel = get_object_or_404(Channel, id=request.data.get('channel_id'))
@@ -77,7 +84,7 @@ class NotificationAPIView(APIView):
 
 class NoticeDetail(APIView):
     permission_classes = (IsAuthenticated,)
-    def get(self, request, notice_id):
+    def get(self, request, notice_id): # 1개
         notification = Notification.objects.filter(id=notice_id)
         serializer = NotificationSerializer(notification, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
