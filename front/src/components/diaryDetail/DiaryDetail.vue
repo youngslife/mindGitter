@@ -41,8 +41,9 @@
       <span>{{ selectedMode }}</span>
     </div>
     <div class="text" v-if="selectedMode == 'Comment'">
+      <!-- <span>{{ selectedMode }}</span> -->
       <div v-if="selectedDiary.is_use_comment">
-        <span>{{ selectedMode }}</span>
+        <Comments />
       </div>
       <div v-else>
         <span>{{ selectedMode }}를 허용하지 않습니다.</span>
@@ -66,10 +67,14 @@
 
 <script>
 import router from "@/router";
+import Comments from "./Comments/Comments.vue";
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "DiaryDetail",
+  components: {
+    Comments
+  },
   data() {
     return {
       modes: ["Detail", "Analysis", "Comment"],
@@ -113,7 +118,9 @@ export default {
   },
   created() {
     this.selectedDiary = this.getSelectedDiary;
-    console.log(this.selectedDiary.video_file);
+    // console.log(this.selectedDiary.video_file);
+    // console.log(this.selectedDiary)
+    // console.log(this.getSelectedChan)
   }
 };
 </script>

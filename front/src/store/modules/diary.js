@@ -11,6 +11,7 @@ import AWS from "aws-sdk";
 const state = {
   chanList: null,
   chanId: null,
+  postId: null,
   selectedChan: null,
   selectedDiary: null,
   s3: {},
@@ -36,7 +37,14 @@ const getters = {
 
 const mutations = {
   setChanList: (state, chanList) => (state.chanList = chanList),
-  setChanId: (state, chanId) => (state.chanId = chanId),
+  setChanId: (state, chanId) => {
+    state.chanId = chanId;
+    sessionStorage.setItem("chan", chanId);
+  },
+  setPostId: (state, postId) => {
+    state.postId = postId;
+    sessionStorage.setItem("post", postId);
+  },
   setSelectedChan: (state, channel) => (state.selectedChan = channel),
   setSelectedDiary: (state, diary) => (state.selectedDiary = diary),
   sets3: (state, s3) => {
@@ -98,6 +106,8 @@ const actions = {
     };
     axios.get(`${HOST}/channels/${channelId}`, options).then(message => {
       commit("setSelectedChan", message.data);
+      // console.log(message);
+      // router.push("postList");
       const temp = {};
       for (const post of message.data.post_set) {
         if (temp[post.created_at.slice(0, 10)]) {
@@ -182,17 +192,21 @@ const actions = {
     await commit("setChanList", null);
     router.push("/");
   },
+<<<<<<< HEAD
   bringDiaryDetail: ({
     commit,
     getters
   }, diaryInfo) => {
+=======
+  bringDiaryDetail: ({ commit, getters }, diaryPK) => {
+>>>>>>> eb7c721a6b434bbcb73d4a194f34c9ae1a799f82
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
     };
-    axios.get(`${HOST}/posts/${diaryInfo.pk}`, options).then(message => {
+    axios.get(`${HOST}/posts/${diaryPK}`, options).then(message => {
       commit("setSelectedDiary", message.data);
       const selectedChanUser = getters.getSelectedChan.user_set;
       for (let idx = 0; idx < selectedChanUser.length; idx++) {
@@ -203,9 +217,68 @@ const actions = {
       router.push("/diaryDetail");
     });
   },
+<<<<<<< HEAD
   async deleteDiary({
     getters
   }, postId) {
+=======
+  async addComment({ commit, getters }, reviewContext) {
+    const token = sessionStorage.getItem("jwt");
+    const postpk = getters.getSelectedDiary.pk;
+    const options = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "JWT " + token
+      }
+    };
+    const body = {
+      context: reviewContext
+    };
+    await axios.post(`${HOST}/posts/${postpk}/comments/`, body, options).then(
+      axios.get(`${HOST}/posts/${postpk}`, options).then(message => {
+        commit("setSelectedDiary", message.data);
+        const selectedChanUser = getters.getSelectedChan.user_set;
+        for (let idx = 0; idx < selectedChanUser.length; idx++) {
+          if (selectedChanUser[idx].id === message.data.user_id) {
+            commit("setWriterInfo", selectedChanUser[idx]);
+          }
+        }
+      })
+    );
+  },
+  deleteComment({ getters, commit }, commentInfo) {
+    const token = sessionStorage.getItem("jwt");
+    const postpk = getters.getSelectedDiary.pk;
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    console.log(postpk, commentInfo.id);
+    axios
+      .delete(`${HOST}/posts/${postpk}/comments/${commentInfo.id}`, options)
+      .then(message => {
+        message;
+        console.log(message);
+        alert("성공적으로 삭제되었습니다.");
+        axios.get(`${HOST}/posts/${postpk}`, options).then(message => {
+          commit("setSelectedDiary", message.data);
+          const selectedChanUser = getters.getSelectedChan.user_set;
+          for (let idx = 0; idx < selectedChanUser.length; idx++) {
+            if (selectedChanUser[idx].id === message.data.user_id) {
+              commit("setWriterInfo", selectedChanUser[idx]);
+            }
+          }
+        });
+      })
+      .catch(err => {
+        err;
+        alert("삭제 중에 문제가 발생하였습니다.");
+      });
+  },
+
+  async deleteDiary({ getters }, postId) {
+>>>>>>> eb7c721a6b434bbcb73d4a194f34c9ae1a799f82
     getters;
     const token = sessionStorage.getItem("jwt");
     const options = {

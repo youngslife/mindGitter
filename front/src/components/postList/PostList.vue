@@ -56,7 +56,7 @@
           class="diaryInfo"
           v-for="(item, idx) in getDiaries[diary]"
           :key="idx"
-          @click="goDetail(item)"
+          @click="goDetail(item.pk)"
         >
           <div
             class="userImage"
@@ -134,13 +134,13 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(["setPostId", "setEditChan"]),
     ...mapActions([
       "deleteChan",
       "bringDiaryDetail",
       "bringChanDetail",
       "leaveChannel"
     ]),
-    ...mapMutations(["setEditChan"]),
     changeShowAddModal() {
       this.showModal = false;
       this.showAddModal = !this.showAddModal;
@@ -161,8 +161,9 @@ export default {
         console.log("취소");
       }
     },
-    goDetail(diaryInfo) {
-      this.bringDiaryDetail(diaryInfo);
+    goDetail(diaryPK) {
+      this.setPostId(diaryPK);
+      this.bringDiaryDetail(diaryPK);
     },
     showProfile(profile_img) {
       console.log(this.profileAddr + profile_img);
@@ -190,8 +191,9 @@ export default {
     }
   },
   async created() {
-    if (this.getChanId) {
-      await this.bringChanDetail(this.getChanId);
+    const chanpk = sessionStorage.getItem("chan");
+    if (chanpk) {
+      await this.bringChanDetail(chanpk);
     } else {
       router.push("/");
     }
