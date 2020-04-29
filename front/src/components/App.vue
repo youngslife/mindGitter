@@ -6,10 +6,10 @@
 
 <script>
 export default {
-  created () {
-    this.$store.dispatch('initialLogin')
+  created() {
+    this.$store.dispatch("initialLogin");
   }
-}
+};
 </script>
 
 <style>

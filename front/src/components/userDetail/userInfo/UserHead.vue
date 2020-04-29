@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="10" class="userName">
-      <div v-if="isLoggedIn">
+      <div v-if="getUserName">
         {{ getUserName }}
       </div>
       <div v-else>
@@ -9,23 +9,30 @@
       </div>
     </v-col>
     <v-col cols="2" class="outBtn">
-      <button class="settings" @click.prevent="logout">
-        <v-icon>fas fa-sign-out-alt</v-icon>
+      <button class="settings" @click="changeModal">
+        <v-icon>fas fa-cog</v-icon>
       </button>
     </v-col>
   </v-row>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "UserHead",
   computed: {
-    ...mapGetters(["getUserName", "isLoggedIn"])
+    ...mapGetters(["getUserName", "isLoggedIn", "getUserImgModal"])
   },
   methods: {
-    ...mapActions(["logout"])
+    ...mapMutations(["setUserImgModal", "setUserInfoModal", "setUserImgModal"]),
+    async changeModal() {
+      console.log(this.getUserImgModal)
+      if (this.getUserImgModal) {
+        await this.setUserImgModal();
+      }
+      this.setUserInfoModal();
+    }
   }
 };
 </script>

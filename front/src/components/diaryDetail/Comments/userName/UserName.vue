@@ -9,24 +9,24 @@ import axios from "axios";
 export default {
   data() {
     return {
-      username: null,
+      username: null
     };
   },
   props: {
-    userpk: Number,
+    userpk: Number
   },
   async mounted() {
     const token = sessionStorage.getItem("jwt");
     const HOST = process.env.VUE_APP_SERVER_HOST;
     const options = {
       headers: {
-        Authorization: "JWT " + token,
-      },
+        Authorization: "JWT " + token
+      }
     };
     await axios.get(`${HOST}/user/${this.userpk}`, options).then(res => {
-        this.username = res.data.username
-    })
-  },
+      this.username = res.data.username;
+    });
+  }
 };
 </script>
 

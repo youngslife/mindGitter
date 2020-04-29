@@ -31,8 +31,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import UserName from "./userName/UserName.vue"
+import { mapGetters, mapMutations, mapActions } from "vuex";
+import UserName from "./userName/UserName.vue";
+import router from "@/router";
+
 export default {
   name: "newComment",
   components: {
@@ -42,15 +44,24 @@ export default {
     return {
       context: null,
       commentList: Array,
-      channelInfo: Object,
+      channelInfo: Object
     };
   },
   methods: {
     ...mapActions(["addComment", "deleteComment"]),
+    ...mapMutations(["setUserName"])
   },
   computed: {
-    ...mapGetters(["getSelectedDiary", "getUserName", "getSelectedChan"]),
+    ...mapGetters(["getSelectedDiary", "getUserName", "getSelectedChan"])
   },
+  async created() {
+    const username = sessionStorage.getItem("userName");
+    if (username) {
+      await this.setUserName(username);
+    } else {
+      router.push("/");
+    }
+  }
 };
 </script>
 

@@ -48,11 +48,29 @@ div.tagDetail {
   margin-bottom: 10px;
 }
 
-.v-card{
+.v-card.userInfoModal{
   position: absolute;
-  margin: 10px;
-  width: 300px;
-  left: 20px;
+  margin-top: 40px;
+  padding: 10px;
+  width: 170px;
+  right: 15%;
+  z-index: 100;
+  text-align: left;
+}
+
+.v-card.userInfoModal>div{
+  margin-bottom: 10px;
+}
+
+.v-card.userInfoModal>div>.v-icon{
+  margin-right: 10px;
+  font-size: 15px;
+}
+
+.v-card.userImgModal{
+  position: absolute;
+  width: 70%;
+  height: 30%;
   z-index: 100;
 }
 

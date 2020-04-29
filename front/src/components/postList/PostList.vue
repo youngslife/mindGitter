@@ -104,12 +104,12 @@ export default {
       date: new Date(),
       showAddModal: false,
       showModal: false,
-      profileAddr: process.env.VUE_APP_STATIC_ADDR + "profile/",
+      profileAddr: process.env.VUE_APP_STATIC_ADDR + "profile/"
     };
   },
   components: {
     Nav,
-    Datepicker,
+    Datepicker
   },
   computed: {
     ...mapGetters(["getSelectedChan", "getDiaries", "getChanId"]),
@@ -131,7 +131,7 @@ export default {
             1}-0${this.date.getDate()}`;
         }
       }
-    },
+    }
   },
   methods: {
     ...mapMutations(["setPostId", "setEditChan"]),
@@ -139,7 +139,7 @@ export default {
       "deleteChan",
       "bringDiaryDetail",
       "bringChanDetail",
-      "leaveChannel",
+      "leaveChannel"
     ]),
     changeShowAddModal() {
       this.showModal = false;
@@ -161,9 +161,10 @@ export default {
         console.log("취소");
       }
     },
-    goDetail(diaryPK) {
-      this.setPostId(diaryPK);
-      this.bringDiaryDetail(diaryPK);
+    async goDetail(diaryPK) {
+      await this.setPostId(diaryPK);
+      await this.bringDiaryDetail(diaryPK);
+      router.push("/diaryDetail");
     },
     showProfile(profile_img) {
       console.log(this.profileAddr + profile_img);
@@ -188,7 +189,7 @@ export default {
     async editChan(channelInfo) {
       await this.setEditChan(channelInfo);
       router.push("/editChan");
-    },
+    }
   },
   async created() {
     const chanpk = sessionStorage.getItem("chan");
@@ -197,7 +198,7 @@ export default {
     } else {
       router.push("/");
     }
-  },
+  }
 };
 </script>
 

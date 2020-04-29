@@ -82,9 +82,9 @@ export default {
         fileName: this.getFileName
       },
       titleRules: [
-        value => !!value || '제목을 입력해 주세요 :)',
-        value => (value && value.length <= 50) || '제목은 최대 50자까지입니다.'
-      ], 
+        value => !!value || "제목을 입력해 주세요 :)",
+        value => (value && value.length <= 50) || "제목은 최대 50자까지입니다."
+      ],
       desRules: [
         value => !!value || '설명을 입력해 주세요 :)',
         value => (value && value.length <= 200) || '설명은 최대 200자까지입니다.'

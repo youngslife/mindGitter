@@ -100,10 +100,11 @@ export default {
     ...mapGetters(["getCommitInfo", "getTargetMonths"])
   },
   methods: {
-    ...mapActions(["bringUserInfoSet"])
+    ...mapActions(["bringUserInfoSet", "preprocessingCommit"])
   },
   async created() {
-    this.bringUserInfoSet();
+    await this.preprocessingCommit();
+    await this.bringUserInfoSet();
   }
 };
 </script>
