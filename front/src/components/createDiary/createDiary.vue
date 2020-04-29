@@ -37,6 +37,7 @@
                   label="diaryimage"
                   prepend-icon="mdi-camera"
                   @change="onFileChange"
+                  clearable
                 ></v-file-input>
               </ul>
               <button class="submit">만들기</button>
@@ -84,6 +85,8 @@ export default {
         this.PostInfo.file = file;
         this.PostInfo.fileName =
           String(this.getUserId) + new Date().getTime() + ".jpg";
+      } else {
+        this.PostInfo.fileName = null;
       }
     },
     goHome() {
