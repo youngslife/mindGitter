@@ -37,6 +37,7 @@
                   label="diaryimage"
                   clearable="true"
                   prepend-icon="mdi-camera"
+                  @change="onFileChange"
                 ></v-file-input>
               </ul>
               <button class="submit">만들기</button>
@@ -79,10 +80,9 @@ export default {
   },
   methods: {
     ...mapActions(["addChannel"]),
-    onFileChange(e) {
-      const files = e.target.files;
-      if (files) {
-        this.PostInfo.file = files[0];
+    onFileChange(file) {
+      if (file) {
+        this.PostInfo.file = file;
         this.PostInfo.fileName =
           String(this.getUserId) + new Date().getTime() + ".jpg";
       }
