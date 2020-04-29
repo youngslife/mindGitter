@@ -85,7 +85,7 @@ INSTALLED_APPS = [
     # tag기능
     'taggit',
     # 'taggit.apps.TaggitAppConfig',
-    'taggit_templatetags2',
+    # 'taggit_templatetags2',
     'taggit_serializer',
 ]
 
@@ -202,7 +202,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/api/static/'
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -218,7 +218,7 @@ OLD_PASSWORD_FIELD_ENABLED = True
 LOGOUT_ON_PASSWORD_CHANGE = False
 
 # media
-MEDIA_URL = '/media/'
+MEDIA_URL = '/api/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Tag

@@ -60,12 +60,13 @@ export default {
       const files = e.target.files;
       if (files) {
         this.PostInfo.file = files[0];
-        this.PostInfo.fileName = String(this.getUserId) + new Date().getTime() +'.jpg'; 
+        this.PostInfo.fileName =
+          String(this.getUserId) + new Date().getTime() + ".jpg";
       }
     },
     goHome() {
       router.push("/");
-    },
+    }
   }
 };
 </script>

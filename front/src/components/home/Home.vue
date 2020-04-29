@@ -70,7 +70,7 @@
 
 <script>
 import router from "@/router";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "Home",
@@ -78,17 +78,19 @@ export default {
     return {
       wHeight: 0,
       wWidth: 0,
-      imgAddr: process.env.VUE_APP_STATIC_ADDR+"channel/",
+      imgAddr: process.env.VUE_APP_STATIC_ADDR + "channel/",
       carOption: false,
       addImg:
         "https://w0.pngwave.com/png/106/279/computer-icons-medicine-health-care-plus-button-png-clip-art.png"
     };
   },
   methods: {
-    ...mapActions(["bringChanList", "bringChanDetail"]),
+    ...mapActions(["bringChanList"]),
+    ...mapMutations(["setChanId"]),
     goCreate() {
       router.push("createDiary");
     },
+<<<<<<< HEAD
     goDetail(channelId) {
       this.bringChanDetail(channelId);
     },
@@ -109,6 +111,11 @@ export default {
       } else {
         return userset[0].username + '외 ' + userset.length + '명이'
       }
+=======
+    async goDetail(channelId) {
+      await this.setChanId(channelId);
+      router.push("/postList");
+>>>>>>> 28b30e40dd1d3b3d86cb19cbe44149965a3a0341
     }
   },
   computed: {

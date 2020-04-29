@@ -15,6 +15,8 @@ from taggit.models import Tag
 from accounts.serializers import UserTagSerializer
 from taggit.models import TaggedItem
 
+import requests
+
 
 @api_view(['GET',])
 @permission_classes((IsAuthenticated, ))
@@ -28,6 +30,7 @@ def tagtest(request, post_id):
 class PostList(APIView):
     permission_classes = (IsAuthenticated,)
 
+    # 후에 기능 불필요시 삭제 예정
     # 해당 user가 생성한 모든 post 조회
     def get(self, requet):
         # user-(channel)-post 연결후 만들기
@@ -37,12 +40,38 @@ class PostList(APIView):
     # post(일기) 생성
     def post(self, request):
         user = get_object_or_404(User, username=request.user)
-        print('데이터 넘어가나')
         serializer = PostSerializer(data=request.data)
+
         if serializer.is_valid():
-            print('valid하나')
             serializer.save(user_id=user.id, channel_id=request.data['channel_id'])
+            
+            ## 주석 풀고 고쳐주시면 됩니다.
+            
+            # ## AI 모델에 분석 요청 ===============================
+            # headers = {
+            #     'Content-Type':'text/plain'
+            # }
+            # data = {
+            #     'video_url': request.data.video_file,
+            #     'post_id': Post.objects.first().id,
+            #     'user_id': request.user.id
+            # }
+            # req = requests.post('http://mind-gitter.me:8001/invocations/', headers=headers, data=data)
+            # print(req.json)
+
+            # ## ==================================================
+
             posting = Post.objects.first()  # -pk 로 정렬이므로
+
+            # ## AI 모델 결과 저장 =================================
+
+            # posting.tags.add(req.tags) # 태그 저장
+            # posting.emotion.add(req.s3) # 감정 분석 결과 csv 주소 저장
+            # posting.context.add(req.content) # 글내용 저장
+            # posting.summary.add(req.abb) # 글요약 저장
+
+            # ## ==================================================
+
             new_tags = posting.tags.names()
             for new_tag in new_tags:
                 if user.tags.filter(name=new_tag).exists():
@@ -59,7 +88,7 @@ class PostList(APIView):
             # new_tags = posting.tags.names()
             # for new_tag in new_tags:
             #     user.tags.add(new_tag)
-            
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
       
@@ -124,7 +153,7 @@ class PostDetail(APIView):
 class CommentList(APIView):
     permission_classes = (IsAuthenticated, )
     def post(self, request, post_id):
-        data = request.data.dict()
+        data = request.data
         data.update({'user': request.user.id})
         data.update({'post': post_id})
         serializer = CommentSerializer(data=data)

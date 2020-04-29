@@ -4,10 +4,9 @@
       <v-col cols="2"
         ><v-icon class="back" @click="goList">fas fa-arrow-left</v-icon></v-col
       >
-      <v-col cols="10" class="diaryName"><h1>일기장1</h1></v-col>
-      <!-- <v-col cols="2"
-        ><v-icon class="back" @click="goHome">fas fa-arrow-left</v-icon></v-col
-      > -->
+      <v-col cols="10" class="diaryName"
+        ><h1>{{ getSelectedChan.title }}</h1></v-col
+      >
     </v-row>
     <form class="AddPostForm" @submit.prevent="addPost(postInfo)">
       <div class="AddPostForm">
@@ -26,7 +25,11 @@
           ><br />
           <input type="file" id="postvideo" @change="onFileChange" />
           <div class="preview">
-            <video class="videoPreview" :src="videoTempUrl" controls="controls"/>
+            <video
+              class="videoPreview"
+              :src="videoTempUrl"
+              controls="controls"
+            />
           </div>
         </ul>
         <ul id="posttag">
@@ -63,7 +66,6 @@ export default {
     return {
       postInfo: {
         title: null,
-        video: null,
         tags: null,
         context: "context",
         cover_image: "cover_image",
@@ -72,7 +74,7 @@ export default {
         file: null,
         fileName: null
       },
-      videoTempUrl: null,
+      videoTempUrl: null
     };
   },
   methods: {
@@ -84,15 +86,16 @@ export default {
       const files = e.target.files;
       if (files) {
         const file = files[0];
-        this.postInfo.file = file
-        this.postInfo.fileName = String(this.getUserId) + new Date().getTime() +'.mp4';
-        const blobFile = new Blob([file], {"type": file.type})
-        this.videoTempUrl = URL.createObjectURL(blobFile)
+        this.postInfo.file = file;
+        this.postInfo.fileName =
+          String(this.getUserId) + new Date().getTime() + ".mp4";
+        const blobFile = new Blob([file], { type: file.type });
+        this.videoTempUrl = URL.createObjectURL(blobFile);
       }
     }
   },
   computed: {
-    ...mapGetters(["getUserId"])
+    ...mapGetters(["getUserId", "getSelectedChan"])
   }
 };
 </script>

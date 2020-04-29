@@ -10,199 +10,48 @@ import AWS from "aws-sdk";
 
 const state = {
   chanList: null,
+  chanId: null,
+  postId: null,
   selectedChan: null,
   selectedDiary: null,
-  commitDates: [new Date().getFullYear(), new Date().getMonth() + 1],
-  commitInfo: [
-    {
-      "2월": [
-        {
-          "1일": 0,
-          "2일": 1,
-          "3일": 0,
-          "4일": 1,
-          "5일": 1,
-          "6일": 1,
-          "7일": 0,
-          "8일": 1,
-          "9일": 0,
-          "10일": 1,
-          "11일": 1,
-          "12일": 0,
-          "13일": 1,
-          "14일": 1,
-          "15일": 0,
-          "16일": 1,
-          "17일": 0,
-          "18일": 1,
-          "19일": 0,
-          "20일": 1,
-          "21일": 0,
-          "22일": 1,
-          "23일": 0,
-          "24일": 1,
-          "25일": 0,
-          "26일": 1,
-          "27일": 1,
-          "28일": 0,
-          "29일": 1
-        }
-      ],
-      "3월": [
-        {
-          "1일": 0,
-          "2일": 1,
-          "3일": 0,
-          "4일": 1,
-          "5일": 1,
-          "6일": 1,
-          "7일": 0,
-          "8일": 1,
-          "9일": 0,
-          "10일": 1,
-          "11일": 1,
-          "12일": 0,
-          "13일": 1,
-          "14일": 1,
-          "15일": 0,
-          "16일": 1,
-          "17일": 0,
-          "18일": 1,
-          "19일": 0,
-          "20일": 1,
-          "21일": 0,
-          "22일": 1,
-          "23일": 0,
-          "24일": 1,
-          "25일": 0,
-          "26일": 1,
-          "27일": 1,
-          "28일": 0,
-          "29일": 0,
-          "30일": 1,
-          "31일": 1
-        }
-      ],
-      "4월": [
-        {
-          "1일": 0,
-          "2일": 1,
-          "3일": 0,
-          "4일": 1,
-          "5일": 1,
-          "6일": 1,
-          "7일": 0,
-          "8일": 1,
-          "9일": 0,
-          "10일": 1,
-          "11일": 1,
-          "12일": 0,
-          "13일": 1,
-          "14일": 1,
-          "15일": 0,
-          "16일": 1,
-          "17일": 0,
-          "18일": 1,
-          "19일": 0,
-          "20일": 1,
-          "21일": 0,
-          "22일": 1,
-          "23일": 0,
-          "24일": 1,
-          "25일": 0,
-          "26일": 1,
-          "27일": 1,
-          "28일": 0,
-          "29일": 0,
-          "30일": 1
-        }
-      ]
-    }
-  ],
-  nemos: [
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo",
-    "nemo"
-  ],
   s3: {},
-  writerInfo: null
+  writerInfo: null,
+  diaries: { dates: null },
+  editDiary: null,
+  editChan: null
 };
 
 const getters = {
   getChanList: state => state.chanList,
+  getChanId: state => state.chanId,
   getSelectedChan: state => state.selectedChan,
   getSelectedDiary: state => state.selectedDiary,
-  getCommitDates: state => state.commitDates,
-  getCommitInfo: state => state.commitInfo,
-  getNemos: state => state.nemos,
   getS3: state => state.s3,
-  getWriterInfo: state => state.writerInfo
+  getWriterInfo: state => state.writerInfo,
+  getDiaries: state => state.diaries,
+  getEditDiary: state => state.editDiary,
+  getEditChan: state => state.editChan
 };
 
 const mutations = {
   setChanList: (state, chanList) => (state.chanList = chanList),
+  setChanId: (state, chanId) => {
+    state.chanId = chanId;
+    sessionStorage.setItem("chan", chanId);
+  },
+  setPostId: (state, postId) => {
+    state.postId = postId;
+    sessionStorage.setItem("post", postId);
+  },
   setSelectedChan: (state, channel) => (state.selectedChan = channel),
   setSelectedDiary: (state, diary) => (state.selectedDiary = diary),
-  setNemos: (state, commitData) => {
-    let results = [];
-    for (let i = 0; i < 105; i++) {
-      results.push("nemo");
-    }
-    const pre = new Date(
-      `${commitData.commitDates[0]}-${commitData.commitDates[1]}-01`
-    ).getDay();
-    const lastDay = new Date(
-      commitData.commitDates[0],
-      commitData.commitDates[1],
-      0
-    ).getDate();
-    for (let cnt = 0; cnt < 35; cnt++) {
-      if (cnt >= pre && cnt <= lastDay) {
-        if (commitData.commitInfo[0][`${cnt}일`]) {
-          results[cnt] = "red";
-        } else {
-          results[cnt] = "nemo";
-        }
-      }
-    }
-    state.nemos = results;
-  },
   sets3: (state, s3) => {
     state.s3 = s3;
   },
-  setWriterInfo: (state, writerInfo) => (state.writerInfo = writerInfo)
+  setWriterInfo: (state, writerInfo) => (state.writerInfo = writerInfo),
+  setDiaries: (state, diaries) => (state.diaries = diaries),
+  setEditDiary: (state, editDiary) => (state.editDiary = editDiary),
+  setEditChan: (state, editChan) => (state.editChan = editChan)
 };
 
 const actions = {
@@ -210,76 +59,135 @@ const actions = {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
-    await axios.get(HOST + "/channels/", options).then(message => {
+    await axios.get(HOST + "/channels/", options).then((message) => {
       commit("setChanList", message.data.channels);
     });
   },
-  async addChannel ({ dispatch }, PostInfo) {
-    console.log('addChannel', PostInfo)
-    await dispatch("s3Init", 'channel');
+  async addChannel({ dispatch, commit }, PostInfo) {
+    console.log("addChannel", PostInfo);
+    await dispatch("s3Init", "channel");
     await dispatch("updates3", PostInfo);
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: "JWT " + token
-      }
-    }
-    const body =
-    {
+        Authorization: "JWT " + token,
+      },
+    };
+    const body = {
       title: PostInfo.title,
       cover_image: PostInfo.fileName,
-      description: PostInfo.description
-    }
-    console.log('body', body)
-    const res = await axios.post(HOST + "/channels/", body, options)
-    console.log(res)
+      description: PostInfo.description,
+    };
+    console.log("body", body);
+    const res = await axios.post(HOST + "/channels/", body, options);
+    console.log(res);
+    await commit("setChanList", null);
     router.push("/");
   },
   bringChanDetail: ({ commit }, channelId) => {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
-    axios.get(`${HOST}/channels/${channelId}`, options).then(message => {
+    axios.get(`${HOST}/channels/${channelId}`, options).then((message) => {
       commit("setSelectedChan", message.data);
-      // console.log(message.data.title)
-      router.push("postList");
+      // console.log(message);
+      // router.push("postList");
+      const temp = {};
+      for (const post of message.data.post_set) {
+        if (temp[post.created_at.slice(0, 10)]) {
+          temp[post.created_at.slice(0, 10)].push({
+            pk: post.pk,
+            title: post.title,
+            tags: post.tags,
+            user_id: post.user_id,
+          });
+        } else {
+          temp[post.created_at.slice(0, 10)] = [
+            {
+              pk: post.pk,
+              title: post.title,
+              tags: post.tags,
+              user_id: post.user_id,
+            },
+          ];
+        }
+      }
+      const dates = Object.keys(temp).sort(function(a, b) {
+        return b - a;
+      });
+      temp["dates"] = dates;
+      commit("setDiaries", temp);
+      // console.log(temp)
     });
   },
   async deleteChan({ dispatch }, channelId) {
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
     await axios
       .delete(`${HOST}/channels/${channelId}`, options)
-      .then(message => {
+      .then((message) => {
         message;
         alert("성공적으로 삭제되었습니다.");
       })
-      .catch(message => {
+      .catch((message) => {
         message;
         alert("삭제 중에 문제가 발생하였습니다.");
       });
     await dispatch("bringChanList");
     router.push("/");
   },
-  bringDiaryDetail: ({ commit, getters }, diaryInfo) => {
+  async editChannel({ dispatch, commit }, PostInfo) {
+    console.log(PostInfo);
+    dispatch;
+    commit;
+    if (PostInfo.file) {
+      console.log("파일 변경");
+      await dispatch("s3Init", "channel");
+      await dispatch("updates3", PostInfo);
+    } else {
+      console.log("파일 변경 안함");
+    }
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
+        "Content-Type": "application/json",
         Authorization: "JWT " + token
       }
     };
-    axios.get(`${HOST}/posts/${diaryInfo.pk}`, options).then(message => {
+    const body = {
+      title: PostInfo.title,
+      cover_image: PostInfo.fileName,
+      description: PostInfo.description
+    };
+    console.log("body", body);
+    const res = await axios.put(
+      `${HOST}/channels/${PostInfo.channelId}/`,
+      body,
+      options
+    );
+    console.log(res);
+    await commit("setChanList", null);
+    router.push("/");
+  },
+  bringDiaryDetail: ({ commit, getters }, diaryPK) => {
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token,
+      },
+    };
+    axios.get(`${HOST}/posts/${diaryPK}`, options).then((message) => {
       commit("setSelectedDiary", message.data);
       const selectedChanUser = getters.getSelectedChan.user_set;
       for (let idx = 0; idx < selectedChanUser.length; idx++) {
@@ -290,27 +198,124 @@ const actions = {
       router.push("/diaryDetail");
     });
   },
+  async addComment({ commit, getters }, reviewContext) {
+    const token = sessionStorage.getItem("jwt");
+    const postpk = getters.getSelectedDiary.pk;
+    const options = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "JWT " + token,
+      },
+    };
+    const body = {
+      context: reviewContext,
+    };
+    await axios.post(`${HOST}/posts/${postpk}/comments/`, body, options).then(
+      axios.get(`${HOST}/posts/${postpk}`, options).then((message) => {
+        commit("setSelectedDiary", message.data);
+        const selectedChanUser = getters.getSelectedChan.user_set;
+        for (let idx = 0; idx < selectedChanUser.length; idx++) {
+          if (selectedChanUser[idx].id === message.data.user_id) {
+            commit("setWriterInfo", selectedChanUser[idx]);
+          }
+        }
+      })
+    );
+  },
+  deleteComment({ getters, commit }, commentInfo) {
+    const token = sessionStorage.getItem("jwt");
+    const postpk = getters.getSelectedDiary.pk;
+    const options = {
+      headers: {
+        Authorization: "JWT " + token,
+      },
+    };
+    console.log(postpk, commentInfo.id);
+    axios
+      .delete(`${HOST}/posts/${postpk}/comments/${commentInfo.id}`, options)
+      .then((message) => {
+        message;
+        console.log(message);
+        alert("성공적으로 삭제되었습니다.");
+        axios.get(`${HOST}/posts/${postpk}`, options).then((message) => {
+          commit("setSelectedDiary", message.data);
+          const selectedChanUser = getters.getSelectedChan.user_set;
+          for (let idx = 0; idx < selectedChanUser.length; idx++) {
+            if (selectedChanUser[idx].id === message.data.user_id) {
+              commit("setWriterInfo", selectedChanUser[idx]);
+            }
+          }
+        });
+      })
+      .catch((err) => {
+        err;
+        alert("삭제 중에 문제가 발생하였습니다.");
+      });
+  },
+
+  async deleteDiary({ getters }, postId) {
+    getters;
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token,
+      },
+    };
+    await axios
+      .delete(`${HOST}/posts/${postId}`, options)
+      .then((message) => {
+        message;
+        console.log(message);
+        alert("성공적으로 삭제되었습니다.");
+      })
+      .catch((err) => {
+        err;
+        alert("삭제 중에 문제가 발생하였습니다.");
+      });
+    router.push("/postList");
+  },
+  async leaveChannel({ getters }, ChannelId) {
+    getters;
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    await axios
+      .delete(`${HOST}/channels/${ChannelId}/join/`, options)
+      .then(message => {
+        message;
+        console.log(message);
+        alert("일기장 탈퇴가 성공적으로 이뤄졌습니다.");
+      })
+      .catch(err => {
+        err;
+        alert("일기장 탈퇴 도중 문제가 발생하였습니다.");
+      });
+    router.push("/");
+  },
   //S3 부분
   s3Init: ({ commit }, type) => {
     AWS.config.update({
       region: process.env.VUE_APP_BUCKET_REGION,
       credentials: new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL
-      })
+        IdentityPoolId: process.env.VUE_APP_IDENTIFYPOOL,
+      }),
     });
     const s3 = new AWS.S3({
       apiVersion: "2006-03-01",
-      params: { Bucket: process.env.VUE_APP_BUCKET_NAME+'/'+type }
+      params: { Bucket: process.env.VUE_APP_BUCKET_NAME + "/" + type },
     });
     commit("sets3", s3);
   },
   async updates3({ commit }, PostInfo) {
-    console.log('upadates3', PostInfo)
+    console.log("upadates3", PostInfo);
     const s3 = state.s3;
     const params = {
       Key: PostInfo.fileName,
       Body: PostInfo.file,
-      ACL: "public-read-write"
+      ACL: "public-read-write",
     };
     const res = await s3.upload(params).promise();
     console.log(res);
@@ -318,33 +323,68 @@ const actions = {
   },
   // async addPost({ getters }, PostInfo) {
   async addPost({ dispatch, getters }, PostInfo) {
-    await dispatch("s3Init", 'diary');
+    await dispatch("s3Init", "diary");
     await dispatch("updates3", PostInfo);
     const token = sessionStorage.getItem("jwt");
-    const tags = PostInfo.tags
+    const tags = PostInfo.tags;
     const body = {
-      title : PostInfo.title,
-      context : PostInfo.context,
-      video_file : PostInfo.fileName,
-      tags: "["+'"'+tags+'"'+"]",
+      title: PostInfo.title,
+      context: PostInfo.context,
+      video_file: PostInfo.fileName,
+      tags: "[" + '"' + tags + '"' + "]",
       cover_image: PostInfo.cover_image,
-      channel_id: parseInt(getters.getSelectedChan.id)
-    }
-    console.log('bodybody', body)
+      channel_id: parseInt(getters.getSelectedChan.id),
+      is_use_comment: PostInfo.possible,
+      is_save_video: PostInfo.saveVideo,
+    };
+    console.log("bodybody", body);
     const options = {
       headers: {
-        Authorization: "JWT " + token
-      }
+        Authorization: "JWT " + token,
+      },
     };
-    const res = await axios.post(HOST + "/posts/", body, options)
-    console.log('res', res)
+    const res = await axios.post(HOST + "/posts/", body, options);
+    console.log("res", res);
     router.push("/postList");
-  }
+  },
+  async editPost({ dispatch }, PostInfo) {
+    if (PostInfo.file) {
+      console.log("file 변경 있음");
+      await dispatch("s3Init", "diary");
+      await dispatch("updates3", PostInfo);
+    } else {
+      console.log("file 변경 없음");
+    }
+    const token = sessionStorage.getItem("jwt");
+    const tags = PostInfo.tags;
+    const body = {
+      title: PostInfo.title,
+      context: PostInfo.context,
+      video_file: PostInfo.fileName,
+      tags: "[" + '"' + tags + '"' + "]",
+      cover_image: PostInfo.cover_image,
+      is_use_comment: PostInfo.possible,
+      is_save_video: PostInfo.saveVideo,
+    };
+    console.log("bodybody", body);
+    const options = {
+      headers: {
+        Authorization: "JWT " + token,
+      },
+    };
+    const res = await axios.put(
+      `${HOST}/posts/${PostInfo.post_id}/`,
+      body,
+      options
+    );
+    console.log("res", res);
+    router.push("/postList");
+  },
 };
 
 export default {
   state,
   getters,
   mutations,
-  actions
+  actions,
 };

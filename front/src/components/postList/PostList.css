@@ -3,23 +3,38 @@ h1{
   position: relative;
 }
 
-div.infoAndSetting>.v-icon.plus{
-  position: absolute;
-  top: 15px;
-  right: 50px;
-}
-
-div.infoAndSetting>.v-icon.delete{
+div.infoAndSetting>.v-icon.settings{
   position: absolute;
   top: 15px;
   right: 15px;
+  font-size: 25px;
 }
 
-.v-card{
+.v-card.settings{
+  position: absolute;
+  margin: 20px;
+  padding: 10px;
+  width: 165px;
+  top: 20px;
+  right: 20px;
+  z-index: 250;
+  text-align: left;
+}
+
+.v-card.settings>div{
+  margin-bottom: 10px;
+}
+
+.v-card.settings>div>.v-icon{
+  margin-right: 10px;
+  font-size: 15px;
+}
+
+.v-card.invite{
   position: absolute;
   margin: 10px;
   width: 300px;
-  left: 20px;
+  right: 20px;
   z-index: 100;
 }
 
@@ -68,13 +83,25 @@ input.hi{
   background-color: gray;
 }
 
-div.diaries>div.diaryInfo{
-  margin: 15px;
+div.diaries{
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
-div.diaries>div.diaryInfo>img{
-  width: 35px;
-  height: 35px;
+div.diaries>div.diaryInfo{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+div.diaries>div.diaryInfo>div.userImage{
+  display: inline-block;
+}
+
+div.diaries>div.diaryInfo>div.userImage>img{
+  width: 40px;
+  height: 40px;
   border: 1.5px solid;
   border-radius: 70%;
   margin-right: 10px;
@@ -87,4 +114,10 @@ div.diaries>div.diaryInfo>div.content{
 
 div.diaryList{
   height: 700px;
+}
+
+div.date{
+  font-size: 15px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: cadetblue;
 }
