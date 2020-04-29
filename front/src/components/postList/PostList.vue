@@ -72,14 +72,14 @@
           </div>
           <div class="content">
             <p class="title">{{ item.title }}</p>
-            <div v-if="item.tags[0] != 'null'">
+            <div v-if="item.tags.length">
               <span class="tag" v-for="(tag, j) in item.tags" :key="j"
                 >#{{ tag }}
               </span>
             </div>
             <div v-else>
               <span class="tag">
-                <br />
+                분석중입니다.
               </span>
             </div>
           </div>

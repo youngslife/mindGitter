@@ -84,19 +84,22 @@ export default {
   },
   methods: {
     ...mapActions(["addPost"]),
-    ...mapMutations(["setChanName"]),
+    ...mapMutations(["setChanName", "setChanId"]),
     goList() {
       router.push("/postList");
     },
     async onFileChange(e) {
       const files = e.target.files;
-      if (files) {
+      if (files && files.length) {
         const file = files[0];
         this.postInfo.file = file;
         this.postInfo.fileName =
           String(this.getUserId) + new Date().getTime() + ".mp4";
         const blobFile = new Blob([file], { type: file.type });
         this.videoTempUrl = URL.createObjectURL(blobFile);
+      } else {
+        this.postInfo.fileName = null;
+        this.videoTempUrl = null;
       }
     }
   },
@@ -105,8 +108,10 @@ export default {
   },
   async created() {
     const chanName = sessionStorage.getItem("chanName");
+    const chanId = sessionStorage.getItem("chan");
     if (chanName) {
       this.setChanName(chanName);
+      this.setChanId(chanId);
     } else {
       router.push("/");
     }
