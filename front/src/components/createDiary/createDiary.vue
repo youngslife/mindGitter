@@ -6,14 +6,14 @@
         style="border-radius:17px"
       >
         <v-img 
-          src="../../assets/create.jpg"
+          :src="getCoverImage"
           gradient="to bottom, rgba(0,0,0,.2), rgba(0,0,0,.1)"
           alt="No Image"
           class="hnImage"
         >
           <form @submit.prevent="addChannel(PostInfo)">
             <div class="hnDiaryForm">
-              <ul id="diarytitle">
+              <div>
                 <v-text-field 
                   label="diarytitle" 
                   :rules="titleRules" 
@@ -21,9 +21,10 @@
                   counter="50"
                   v-model="PostInfo.title"
                   id="diarytitle"
+                  
                 ></v-text-field>
-              </ul>
-              <ul id="diarydescription">
+              </div>
+              <div>
                 <v-textarea
                   name="input-7-1"
                   counter="200"
@@ -32,15 +33,35 @@
                   v-model="PostInfo.description"
                   id="diarydescription"
                 ></v-textarea>
-              </ul>
-              <ul id="diaryimage">
-                <v-file-input small-chips accept="image/*" label="diaryimage" clearable=true prepend-icon="mdi-camera"></v-file-input>
-              </ul>
-              <button class="submit">만들기</button>
+              </div>
+              <div>
+                <p class="hnCoverTxt">cover image</p>
+                <div class="hnCoverBox">
+                  <div class="hnCoverWrapper" style="width:10vw; height:10vw" v-for="img in defaultImages" :key="img.index">
+                    <img 
+                      class="hnCoverSample"
+                      @click="changeImage(img)"
+                      :src="baseImageAddr+img" alt="" >
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top:1vh">
+                <v-file-input 
+                  small-chips accept="image/*" 
+                  label="diaryimage" 
+                  clearable prepend-icon="mdi-file-image"
+                  v-model="file"
+                ></v-file-input>
+              </div>
+              <div>
+                <button class="submit">만들기</button>
+              </div>
             </div>
           </form>
+          <div class="hnBackBtn" @click="goHome">
+            <v-icon color="rgba(255, 255, 255, 0.9)">fas fa-arrow-left</v-icon>
+          </div>
         </v-img>
-        <v-icon class="back" @click="goHome">fas fa-arrow-left</v-icon>
       </v-card>
     </div>
   </v-container>
@@ -58,7 +79,7 @@ export default {
         title: null,
         description: null,
         file: null,
-        fileName: null
+        fileName: this.getFileName
       },
       titleRules: [
         value => !!value || '제목을 입력해 주세요 :)',
@@ -67,21 +88,43 @@ export default {
       desRules: [
         value => !!value || '설명을 입력해 주세요 :)',
         value => (value && value.length <= 200) || '설명은 최대 200자까지입니다.'
-      ]
+      ],
+      baseImageAddr: process.env.VUE_APP_STATIC_ADDR + "channel/default_channel",
+      defaultImages: [
+        '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg'
+      ],
+      coverImage: process.env.VUE_APP_STATIC_ADDR + "channel/default_channel1.jpg",
+      file: null
     };
   },
   computed: {
-    ...mapGetters(["getUserId"])
+    ...mapGetters(["getUserId"]),
+    getCoverImage: function() {
+      if (this.file) {
+        const url = URL.createObjectURL(this.file)
+        return url
+      } else {
+        return this.coverImage
+      }
+    },
+    getFileName: function() {
+      if (this.file) {
+        return String(this.getUserId) + new Date().getTime() + ".jpg"
+      } else {
+        if (this.PostInfo.fileName) {
+          return this.PostInfo.fileName
+        } else {
+          return "default_channel1.jpg"
+        }
+      }
+    }
   },
   methods: {
     ...mapActions(["addChannel"]),
-    onFileChange(e) {
-      const files = e.target.files;
-      if (files) {
-        this.PostInfo.file = files[0];
-        this.PostInfo.fileName =
-          String(this.getUserId) + new Date().getTime() + ".jpg";
-      }
+    changeImage(img) {
+      this.file = null
+      this.coverImage = this.baseImageAddr+img
+      this.PostInfo.fileName = 'default_channel'+img
     },
     goHome() {
       router.push("/");
