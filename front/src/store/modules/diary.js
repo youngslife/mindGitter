@@ -78,26 +78,50 @@ const actions = {
     });
   },
   async addChannel({ dispatch, commit }, PostInfo) {
-    console.log("addChannel", PostInfo);
-    await dispatch("s3Init", "channel");
-    await dispatch("updates3", PostInfo);
-    const token = sessionStorage.getItem("jwt");
-    const options = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "JWT " + token
-      }
-    };
-    const body = {
-      title: PostInfo.title,
-      cover_image: PostInfo.fileName,
-      description: PostInfo.description
-    };
-    console.log("body", body);
-    const res = await axios.post(HOST + "/channels/", body, options);
-    console.log(res);
-    await commit("setChanList", null);
-    router.push("/");
+    if (PostInfo.title && PostInfo.fileName && PostInfo.description) {
+      console.log("addChannel", PostInfo);
+      await dispatch("s3Init", "channel");
+      await dispatch("updates3", PostInfo);
+      const token = sessionStorage.getItem("jwt");
+      const options = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "JWT " + token
+        }
+      };
+      const body = {
+        title: PostInfo.title,
+        cover_image: PostInfo.fileName,
+        description: PostInfo.description
+      };
+      console.log("body", body);
+      const res = await axios.post(HOST + "/channels/", body, options);
+      console.log(res);
+      await commit("setChanList", null);
+      router.push("/");
+    } else if (PostInfo.title && PostInfo.fileName) {
+      alert("! 일기장에 대한 설명을 작성해주세요.");
+    } else if (PostInfo.title && PostInfo.description) {
+      alert("! 일기장 배경 사진을 첨부해주세요.");
+    } else if (PostInfo.fileName && PostInfo.description) {
+      alert("! 일기장의 제목을 작성해주세요");
+    } else if (PostInfo.title) {
+      alert(
+        "! 일기장에 대한 설명을 작성해주세요.\n! 일기장 배경 사진을 첨부해주세요."
+      );
+    } else if (PostInfo.fileName) {
+      alert(
+        "! 일기장의 제목을 작성해주세요\n! 일기장에 대한 설명을 작성해주세요."
+      );
+    } else if (PostInfo.description) {
+      alert(
+        "! 일기장의 제목을 작성해주세요\n! 일기장 배경 사진을 첨부해주세요."
+      );
+    } else {
+      alert(
+        "! 일기장의 제목을 작성해주세요\n! 일기장에 대한 설명을 작성해주세요.\n! 일기장 배경 사진을 첨부해주세요."
+      );
+    }
   },
   bringChanDetail: ({ commit }, channelId) => {
     const token = sessionStorage.getItem("jwt");
