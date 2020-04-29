@@ -19,7 +19,8 @@ const state = {
   writerInfo: null,
   diaries: { dates: null },
   editDiary: null,
-  editChan: null
+  editChan: null,
+  postLoading: false
 };
 
 const getters = {
@@ -32,7 +33,8 @@ const getters = {
   getWriterInfo: state => state.writerInfo,
   getDiaries: state => state.diaries,
   getEditDiary: state => state.editDiary,
-  getEditChan: state => state.editChan
+  getEditChan: state => state.editChan,
+  getPostLoading: state => state.postLoading
 };
 
 const mutations = {
@@ -57,7 +59,8 @@ const mutations = {
   setWriterInfo: (state, writerInfo) => (state.writerInfo = writerInfo),
   setDiaries: (state, diaries) => (state.diaries = diaries),
   setEditDiary: (state, editDiary) => (state.editDiary = editDiary),
-  setEditChan: (state, editChan) => (state.editChan = editChan)
+  setEditChan: (state, editChan) => (state.editChan = editChan),
+  setPostLoading: (state, flag) => (state.postLoading = flag)
 };
 
 const actions = {
@@ -325,8 +328,8 @@ const actions = {
     console.log(res);
     commit("sets3", {});
   },
-  // async addPost({ getters }, PostInfo) {
-  async addPost({ dispatch, getters }, PostInfo) {
+  async addPost({ dispatch, getters, commit }, PostInfo) {
+    commit("setPostLoading", true);
     await dispatch("s3Init", "diary");
     await dispatch("updates3", PostInfo);
     const token = sessionStorage.getItem("jwt");
@@ -348,11 +351,13 @@ const actions = {
       }
     };
     const res = await axios.post(HOST + "/posts/", body, options);
+    commit("setPostLoading", false);
     console.log("res", res);
     router.push("/postList");
   },
-  async editPost({ dispatch }, PostInfo) {
+  async editPost({ dispatch, commit }, PostInfo) {
     if (PostInfo.file) {
+      commit("setPostLoading", true);
       console.log("file 변경 있음");
       await dispatch("s3Init", "diary");
       await dispatch("updates3", PostInfo);
@@ -381,6 +386,7 @@ const actions = {
       body,
       options
     );
+    commit("setPostLoading", false)
     console.log("res", res);
     router.push("/postList");
   }

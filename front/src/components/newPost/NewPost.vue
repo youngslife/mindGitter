@@ -53,6 +53,14 @@
         <button class="submit">Upload</button>
       </div>
     </form>
+    <v-card class="loading" v-if="getPostLoading">
+      ...영상을 모델로 넘기고 있습니다...<br />
+      조금만 기다려 주세요.<br />
+      <v-progress-circular
+        indeterminate
+        color="green" 
+      ></v-progress-circular>
+    </v-card>
   </v-container>
 </template>
 
@@ -96,7 +104,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getUserId", "getChanName"])
+    ...mapGetters(["getUserId", "getChanName", "getPostLoading"])
   },
   async created() {
     const chanName = sessionStorage.getItem("chanName");
