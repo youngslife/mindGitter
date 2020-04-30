@@ -56,7 +56,7 @@ export default {
     ...mapGetters(["getSelectedChan"])
   },
   methods: {
-    ...mapActions(["editChannel"]),
+    ...mapActions(["editChannel", "bringChanDetail"]),
     onFileChange(e) {
       const files = e.target.files;
       if (files) {
@@ -70,10 +70,14 @@ export default {
     }
   },
   async created() {
-    this.PostInfo.title = this.getSelectedChan.title;
-    this.PostInfo.description = this.getSelectedChan.description;
-    this.PostInfo.fileName = this.getSelectedChan.cover_image;
-    this.PostInfo.channelId = this.getSelectedChan.id;
+    if (this.getSelectedChan) {
+      this.PostInfo.title = this.getSelectedChan.title;
+      this.PostInfo.description = this.getSelectedChan.description;
+      this.PostInfo.fileName = this.getSelectedChan.cover_image;
+      this.PostInfo.channelId = this.getSelectedChan.id;
+    } else {
+      router.push("/");
+    }
   }
 };
 </script>

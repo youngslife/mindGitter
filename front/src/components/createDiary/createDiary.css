@@ -1,11 +1,67 @@
-div.createDiary{
-  background-image: url(../../assets/create.jpg);
-  width: 100vw;
-  height: 100vh;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-justify-content: center;
-  justify-content: center;
+.hnContainer {
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+  margin:auto;
+}
+
+.hnDiary{
+  height: 98vh;
+}
+
+.hnImage {
+  border-radius: 17px;
+  height: 98vh;
+  object-fit: cover;
+  object-position: center;
+  position:relative;
+}
+
+.hnBackBtn {
+  border-radius:50%; 
+  height: 7vw; 
+  width: 7vw; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+  z-index:99999999999999999999999999;
+  background-color:rgba(255, 255, 255, 0.3);
+  position:absolute;
+  top:5%; 
+  left:10%; 
+  transform: translate(-50%, -50%); 
+}
+
+.hnDiaryForm {
+  display:flex;
+  justify-content:space-around; 
+  flex-direction:column;           
+  width: 70vw; 
+  height: 27vh; 
+  position:absolute;
+  top:50%; 
+  left:50%; 
+  transform: translate(-50%, -50%)
+}
+
+.hnCoverTxt {
+  color:rgba(255, 255, 255, 0.7); margin-top:1vh
+}
+
+.hnCoverBox {
+  display:flex; justify-content:space-around; margin-top:2vh
+}
+
+.hnCoverWrapper {
+  height:10vw; width:10vw; display:flex; justify-content: center; align-items:center;
+}
+
+.hnCoverSample {
+  height:10vw; width:10vw; border-radius:50%;
+}
+
+.hnCoverSample:hover {
+  height:9vw; width:9vw; border-radius:50%;
+  transition: all 0.2s ease 0s;
 }
 
 .v-icon.back{
@@ -13,48 +69,15 @@ div.createDiary{
   position: absolute;
   left: 15px;
   margin: 10px;
-}
-
-form.AddDiaryForm{
-  -webkit-align-items: center;
-  align-items: center;
-}
-
-div.AddDiaryForm{
-  margin-top: 150px;
-  background-color: rgba(255,232,169,0.7);
-}
-
-h1{
-  margin-bottom: 15px;
-}
-
-ul{
-  margin: 10px;
-}
-
-input{
-  margin: 10px;
-}
-
-input#diarytitle{
-  border-bottom: 1px solid #000;
-}
-
-input#diarydescription{
-  border-bottom: 1px solid #000;
-}
-
-input#diaryimage{
-  width: 210px;
+  z-index: 9999;
 }
 
 button.submit{
   margin-top: 2vh;
   height: 30px;
-  width: 58vw;
+  width: 100%;
   border-radius: 5px;
-  background: #ffde84;
-  color: white;
+  background: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.8);
   margin-bottom: 10px;
 }

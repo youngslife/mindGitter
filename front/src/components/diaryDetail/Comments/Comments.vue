@@ -20,7 +20,7 @@
         v-for="(comment, i) in getSelectedDiary.comment_set"
         :key="i"
       >
-        <div class="userName">{{ comment.user }}</div>
+        <UserName :userpk="comment.user" />
         <div class="context">{{ comment.context }}</div>
         <div class="btn">
           <button class="delBtn" @click="deleteComment(comment)">DEL</button>
@@ -31,23 +31,37 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
+import UserName from "./userName/UserName.vue";
+import router from "@/router";
 
 export default {
   name: "newComment",
+  components: {
+    UserName
+  },
   data() {
     return {
       context: null,
       commentList: Array,
-      channelInfo: Object,
+      channelInfo: Object
     };
   },
   methods: {
     ...mapActions(["addComment", "deleteComment"]),
+    ...mapMutations(["setUserName"])
   },
   computed: {
-    ...mapGetters(["getSelectedDiary", "getUserName", "getSelectedChan"]),
+    ...mapGetters(["getSelectedDiary", "getUserName", "getSelectedChan"])
   },
+  async created() {
+    const username = sessionStorage.getItem("userName");
+    if (username) {
+      await this.setUserName(username);
+    } else {
+      router.push("/");
+    }
+  }
 };
 </script>
 

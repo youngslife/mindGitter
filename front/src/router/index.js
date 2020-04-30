@@ -10,6 +10,9 @@ import UserDetail from "../components/userDetail/UserDetail.vue";
 import Signup from "../components/signup/Signup.vue";
 import EditPost from "../components/editPost/editPost.vue";
 import EditChan from "../components/editDiary/editDiary";
+import ChangePwd from "../components/userDetail/ChangePwd.vue";
+// notification
+import Notification from "../components/notification/Notification.vue";
 
 Vue.use(VueRouter);
 
@@ -63,6 +66,17 @@ const routes = [
     path: "/editChan",
     name: "editChan",
     component: EditChan
+  },
+  {
+    path: "/changePwd",
+    name: "changePwd",
+    component: ChangePwd
+  },
+  //Notification
+  {
+    path: "/notification",
+    name: "notification",
+    component: Notification
   }
 ];
 

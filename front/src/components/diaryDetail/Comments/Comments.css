@@ -1,13 +1,16 @@
 div.reviewInput {
     display: inline-block;
-    width: 63%;
+    width: 60%;
     margin-right: 2%;
 }
 
 div.userName {
     display: inline-block;
-    width: 20%;
+    width: 23%;
     font-size: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 div.btn {
@@ -33,7 +36,7 @@ input.context {
 
 div.context {
     display: inline-block;
-    width: 63%;
+    width: 60%;
     margin-right: 2%;
 }
 

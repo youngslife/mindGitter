@@ -1,12 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Channel
-from rest_framework import status
+from rest_framework import status, filters, generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from accounts.models import User
 from accounts.serializers import UserDisplaySerializer
 from .serializers import UserChannelSerializer, ChannelSerializer
 from django.http import JsonResponse
+from posts.models import Post
+from posts.serializers import PostSerializer
 
 # Create your views here.
 
@@ -18,16 +20,19 @@ def board(request):
         user = get_object_or_404(User, username=request.user)
         serializer = UserChannelSerializer(user)
         return JsonResponse(serializer.data)
-
     elif request.method == 'POST':  # create a diary book
-        data = request.data
+        # data = request.data
         # # postman에서 보낼 때는 dict형으로 바꿔줘야 QueryDict is immutable 에러 안남
-        # data = request.data.dict()
-
+        data = request.data.dict()
+        print(1)
         data.update({'create_user': request.user.id})
+        print(2)
         serializer = ChannelSerializer(data=data)
-
+        print(3)
+        # print('serializer', serializer)
+        print(4)
         if serializer.is_valid():
+            print('valid')
             serializer.save()
             user = get_object_or_404(User, username=request.user)
             channel = Channel.objects.last()
@@ -74,9 +79,19 @@ def board_title(request, id):
 @permission_classes((IsAuthenticated, ))
 def board_join(request, id):
     if request.method == 'POST':  # join a channel
+        # print("들어왔니?")
+        # print(11)
         user = get_object_or_404(User, username=request.user)
+        # print(4422244)
         channel = get_object_or_404(Channel, id=id)
+        # print(333)
         user.channels.add(channel)
+        # print(4444)
+        # print('채널만든사람!!!!!', channel.create_user.id)
+        
+        # notification
+        # create_notification(channel.create_user, user, 'join')
+
         return JsonResponse({'message': 'success to join'}, status=201)
 
     elif request.method == 'DELETE':  # leave from a channel
@@ -88,3 +103,13 @@ def board_join(request, id):
             return JsonResponse({'message': 'success to leave'}, status=200)
         else:
             return JsonResponse({'message': 'fail to leave'}, status=200)
+
+class SearchTags(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated, )
+    serializer_class = PostSerializer   
+    search_fields = ['tags__name']
+    filter_backends = (filters.SearchFilter, )
+
+    def get_queryset(self):
+        queryset = Post.objects.filter(channel_id=self.kwargs['id'])
+        return queryset

@@ -1,25 +1,32 @@
 <template>
-  <v-row>
+  <v-row v-if="getUserInfoSet && getChanList">
     <v-col cols="3">
-      <img
-        class="userProfile"
-        :src="showProfile()"
-        alt="userprofile"
-        @click="setUserImgModal(true)"
-      />
+      <img class="userProfile" :src="showProfile()" alt="userprofile" />
     </v-col>
     <v-col class="userSummary" cols="9">
       <v-row>
-        <v-col cols="4">Total</v-col>
-        <v-col cols="4">Create</v-col>
-        <v-col cols="4">Diary</v-col>
+        <v-col cols="4">Post</v-col>
+        <v-col cols="5">First Post</v-col>
+        <v-col cols="3">Diary</v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="4">총 {{ getUserInfoSet.post_set.length }}편</v-col>
+        <v-col cols="5" v-if="getUserInfoSet.post_set.length">{{
+          getUserInfoSet.post_set[
+            getUserInfoSet.post_set.length - 1
+          ].created_at.slice(0, 10)
+        }}</v-col>
+        <v-col cols="5" v-else>
+          -
+        </v-col>
+        <v-col cols="3">{{ getChanList.length }}개</v-col>
       </v-row>
     </v-col>
   </v-row>
 </template>
 
 <script>
-import { mapMutations, mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 // src="../../../assets/basic_userImage.png"
 export default {
   data() {
@@ -28,8 +35,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["setUserImgModal"]),
-    ...mapActions(["bringUserProfile"]),
+    ...mapActions(["bringUserProfile", "bringUserInfoSet", "bringChanList"]),
     showProfile() {
       console.log(this.profileAddr + this.getUserProfile);
       return this.getUserProfile
@@ -38,10 +44,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getUserProfile"])
+    ...mapGetters(["getUserProfile", "getUserInfoSet", "getChanList"])
   },
   async created() {
     await this.bringUserProfile();
+    await this.bringUserInfoSet();
+    await this.bringChanList();
   }
 };
 </script>

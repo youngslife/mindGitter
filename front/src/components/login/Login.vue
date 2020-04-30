@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import router from "@/router";
 export default {
   name: "Login",
@@ -54,12 +54,16 @@ export default {
   },
   methods: {
     ...mapActions(["validation"]),
+    ...mapMutations(["clearErrors"]),
     goSignup() {
       router.push("/signup");
     }
   },
   computed: {
     ...mapGetters(["getErrors", "isLoading"])
+  },
+  created() {
+    this.clearErrors();
   }
 };
 </script>

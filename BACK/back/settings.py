@@ -30,7 +30,7 @@ DEBUG = config('DEBUG')
 ALLOWED_HOSTS = [
     '13.125.177.238',
     'mind-gitter.me',
-    'localhost',
+    'localhost'
 ]
 
 # REST_framework 설정

@@ -5,7 +5,7 @@
         ><v-icon class="back" @click="goList">fas fa-arrow-left</v-icon></v-col
       >
       <v-col cols="10" class="diaryName"
-        ><h1>{{ getSelectedChan.title }}</h1></v-col
+        ><h1>{{ getChanName }}</h1></v-col
       >
     </v-row>
     <form class="AddPostForm" @submit.prevent="addPost(postInfo)">
@@ -53,11 +53,16 @@
         <button class="submit">Upload</button>
       </div>
     </form>
+    <v-card class="loading" v-if="getPostLoading">
+      ...영상을 모델로 넘기고 있습니다...<br />
+      조금만 기다려 주세요.<br />
+      <v-progress-circular indeterminate color="green"></v-progress-circular>
+    </v-card>
   </v-container>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import router from "@/router";
 
 export default {
@@ -79,23 +84,37 @@ export default {
   },
   methods: {
     ...mapActions(["addPost"]),
+    ...mapMutations(["setChanName", "setChanId"]),
     goList() {
       router.push("/postList");
     },
     async onFileChange(e) {
       const files = e.target.files;
-      if (files) {
+      if (files && files.length) {
         const file = files[0];
         this.postInfo.file = file;
         this.postInfo.fileName =
           String(this.getUserId) + new Date().getTime() + ".mp4";
         const blobFile = new Blob([file], { type: file.type });
         this.videoTempUrl = URL.createObjectURL(blobFile);
+      } else {
+        this.postInfo.fileName = null;
+        this.videoTempUrl = null;
       }
     }
   },
   computed: {
-    ...mapGetters(["getUserId", "getSelectedChan"])
+    ...mapGetters(["getUserId", "getChanName", "getPostLoading"])
+  },
+  async created() {
+    const chanName = sessionStorage.getItem("chanName");
+    const chanId = sessionStorage.getItem("chan");
+    if (chanId) {
+      this.setChanName(chanName);
+      this.setChanId(chanId);
+    } else {
+      router.push("/");
+    }
   }
 };
 </script>
