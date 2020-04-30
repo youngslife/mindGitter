@@ -82,7 +82,7 @@ export default {
         title: null,
         description: null,
         file: null,
-        fileName: this.getFileName
+        fileName: this.getFileName ? this.getFileName : "default_channel1.jpg"
       },
       titleRules: [
         value => !!value || "제목을 입력해 주세요 :)",
@@ -136,13 +136,14 @@ export default {
       router.push("userDetail");
     },
     onFileChange(file) {
-      console.log(file)
       if (file) {
         this.PostInfo.file = file;
+        this.file = file
         this.PostInfo.fileName =
           String(this.getUserId) + new Date().getTime() + ".jpg";
       } else {
         this.PostInfo.file = null;
+        this.file = null;
         this.PostInfo.fileName = "default_channel1.jpg";
       }
     }

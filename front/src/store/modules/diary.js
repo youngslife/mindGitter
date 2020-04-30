@@ -23,6 +23,38 @@ const state = {
   editDiary: null,
   editChan: null,
   postLoading: false,
+  series: null,
+  charOptions: {
+    chart: {
+        height: 350,
+        type: 'bubble',
+        zoom: {
+          type: 'x',
+          enabled: true,
+          autoScaleYaxis: true
+        },
+        toolbar: {
+          autoSelected: 'zoom'
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    fill: {
+        opacity: 0.5
+    },
+    title: {
+        text: 'Emotion Chart'
+    },
+    xaxis: {
+        tickAmount: 12,
+        type: 'category',
+    },
+    yaxis: {
+      min: 35
+    },
+    colors: ['#A93F55', '#46AF78', "#663F59",  '#BAFF29', "#4E88B4", "#F27036", '#7A918D'],
+  },
   notiList: null
 };
 
@@ -38,6 +70,8 @@ const getters = {
   getEditDiary: state => state.editDiary,
   getEditChan: state => state.editChan,
   getPostLoading: state => state.postLoading,
+  getSeries: state => state.series,
+  getChartOptions: state => state.charOptions,
   getNotiList: state => state.notiList
 };
 
@@ -52,7 +86,7 @@ const mutations = {
     sessionStorage.setItem("chanName", chanName);
   },
   setPostId: (state, postId) => {
-    state.postId = postId;
+    state.postId = postId;  
     sessionStorage.setItem("post", postId);
   },
   setSelectedChan: (state, channel) => (state.selectedChan = channel),
@@ -65,6 +99,7 @@ const mutations = {
   setEditDiary: (state, editDiary) => (state.editDiary = editDiary),
   setEditChan: (state, editChan) => (state.editChan = editChan),
   setPostLoading: (state, flag) => (state.postLoading = flag),
+  setSeries: (state, series) => (state.series = series),
   setNotiList: (state, notiList) => (state.notiList = notiList)
 };
 
@@ -78,18 +113,15 @@ const actions = {
     };
     await axios.get(HOST + "/channels/", options).then(message => {
       commit("setChanList", message.data.channels);
-      console.log(message.data.channels.length)
       return "y"
     });
   },
   async addChannel({ dispatch, commit }, PostInfo) {
-    console.log(PostInfo)
     if (PostInfo.title && PostInfo.description) {
       if (PostInfo.file) {
         await dispatch("s3Init", "channel");
         await dispatch("updates3", PostInfo);
       }
-      console.log("addChannel", PostInfo);
       const token = sessionStorage.getItem("jwt");
       const options = {
         headers: {
@@ -102,9 +134,7 @@ const actions = {
         cover_image: PostInfo.fileName,
         description: PostInfo.description
       };
-      console.log("body", body);
-      const res = await axios.post(HOST + "/channels/", body, options);
-      console.log(res);
+      await axios.post(HOST + "/channels/", body, options);
       await commit("setChanList", null);
       router.push("/");
     } else if (PostInfo.title) {
@@ -127,7 +157,6 @@ const actions = {
     axios.get(`${HOST}/channels/${channelId}`, options).then(message => {
       commit("setSelectedChan", message.data);
       commit("setChanName", message.data.title);
-      // console.log(message);
       const temp = {};
       for (const post of message.data.post_set) {
         if (temp[post.created_at.slice(0, 10)]) {
@@ -152,7 +181,6 @@ const actions = {
         return b - a;
       });
       temp["dates"] = dates;
-      console.log(temp);
       commit("setDiaries", temp);
     });
   },
@@ -178,11 +206,8 @@ const actions = {
   },
   async editChannel({ dispatch, commit }, PostInfo) {
     if (PostInfo.file) {
-      console.log("파일 변경");
       await dispatch("s3Init", "channel");
       await dispatch("updates3", PostInfo);
-    } else {
-      console.log("파일 변경 안함");
     }
     const token = sessionStorage.getItem("jwt");
     const options = {
@@ -196,13 +221,11 @@ const actions = {
       cover_image: PostInfo.fileName,
       description: PostInfo.description
     };
-    console.log("body", body);
-    const res = await axios.put(
+    await axios.put(
       `${HOST}/channels/${PostInfo.channelId}/`,
       body,
       options
     );
-    console.log(res);
     await commit("setChanList", null);
     router.push("/");
   },
@@ -221,9 +244,10 @@ const actions = {
     );
     await commit("setWriterInfo", mess.data);
   },
-  async addComment({ commit, getters }, reviewContext) {
+  async addComment({ getters, commit }, reviewContext) {
     const token = sessionStorage.getItem("jwt");
     const postpk = getters.getSelectedDiary.pk;
+    const chanId = sessionStorage.getItem("chan");
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -233,47 +257,45 @@ const actions = {
     const body = {
       context: reviewContext
     };
-    await axios.post(`${HOST}/posts/${postpk}/comments/`, body, options).then(
-      axios.get(`${HOST}/posts/${postpk}`, options).then(message => {
-        commit("setSelectedDiary", message.data);
-        const selectedChanUser = getters.getSelectedChan.user_set;
-        for (let idx = 0; idx < selectedChanUser.length; idx++) {
-          if (selectedChanUser[idx].id === message.data.user_id) {
-            commit("setWriterInfo", selectedChanUser[idx]);
-          }
-        }
-      })
-    );
+    await axios.post(`${HOST}/posts/${postpk}/comments/`, body, options)
+    const message = await axios.get(`${HOST}/channels/${chanId}`, options)
+    await commit("setSelectedChan", message.data);
+    const message2 = await axios.get(`${HOST}/posts/${postpk}/`, options);
+    await commit("setSelectedDiary", message2.data);
+    const selectedChanUser = getters.getSelectedChan.user_set;
+    for (let idx = 0; idx < selectedChanUser.length; idx++) {
+      if (selectedChanUser[idx].id === message.data.user_id) {
+        commit("setWriterInfo", selectedChanUser[idx]);
+      }
+    }    
   },
-  deleteComment({ getters, commit }, commentInfo) {
+  async deleteComment({ getters, commit }, commentInfo) {
     const token = sessionStorage.getItem("jwt");
     const postpk = getters.getSelectedDiary.pk;
+    const chanId = sessionStorage.getItem("chan");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
     };
-    console.log(postpk, commentInfo.id);
-    axios
-      .delete(`${HOST}/posts/${postpk}/comments/${commentInfo.id}`, options)
-      .then(message => {
-        message;
-        console.log(message);
-        alert("성공적으로 삭제되었습니다.");
-        axios.get(`${HOST}/posts/${postpk}`, options).then(message => {
-          commit("setSelectedDiary", message.data);
-          const selectedChanUser = getters.getSelectedChan.user_set;
-          for (let idx = 0; idx < selectedChanUser.length; idx++) {
-            if (selectedChanUser[idx].id === message.data.user_id) {
-              commit("setWriterInfo", selectedChanUser[idx]);
-            }
-          }
-        });
-      })
-      .catch(err => {
-        err;
+    try {
+      const messa = await axios.delete(`${HOST}/posts/${postpk}/comments/${commentInfo.id}`, options)
+      messa;
+      alert("성공적으로 삭제되었습니다.");
+      const message = await axios.get(`${HOST}/channels/${chanId}`, options)
+      await commit("setSelectedChan", message.data);
+      const message2 = await axios.get(`${HOST}/posts/${postpk}/`, options);
+      await commit("setSelectedDiary", message2.data);
+      const selectedChanUser = getters.getSelectedChan.user_set;
+      for (let idx = 0; idx < selectedChanUser.length; idx++) {
+        if (selectedChanUser[idx].id === message.data.user_id) {
+          commit("setWriterInfo", selectedChanUser[idx]);
+        }
+      }  
+    } catch (err) {
+      err;
         alert("삭제 중에 문제가 발생하였습니다.");
-      });
+    }
   },
 
   async deleteDiary({ getters }, postId) {
@@ -288,7 +310,6 @@ const actions = {
       .delete(`${HOST}/posts/${postId}`, options)
       .then(message => {
         message;
-        console.log(message);
         alert("성공적으로 삭제되었습니다.");
       })
       .catch(err => {
@@ -309,7 +330,6 @@ const actions = {
       .delete(`${HOST}/channels/${ChannelId}/join/`, options)
       .then(message => {
         message;
-        console.log(message);
         alert("일기장 탈퇴가 성공적으로 이뤄졌습니다.");
       })
       .catch(err => {
@@ -317,6 +337,50 @@ const actions = {
         alert("일기장 탈퇴 도중 문제가 발생하였습니다.");
       });
     router.push("/");
+  },
+  //bubble chart
+  async generateData ({ commit }, emotionData) {
+    let series = []
+    const labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
+    for (let k = 0; k < 7; k++) {
+      series.push({
+        name: labels[k],
+        data: new Array()
+      })
+    }
+    for (let i = 0; i < emotionData.length; i++ ) {
+      for (let k = 0; k < 7; k++) {
+        if (emotionData[i][k] > 0.35) {
+          const x = i;
+          const y = Math.floor(emotionData[i][k] * 100)
+          const z = Math.floor((emotionData[i][k] **2) * 60)
+          series[k].data.push([x, y, z])
+        }
+      }
+    }
+    await commit("setSeries", series)
+  },
+  async bringEmotionData({ getters, dispatch }) {
+    const emotionData = []
+    const url = getters.getSelectedDiary.csv_url
+    if (url) {
+      const req = await axios.get(url)
+      const csv = req.data
+      const rows = csv.split('\n')
+      for (let i = 0; i < rows.length; i++ ) {
+        if (rows[i]) {
+          const colsStr = rows[i].split(',');
+          const cols = []
+          for (let j =0 ; j < colsStr.length; j++ ) {
+            const num = parseFloat(colsStr[j]).toFixed(2)
+            cols.push(num)
+          }
+          emotionData.push(cols)
+        }
+      }
+      await dispatch("generateData", emotionData)
+    }
+    
   },
   //S3 부분
   s3Init: ({ commit }, type) => {
@@ -335,15 +399,13 @@ const actions = {
     commit("sets3", s3);
   },
   async updates3({ commit }, PostInfo) {
-    console.log("upadates3", PostInfo);
     const s3 = state.s3;
     const params = {
       Key: PostInfo.fileName,
       Body: PostInfo.file,
       ACL: "public-read-write"
     };
-    const res = await s3.upload(params).promise();
-    console.log(res);
+    await s3.upload(params).promise();
     commit("sets3", {});
   },
   async addPost({ dispatch, commit }, PostInfo) {
@@ -352,7 +414,6 @@ const actions = {
       await dispatch("s3Init", "diary");
       await dispatch("updates3", PostInfo);
       const token = sessionStorage.getItem("jwt");
-      // 태그 분리
       let tags = PostInfo.tags;
       if (tags == null) {
         tags = "[]";
@@ -380,15 +441,13 @@ const actions = {
         is_use_comment: PostInfo.possible,
         is_save_video: PostInfo.saveVideo
       };
-      console.log("bodybody", body);
       const options = {
         headers: {
           Authorization: "JWT " + token
         }
       };
-      const res = await axios.post(HOST + "/posts/", body, options);
+      await axios.post(HOST + "/posts/", body, options);
       commit("setPostLoading", false);
-      console.log("res", res);
       router.push("/postList");
     } else if (PostInfo.title) {
       alert("! 분석할 영상을 첨부해주세요.");
@@ -401,14 +460,10 @@ const actions = {
   async editPost({ dispatch, commit }, PostInfo) {
     if (PostInfo.file) {
       commit("setPostLoading", true);
-      console.log("file 변경 있음");
       await dispatch("s3Init", "diary");
       await dispatch("updates3", PostInfo);
-    } else {
-      console.log("file 변경 없음");
     }
     const token = sessionStorage.getItem("jwt");
-    // 태그 분리
     let tags = PostInfo.tags;
     if (tags == null) {
       tags = "[]";
@@ -433,24 +488,21 @@ const actions = {
       is_use_comment: PostInfo.possible,
       is_save_video: PostInfo.saveVideo
     };
-    console.log("bodybody", body);
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
     };
-    const res = await axios.put(
+    await axios.put(
       `${HOST}/posts/${PostInfo.post_id}/`,
       body,
       options
     );
     commit("setPostLoading", false);
-    console.log("res", res);
     router.push("/postList");
   },
   addNotification({ getters }, info) {
     getters;
-    console.log(info);
     const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
@@ -462,7 +514,6 @@ const actions = {
       channel_id: parseInt(info.channel_id),
       notice_type: "join"
     };
-    console.log(body);
     axios.post(HOST + "/notifications/", body, options);
   },
   async bringNotice({ commit }) {
@@ -477,11 +528,15 @@ const actions = {
       for (const noti of message.data) {
         if (noti.accept_or_not == "0") {
           axios.get(`${HOST}/user/${noti.inviter}`, options).then(mess => {
-            notices.push({
+            const newN = {
               id: noti.id,
               inviter: mess.data.username,
+              inviter_img: mess.data.profile_img,
               channelId: noti.channel
-            });
+            }
+            if (!notices.some(n => (n.inviter===newN.inviter) && (n.channelId===newN.channelId))) {
+              notices.push(newN);
+            }
           });
         }
       }
@@ -500,11 +555,9 @@ const actions = {
       .post(`${HOST}/channels/${joinInfo.channelId}/join/`, {}, options)
       .then(message => {
         message;
-        // console.log(message)
       })
       .catch(err => {
         err;
-        // console.log(err.response);
       });
     const body = {
       accept_or_not: "1"
@@ -540,14 +593,12 @@ const actions = {
       }
     };
     const channId = sessionStorage.getItem("chan");
-    console.log(searchParams);
     axios
       .get(
         `${HOST}/channels/${channId}/tags/?search=${searchParams.searchKwd}`,
         options
       )
       .then(message => {
-        console.log(searchParams.searchKwd, "요청 완료");
         const temp = {};
         for (const post of message.data) {
           if (temp[post.created_at.slice(0, 10)]) {
@@ -572,7 +623,6 @@ const actions = {
           return b - a;
         });
         temp["dates"] = dates;
-        console.log(temp);
         commit("setDiaries", temp);
       });
   }

@@ -21,16 +21,9 @@ def board(request):
         serializer = UserChannelSerializer(user)
         return JsonResponse(serializer.data)
     elif request.method == 'POST':  # create a diary book
-        # data = request.data
-        # # postman에서 보낼 때는 dict형으로 바꿔줘야 QueryDict is immutable 에러 안남
-        data = request.data.dict()
-        print(1)
+        data = request.data
         data.update({'create_user': request.user.id})
-        print(2)
         serializer = ChannelSerializer(data=data)
-        print(3)
-        # print('serializer', serializer)
-        print(4)
         if serializer.is_valid():
             print('valid')
             serializer.save()
@@ -39,7 +32,6 @@ def board(request):
             user.channels.add(channel)
             return JsonResponse({'message': 'success to save'}, status=201)
         else:
-            # return JsonResponse({'message': 'fail to save'}, status=400)
             return JsonResponse({'message': serializer.errors }, status=400)
 
 # 채널 한 개
@@ -57,8 +49,6 @@ def board_title(request, id):
     if channel.create_user_id == request.user.id:
         if request.method == 'PUT':  # update a diary book
             data = request.data
-            # # postman에서 보낼 때는 dict형으로 바꿔줘야 QueryDict is immutable 에러 안남
-            # data = request.data.dict()
             data.update({'create_user': request.user.id})
             serializer = ChannelSerializer(channel, data=data)
             if serializer.is_valid():
@@ -66,7 +56,6 @@ def board_title(request, id):
                 return JsonResponse({'message': 'success to update'}, status=201)
             else:
                 return JsonResponse({'message': 'fail to update'}, status=400)
-                # return JsonResponse({'message': serializer.errors}, status=400)
 
         elif request.method == 'DELETE':  # delete a diary book
             channel.delete()
@@ -79,18 +68,9 @@ def board_title(request, id):
 @permission_classes((IsAuthenticated, ))
 def board_join(request, id):
     if request.method == 'POST':  # join a channel
-        # print("들어왔니?")
-        # print(11)
         user = get_object_or_404(User, username=request.user)
-        # print(4422244)
         channel = get_object_or_404(Channel, id=id)
-        # print(333)
         user.channels.add(channel)
-        # print(4444)
-        # print('채널만든사람!!!!!', channel.create_user.id)
-        
-        # notification
-        # create_notification(channel.create_user, user, 'join')
 
         return JsonResponse({'message': 'success to join'}, status=201)
 

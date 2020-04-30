@@ -36,7 +36,7 @@
                 </div>
                 <div class="hMetasBox">
                   <p class="hMeta">쓰는 이</p>
-                  <p class="hMeta">{{ getPartyList(item.user_set) }}</p>
+                  <p class="hMeta">{{ item.user_set.length + ' 명' }}</p>
                 </div>
               </div>
             </div>
@@ -102,7 +102,6 @@ export default {
       return d.getFullYear() + "." + d.getMonth() + "." + d.getDate();
     },
     getPartyList(userset) {
-      console.log(userset)
       if (userset.length === 1) {
         return userset[0].username;
       } else {

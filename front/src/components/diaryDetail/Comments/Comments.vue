@@ -1,58 +1,68 @@
 <template>
-  <div class="commentContainer">
-    <div class="reviewForm">
-      <div class="userName">
-        {{ getUserName }}
-      </div>
-      <div class="reviewInput">
-        <input type="text" class="context" v-model="context" />
-      </div>
-      <div class="btn">
+  <div class="commentContainer" v-if="currentUser">
+    <v-row class="reviewForm">
+      <v-col cols="2" class="userImage">
+        <img
+          :src="showProfile(currentUser.profile_img)"
+          alt="userProfile"
+          class="uImage"
+        />
+      </v-col>
+      <v-col class="reviewInput">
+        <input type="text" class="context" v-model="context" placeholder="댓글 입력 .."/>
+      </v-col>
+      <v-col cols="2" class="btn">
         <button class="reviewBtn" @click.prevent="addComment(context)">
-          등록
+          게시
         </button>
-      </div>
-    </div>
-    <hr class="partialLine" />
+      </v-col>
+    </v-row>
+    <!-- <hr class="partialLine" /> -->
     <div class="Reviews">
       <div
         class="review"
         v-for="(comment, i) in getSelectedDiary.comment_set"
         :key="i"
       >
-        <UserName :userpk="comment.user" />
-        <div class="context">{{ comment.context }}</div>
-        <div class="btn" v-if="comment.user == getUserId">
-          <button class="delBtn" @click="deleteComment(comment)">DEL</button>
-        </div>
+        <Comment :comment="comment" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from "vuex";
-import UserName from "./userName/UserName.vue";
+import { mapMutations, mapGetters, mapActions } from "vuex";
+import axios from "axios";
+import Comment from "./comment/Comment.vue";
 import router from "@/router";
 
 export default {
-  name: "newComment",
   components: {
-    UserName
+    Comment,
   },
   data() {
     return {
       context: null,
-      commentList: Array,
-      channelInfo: Object
+      profileAddr: process.env.VUE_APP_STATIC_ADDR + "profile/",
+      currentUser: null,
     };
   },
   methods: {
-    ...mapActions(["addComment", "deleteComment"]),
-    ...mapMutations(["setUserName"])
+    ...mapActions(["addComment"]),
+    ...mapMutations(["setUserName"]),
+    showProfile(profile_img) {
+      return profile_img
+        ? this.profileAddr + profile_img
+        : require("../../../assets/basic_userImage.png");
+    },
   },
   computed: {
-    ...mapGetters(["getSelectedDiary", "getUserName", "getSelectedChan", "getUserId"])
+    ...mapGetters([
+      "getSelectedDiary",
+      "getUserName",
+      "getSelectedChan",
+      "getUserId",
+    ]),
   },
   async created() {
     const username = sessionStorage.getItem("userName");
@@ -61,7 +71,19 @@ export default {
     } else {
       router.push("/");
     }
-  }
+  },
+  async mounted() {
+    const token = sessionStorage.getItem("jwt");
+    const HOST = process.env.VUE_APP_SERVER_HOST;
+    const options = {
+      headers: {
+        Authorization: "JWT " + token,
+      },
+    };
+    await axios.get(`${HOST}/current_user`, options).then((res) => {
+      this.currentUser = res.data;
+    });
+  },
 };
 </script>
 

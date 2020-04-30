@@ -1,8 +1,0 @@
-div.userName {
-    display: inline-block;
-    width: 23%;
-    font-size: 15px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}

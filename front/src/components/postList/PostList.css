@@ -22,7 +22,7 @@ div.infoAndSetting>.v-icon.settings{
 }
 
 .v-card.settings>div{
-  margin-bottom: 10px;
+  margin: 7px 0 7px 3px;
 }
 
 .v-card.settings>div>.v-icon{
@@ -120,4 +120,79 @@ div.date{
   font-size: 15px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   color: cadetblue;
+  text-align: left;
+  margin-bottom: 5px;
 }
+
+.ddBar {
+  height: 8vh;
+  width: 100%;
+  background-color: white;
+  position: relative;
+  border-top-left-radius: 17px;
+  border-top-right-radius: 17px;
+}
+
+.ddBtn {
+  height: 8vw; 
+  width: 8vw; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+  z-index:99999999999999999999999999;
+}
+
+.ddBackBtn {
+  position:absolute;
+  top:4vh; left:9vw; 
+  transform: translate(-50%, -50%); 
+}
+
+.ddHamBtn {
+  position:absolute;
+  top:4vh; left:91vw; 
+  transform: translate(-50%, -50%); 
+}
+
+.ddDate {
+  font-size: large;
+  font-weight: 600;
+  color: rgba(0,0,0,0.65);
+  line-height: 8vh;
+  text-align: center;
+}
+
+.timeline.theme--light.v-timeline::before {
+  width: 0px;
+}
+
+
+.v-card__title {
+  font-size: 1rem;
+  line-height: 1rem; 
+  /* default값: line-height: 2rem, font-size: 1.25rem */
+  height:7vh; display:flex; justify-content:center;
+}
+
+.tag {
+  /* text-align: left; */
+}
+
+.v-timeline {
+  padding-top: 15px;
+}
+
+.shared {
+  text-align: left;
+}
+
+.tag > span {
+  font-size:1.8vh; color:#4682B4; font-weight:550;
+  background-color: rgba(86, 61, 124,.15);
+  border: 2px solid round rgba(86, 61, 124,.15);
+}
+
+.v-timeline-item__body > .v-card:not(.v-card--flat):before, .v-timeline-item__body > .v-card:not(.v-card--flat):after {
+  border: 10px solid transparent !important;
+}
+

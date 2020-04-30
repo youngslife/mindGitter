@@ -40,14 +40,14 @@ class PostList(APIView):
             
             ## AI 모델에 분석 요청 ===============================
             headers = {
-                'Content-Type':'text/plain'
+                'Content-Type':'application/json'
             }
             data = {
-                'video_url': request.data['video_file'],
-                'post_id': Post.objects.first().id,
-                'user_id': request.user.id
+                'video_url': 'https://mind-gitter-diary.s3.ap-northeast-2.amazonaws.com/diary/' + request.data['video_file'],
+                'post_id': str(Post.objects.first().id),
+                'user_id': str(request.user.id)
             }
-            res = requests.post('http://13.125.177.238/message/', headers=headers, data=data)
+            res = requests.post('https://mind-gitter.me/message/', headers=headers, json=data)
             print(res)
 
             ## ==================================================
@@ -101,7 +101,6 @@ class PostDetail(APIView):
             for new_tag in update_tags:
                 if user.tags.filter(name=new_tag).exists():
                     tag_id=user.tags.get(name=new_tag).id
-                    # tag = Tag.objects.get(name=new_tag)
                     usertag = UserTag.objects.get(tag=tag_id)
                     count = usertag.count
                     usertagserializer = UserTagSerializer(instance=usertag, data=request.data)
@@ -122,6 +121,8 @@ class PostDetail(APIView):
 
 ## 모델 분석 결과 저장 요청 (요청은 모델 쪽에서)
 class PostAnalyze(APIView):
+    permission_classes = (AllowAny,)
+
     def put(self, request, post_id):
         
         posting = get_object_or_404(Post, id=post_id)
@@ -141,7 +142,7 @@ class PostAnalyze(APIView):
         data.update({'csv_url': request.data['emotions']})
         data.update({'tags': request.data['tags']})
         data.update({'summary': request.data['abb']})
-        data.update({'emotions': request.data['statistics']})
+        data.update({'emotions': json.dumps(request.data['statistics'])})
 
         before_tags = posting.tags.names()
         # 원래 디비에 저장되어 있던 포스팅 태그들

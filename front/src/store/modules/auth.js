@@ -96,7 +96,7 @@ const actions = {
   pushError: ({ commit }, error) => {
     commit("pushError", error);
   },
-  login: ({ state, commit, getters }, { username, password }) => {
+  login: ({ commit, getters }, { username, password }) => {
     if (getters.isLoggedIn) {
       router.push("/");
     } else {
@@ -115,8 +115,6 @@ const actions = {
           }
         )
         .then(token => {
-          console.log(state.commitDates); // [2020, 04]
-          console.log(token);
           commit("setToken", token.data.token);
           commit("setLoading", false);
           commit("setUserName", username);
@@ -227,7 +225,6 @@ const actions = {
         })
         .then(message => {
           message;
-          console.log("비밀번호 변경 성공!");
           router.push("/userDetail");
         })
         .catch(err => {
@@ -262,13 +259,25 @@ const actions = {
 
     for (let i = 0; i < 147; i++) {
       if (dates.getMonth() < 9) {
-        indexDict[
-          `${dates.getFullYear()}-0${dates.getMonth() + 1}-${dates.getDate()}`
-        ] = i;
+        if (dates.getDate() < 10) {
+          indexDict[
+            `${dates.getFullYear()}-0${dates.getMonth() + 1}-0${dates.getDate()}`
+          ] = i;
+        } else {
+          indexDict[
+            `${dates.getFullYear()}-0${dates.getMonth() + 1}-${dates.getDate()}`
+          ] = i;
+        }
       } else {
-        indexDict[
-          `${dates.getFullYear()}-${dates.getMonth() + 1}-${dates.getDate()}`
-        ] = i;
+        if (dates.getDate() < 10) {
+          indexDict[
+            `${dates.getFullYear()}-${dates.getMonth() + 1}-0${dates.getDate()}`
+          ] = i;
+        } else {
+          indexDict[
+            `${dates.getFullYear()}-${dates.getMonth() + 1}-${dates.getDate()}`
+          ] = i;
+        }
       }
       dates.setDate(dates.getDate() + 1);
     }
@@ -278,9 +287,6 @@ const actions = {
       commitInfo.push("nemo");
     }
     commit("setCommitInfo", commitInfo);
-
-    console.log(targetMonths);
-    console.log(indexDict);
   },
   async bringUserInfoSet({ commit }) {
     const token = sessionStorage.getItem("jwt");
@@ -335,15 +341,13 @@ const actions = {
     commit("sets3", s3);
   },
   async updates3({ commit }, PostInfo) {
-    console.log("upadates3", PostInfo);
     const s3 = state.s3;
     const params = {
       Key: PostInfo.fileName,
       Body: PostInfo.file,
       ACL: "public-read-write"
     };
-    const res = await s3.upload(params).promise();
-    console.log(res);
+    await s3.upload(params).promise();
     commit("sets3", {});
   },
   async bringUserProfile({ commit }) {
@@ -354,11 +358,9 @@ const actions = {
       }
     };
     const res = await axios.get(`${HOST}/profile_img/`, options);
-    console.log("bringUserProfile", res.data);
     commit("setUserProfile", res.data.profile_img);
   },
   async updateUserInfo({ commit, dispatch }, PostInfo) {
-    console.log("addChannel", PostInfo);
     await dispatch("s3Init", "profile");
     await dispatch("updates3", PostInfo);
     const token = sessionStorage.getItem("jwt");
@@ -370,8 +372,7 @@ const actions = {
     const body = {
       profile_img: PostInfo.fileName
     };
-    const res = await axios.put(`${HOST}/profile_img/`, body, options);
-    console.log(res);
+    await axios.put(`${HOST}/profile_img/`, body, options);
     await dispatch("bringUserProfile");
     commit("setUserImgModal", false);
   }

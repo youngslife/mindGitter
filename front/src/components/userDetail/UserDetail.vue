@@ -32,14 +32,6 @@
         </v-card-actions>
       </v-card>
       <CommitCalendar />
-      <div class="emotion">
-        <h3>Emotion</h3>
-        <div class="emotionDetail">감정 분석 결과</div>
-      </div>
-      <div class="tag">
-        <h3>Tag</h3>
-        <div class="tagDetail">tag 분석 결과</div>
-      </div>
     </v-container>
     <Nav />
   </div>
@@ -117,13 +109,10 @@ export default {
   async created() {
     const userName = sessionStorage.getItem("userName");
     const userId = sessionStorage.getItem("userId");
-    // console.log(userName)
     if (userName) {
-      // console.log("여기가 맞지")
       await this.setUserName(userName);
       await this.setUserId(userId);
     } else {
-      // console.log("왜 여길 들어왔지?")
       router.push("/");
     }
   },

@@ -1,28 +1,34 @@
 <template>
-  <div class="ddContainer">
-    <div class="ddBar">
-      <div class="ddBtn ddBackBtn" @click="goHome">
+  <div class="nContainer">
+    <div class="nBar">
+      <div class="nBtn nBackBtn" @click="goHome">
         <v-icon color="rgba(0, 0, 0, 0.5)" small>fas fa-arrow-left</v-icon>
       </div>
-      <p class="ddDate">Noti</p>
+      <p class="nDate">알림함</p>
     </div>
-    <div v-if="getNotiList && getNotiList.length" class="hContentBox">
-      <div v-for="(item, i) in getNotiList" :key="i" class="hMetaWrapper">
-        <div class="hMetasBox">
-          {{ item.inviter }}
+    <div v-if="getNotiList && getNotiList.length" class="nContentBox">
+      <div v-for="(item, i) in getNotiList" :key="i" class="nMetaWrapper">
+        <div class="nMetasBox">
+          <img
+            :src="showProfile(item.inviter_img.profile_img)"
+            alt="userProfile"
+            class="nImage"
+          />
+          <p>{{ item.inviter }}님의 초대 알림</p>
         </div>
-        <div class="hNewBtn">
-          <div @click="accept(item)" class="ddExpandBtn">
-            <p>공유</p>
+        <div class="nNewBtn">
+          <div @click="accept(item)" class="nExpandBtn">
+            <v-icon small>mdi-charity</v-icon><p>수락</p>
           </div>
-          <div @click="reject(item)" class="ddExpandBtn">
-            <p>거절</p>
+          <div @click="reject(item)" class="nExpandBtn">
+            <v-icon small>mdi-account-off</v-icon><p>거절</p>
           </div>
         </div>
       </div>
     </div>
-    <div v-else class="hContentBox">
-      <p class="noneNoti">
+    <div v-else class="nContentBox">
+      <img class="nNoneNotiImg" :src="noticeImg" alt="">
+      <p class="nNoneNoti">
         새로운 알림이 없습니다.
       </p>
     </div>
@@ -43,14 +49,14 @@ export default {
   data() {
     return {
       wHeight: 0,
-      wWidth: 0
+      wWidth: 0,
+      noticeImg: "https://image.flaticon.com/icons/png/512/2361/2361863.png"
     };
   },
   methods: {
     ...mapActions(["bringNotice", "joinChan", "rejectInvite"]),
     ...mapMutations(["setChanId"]),
     async accept(item) {
-      // console.log(item)
       await this.joinChan(item);
       this.bringNotice();
     },
@@ -60,7 +66,12 @@ export default {
     },
     goHome() {
       router.push("/")
-    }
+    },
+    showProfile(profile_img) {
+      return profile_img
+        ? this.profileAddr + profile_img
+        : require("../../assets/basic_userImage.png");
+    },
   },
   computed: {
     ...mapGetters(["isLoggedIn", "getNotiList"])
