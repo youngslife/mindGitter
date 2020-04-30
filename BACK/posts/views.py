@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from .serializers import CommentSerializer, TagSerializer, EmotionSerializer, PostSerializer
 from accounts.models import User, UserTag
 from .models import Post
+import json
 
 from taggit.models import Tag
 
@@ -177,6 +178,17 @@ class PostAnalyze(APIView):
             usertagserializer = UserTagSerializer(instance=usertag, data=data)
             if usertagserializer.is_valid():
                 usertagserializer.save(count=count-1)
+
+
+        ## 태그 거르기
+        temp = list()
+        for tag in data['tags']:
+            if ('/NNG' not in tag) and ('/NNB' not in tag):
+                continue
+            else:
+                temp.append(tag[:-4])
+
+        data.update({'tags': temp})
 
         serializer = PostSerializer(instance=posting, data=data)
         if serializer.is_valid():
