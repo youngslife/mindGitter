@@ -1,9 +1,6 @@
 import router from "../../router";
 
 const HOST = process.env.VUE_APP_SERVER_HOST;
-// const ALBUMBUCKETNAME = process.env.VUE_APP_BUCKET_NAME
-// const BUCKETREGION = process.env.VUE_APP_BUCKET_REGION
-// const IDENTIFYPOOL = process.env.VUE_APP_IDENTIFYPOOL
 
 const axios = require("axios");
 import AWS from "aws-sdk";
@@ -52,7 +49,8 @@ const state = {
     },
     yaxis: {
       min: 35
-    }
+    },
+    colors: ['#A93F55', '#46AF78', "#663F59",  '#BAFF29', "#4E88B4", "#F27036", '#7A918D'],
   },
   notiList: null
 };
@@ -98,7 +96,8 @@ const mutations = {
   setEditDiary: (state, editDiary) => (state.editDiary = editDiary),
   setEditChan: (state, editChan) => (state.editChan = editChan),
   setPostLoading: (state, flag) => (state.postLoading = flag),
-  setNotiList: (state, notiList) => (state.notiList = notiList)
+  setNotiList: (state, notiList) => (state.notiList = notiList),
+  setSeries: (state, series) => (state.series = series)
 };
 
 const actions = {
@@ -358,9 +357,10 @@ const actions = {
     }
     await commit("setSeries", series)
   },
-  async bringEmotionData({ getters, dispatch }) {
+  async bringEmotionData({ dispatch }) {
     const emotionData = []
-    const url = getters.getSelectedDiary.csv_url
+    // const url = getters.getSelectedDiary.csv_url
+    const url = "https://mind-gitter-diary.s3.ap-northeast-2.amazonaws.com/emotions/tessdfte2321rasdsdfftest1234sdfsd5sdfsdesdfr.csv"
     if (url) {
       const req = await axios.get(url)
       const csv = req.data
