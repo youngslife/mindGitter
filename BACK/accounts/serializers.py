@@ -30,7 +30,7 @@ class UserTagSerializer(serializers.ModelSerializer):
 class UserNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
-        fields = ('id', 'username')
+        fields = '__all__'
 
 
 class NotificationSerializer(serializers.ModelSerializer):
