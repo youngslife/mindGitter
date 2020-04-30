@@ -11,11 +11,14 @@
       </v-row>
       <v-row>
         <v-col cols="4">총 {{ getUserInfoSet.post_set.length }}편</v-col>
-        <v-col cols="5">{{
+        <v-col cols="5" v-if="getUserInfoSet.post_set.length">{{
           getUserInfoSet.post_set[
             getUserInfoSet.post_set.length - 1
           ].created_at.slice(0, 10)
         }}</v-col>
+        <v-col cols="5" v-else>
+          -
+        </v-col>
         <v-col cols="3">{{ getChanList.length }}개</v-col>
       </v-row>
     </v-col>

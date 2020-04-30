@@ -109,7 +109,7 @@ export default {
   async created() {
     const chanName = sessionStorage.getItem("chanName");
     const chanId = sessionStorage.getItem("chan");
-    if (chanName) {
+    if (chanId) {
       this.setChanName(chanName);
       this.setChanId(chanId);
     } else {

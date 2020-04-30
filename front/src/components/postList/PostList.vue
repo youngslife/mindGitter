@@ -30,14 +30,21 @@
         />
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="search" @click="pushNotice(getSelectedChan.id)">공유</v-btn>
+          <v-btn class="search" @click="pushNotice(getSelectedChan.id)"
+            >요청</v-btn
+          >
           <v-btn class="close" @click="changeShowAddModal">닫기</v-btn>
         </v-card-actions>
       </v-card>
     </div>
     <div calss="search">
       <v-icon class="search">fas fa-search</v-icon>
-      <input type="text" v-model="searchTag" />
+      <input
+        type="text"
+        v-model="searchParams.searchKwd"
+        @keydown.enter="searchingTag(searchParams)"
+        placeholder="search tag"
+      />
       <div
         class="sharedImage"
         v-for="(user, i) in getSelectedChan.user_set"
@@ -54,9 +61,7 @@
     <v-divider></v-divider>
     <div v-for="(diary, i) in getDiaries['dates']" :key="i">
       <div class="diaries" v-if="diary <= changeDate">
-        <div class="date">
-          {{ diary }}
-        </div>
+        <div class="date">{{ diary }}</div>
         <div
           class="diaryInfo"
           v-for="(item, idx) in getDiaries[diary]"
@@ -108,9 +113,13 @@ export default {
       //은영
       noticeInfo: {
         username: "",
-        channel_id: "",
+        channel_id: ""
       },
-      searchTag: null,
+      // searchTag: null,
+      searchParams: {
+        searchKwd: null,
+        channId: null
+      },
       date: new Date(),
       showAddModal: false,
       showModal: false,
@@ -152,32 +161,36 @@ export default {
       "leaveChannel",
       //은영
       "addNotification",
+      "searchingTag"
     ]),
     //은영
     pushNotice(channelId) {
-      this.noticeInfo.channel_id = channelId
+      this.noticeInfo.channel_id = channelId;
       console.log(channelId);
-        console.log(this.noticeInfo);
+      console.log(this.noticeInfo);
       if (
-        confirm(
-          "00님과 공유하시겠습니까?"
-        )
+        confirm(`${this.noticeInfo.username}님께 공유 요청을 보내시겠습니까?`)
       ) {
         console.log("공유");
         console.log(channelId);
         console.log(this.noticeInfo);
-        
-        this.addNotification(this.noticeInfo)
+        this.addNotification(this.noticeInfo);
       } else {
         console.log("공유취소");
       }
+      this.showAddModal = false;
     },
     //
     changeShowAddModal() {
+      this.noticeInfo.username = null;
+      this.noticeInfo.channel_id = null;
       this.showModal = false;
       this.showAddModal = !this.showAddModal;
     },
     changeShowModal() {
+      if (this.showAddModal) {
+        this.showAddModal = false;
+      }
       this.showModal = !this.showModal;
     },
     deleteChannel(channelId) {
@@ -199,7 +212,8 @@ export default {
       router.push("/diaryDetail");
     },
     showProfile(profile_img) {
-      console.log(this.profileAddr + profile_img);
+      // console.log(profile_img)
+      // console.log(this.profileAddr + profile_img);
       return profile_img
         ? this.profileAddr + profile_img
         : require("../../assets/basic_userImage.png");

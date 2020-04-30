@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from accounts.serializers import UserDisplaySerializer, ProfileImageSerializer, NotificationSerializer
+from accounts.serializers import UserDisplaySerializer, ProfileImageSerializer, NotificationSerializer, UserNameSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from .models import User, Notification
 from channels.models import Channel
@@ -93,7 +93,8 @@ class NoticeDetail(APIView):
     def put(self, request, notice_id):
         
         notification = Notification.objects.get(id=notice_id)
-        data = request.data.dict()
+        # data = request.data.dict()
+        data = request.data
 
         data.update({'inviter': notification.inviter.id,
                     'guest': notification.guest.id,
