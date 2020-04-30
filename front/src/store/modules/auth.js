@@ -61,7 +61,10 @@ const mutations = {
     state.userName = userName;
     sessionStorage.setItem("userName", userName);
   },
-  setUserId: (state, userId) => (state.userId = userId),
+  setUserId: (state, userId) => {
+    state.userId = userId;
+    sessionStorage.setItem("userId", userId);
+  },
   setUserInfoSet: (state, userInfoSet) => (state.userInfoSet = userInfoSet),
   setUserImgModal: state => (state.userImgModal = !state.userImgModal),
   setUserInfoModal: state => (state.userInfoModal = !state.userInfoModal),
@@ -84,8 +87,10 @@ const actions = {
   logout: ({ commit }) => {
     commit("setToken", null);
     commit("setUserName", null);
+    commit("setUserId", null);
     sessionStorage.removeItem("jwt");
     sessionStorage.removeItem("userName");
+    sessionStorage.removeItem("userId");
     router.push("/login");
   },
   pushError: ({ commit }, error) => {

@@ -457,7 +457,7 @@ const actions = {
     router.push("/postList");
   },
   addNotification({ getters }, info) {
-    getters
+    getters;
     console.log(info);
     const token = sessionStorage.getItem("jwt");
     const options = {
@@ -468,21 +468,77 @@ const actions = {
     const body = {
       username: info.username,
       channel_id: parseInt(info.channel_id),
-      notice_type: "join" 
+      notice_type: "join"
     };
     console.log(body);
     axios.post(HOST + "/notifications/", body, options);
   },
   async bringNotice({ commit }) {
-    const token = sessionStorage.getItem("jwt")
+    const token = sessionStorage.getItem("jwt");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
-  };
-  await axios.get(HOST + "/notifications/", options).then(message => {
-      commit("setNotiList", message.data);
-  });
+    };
+    await axios.get(HOST + "/notifications/", options).then(message => {
+      let notices = [];
+      for (const noti of message.data) {
+        if (noti.accept_or_not == "0") {
+          axios.get(`${HOST}/user/${noti.inviter}`, options).then(mess => {
+            notices.push({
+              id: noti.id,
+              inviter: mess.data.username,
+              channelId: noti.channel
+            });
+          });
+        }
+      }
+      commit("setNotiList", notices);
+    });
+  },
+  async joinChan({ getters }, joinInfo) {
+    getters;
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    await axios
+      .post(`${HOST}/channels/${joinInfo.channelId}/join/`, {}, options)
+      .then(message => {
+        message;
+        // console.log(message)
+      })
+      .catch(err => {
+        err;
+        // console.log(err.response);
+      });
+    const body = {
+      accept_or_not: "1"
+    };
+    await axios
+      .put(`${HOST}/notifications/${joinInfo.id}/`, body, options)
+      .then(mess => {
+        mess;
+      });
+  },
+  async rejectInvite({ getters }, joinInfo) {
+    getters;
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    const body = {
+      accept_or_not: "1"
+    };
+    await axios
+      .put(`${HOST}/notifications/${joinInfo.id}/`, body, options)
+      .then(mess => {
+        mess;
+      });
   }
 };
 

@@ -21,9 +21,9 @@ def board(request):
         serializer = UserChannelSerializer(user)
         return JsonResponse(serializer.data)
     elif request.method == 'POST':  # create a diary book
-        # data = request.data
+        data = request.data
         # # postman에서 보낼 때는 dict형으로 바꿔줘야 QueryDict is immutable 에러 안남
-        data = request.data.dict()
+        # data = request.data.dict()
 
         data.update({'create_user': request.user.id})
         serializer = ChannelSerializer(data=data)
@@ -76,10 +76,15 @@ def board_title(request, id):
 @permission_classes((IsAuthenticated, ))
 def board_join(request, id):
     if request.method == 'POST':  # join a channel
+        # print("들어왔니?")
+        # print(11)
         user = get_object_or_404(User, username=request.user)
+        # print(4422244)
         channel = get_object_or_404(Channel, id=id)
+        # print(333)
         user.channels.add(channel)
-        print('채널만든사람!!!!!', channel.create_user.id)
+        # print(4444)
+        # print('채널만든사람!!!!!', channel.create_user.id)
         
         # notification
         # create_notification(channel.create_user, user, 'join')

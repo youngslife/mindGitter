@@ -30,7 +30,9 @@
         />
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="search" @click="pushNotice(getSelectedChan.id)">공유</v-btn>
+          <v-btn class="search" @click="pushNotice(getSelectedChan.id)"
+            >요청</v-btn
+          >
           <v-btn class="close" @click="changeShowAddModal">닫기</v-btn>
         </v-card-actions>
       </v-card>
@@ -108,7 +110,7 @@ export default {
       //은영
       noticeInfo: {
         username: "",
-        channel_id: "",
+        channel_id: ""
       },
       searchTag: null,
       date: new Date(),
@@ -151,29 +153,29 @@ export default {
       "bringChanDetail",
       "leaveChannel",
       //은영
-      "addNotification",
+      "addNotification"
     ]),
     //은영
     pushNotice(channelId) {
-      this.noticeInfo.channel_id = channelId
+      this.noticeInfo.channel_id = channelId;
       console.log(channelId);
-        console.log(this.noticeInfo);
+      console.log(this.noticeInfo);
       if (
-        confirm(
-          "00님과 공유하시겠습니까?"
-        )
+        confirm(`${this.noticeInfo.username}님께 공유 요청을 보내시겠습니까?`)
       ) {
         console.log("공유");
         console.log(channelId);
         console.log(this.noticeInfo);
-        
-        this.addNotification(this.noticeInfo)
+        this.addNotification(this.noticeInfo);
       } else {
         console.log("공유취소");
       }
+      this.showAddModal = false;
     },
     //
     changeShowAddModal() {
+      this.noticeInfo.username = null;
+      this.noticeInfo.channel_id = null;
       this.showModal = false;
       this.showAddModal = !this.showAddModal;
     },
@@ -202,7 +204,8 @@ export default {
       router.push("/diaryDetail");
     },
     showProfile(profile_img) {
-      console.log(this.profileAddr + profile_img);
+      // console.log(profile_img)
+      // console.log(this.profileAddr + profile_img);
       return profile_img
         ? this.profileAddr + profile_img
         : require("../../assets/basic_userImage.png");

@@ -86,13 +86,15 @@ export default {
       "setUserName",
       "setChanId",
       "setChanName",
-      "setPostId"
+      "setPostId",
+      "setUserId"
     ]),
     onFileChange(e) {
       const files = e.target.files;
       if (files) {
         this.PostInfo.file = files[0];
-        this.PostInfo.fileName = String(this.getUserId) + ".jpg";
+        this.PostInfo.fileName =
+          String(this.getUserId) + new Date().getTime() + ".jpg";
       }
     },
     changePwd() {
@@ -114,8 +116,10 @@ export default {
   },
   async created() {
     const userName = sessionStorage.getItem("userName");
+    const userId = sessionStorage.getItem("userId");
     if (userName) {
-      this.setUserName(userName);
+      await this.setUserName(userName);
+      await this.setUserId(userId);
     } else {
       router.push("/");
     }
