@@ -15,6 +15,7 @@ from accounts.serializers import UserTagSerializer
 from taggit.models import TaggedItem
 
 import requests
+import json
 
 
 @api_view(['GET',])
@@ -154,7 +155,7 @@ class PostAnalyze(APIView):
 
         ## 태그 거르기
         temp = list()
-        for tag in data['tags']:
+        for tag in json.loads(data['tags']):
             if ('/NNG' not in tag) and ('/NNB' not in tag):
                 continue
             else:
