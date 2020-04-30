@@ -22,7 +22,7 @@
       >
         <UserName :userpk="comment.user" />
         <div class="context">{{ comment.context }}</div>
-        <div class="btn">
+        <div class="btn" v-if="comment.user == getUserId">
           <button class="delBtn" @click="deleteComment(comment)">DEL</button>
         </div>
       </div>
@@ -52,7 +52,7 @@ export default {
     ...mapMutations(["setUserName"])
   },
   computed: {
-    ...mapGetters(["getSelectedDiary", "getUserName", "getSelectedChan"])
+    ...mapGetters(["getSelectedDiary", "getUserName", "getSelectedChan", "getUserId"])
   },
   async created() {
     const username = sessionStorage.getItem("userName");
