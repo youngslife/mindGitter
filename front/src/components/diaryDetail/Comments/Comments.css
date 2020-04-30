@@ -1,46 +1,47 @@
-div.reviewInput {
-    display: inline-block;
-    width: 60%;
-    margin-right: 2%;
+div.col {
+    padding: 5px;
 }
 
-div.userName {
-    display: inline-block;
-    width: 23%;
-    font-size: 15px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
 
-div.btn {
-    display: inline-block;
-    width: 15%;
+div.col.btn {
+    align-self: center;
     font-size: 15px;
 }
 
 button.reviewBtn {
     font-size: 15px;
-    background-color: lightgreen;
+    color: lightskyblue;
+    font-weight: bold;
 }
 
 hr {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    /* margin-top: 15px; */
+    margin-bottom: 8px;
 }
 
 input.context {
-    background-color: lightgoldenrodyellow;
     width: 100%;
+    height: 100%;
 }
 
-div.context {
-    display: inline-block;
-    width: 60%;
-    margin-right: 2%;
+div.col.reviewInput {
+    font-size: 12px;
 }
 
-button.delBtn {
-    background-color: red;
-    color: white;
+
+div.userImage>img {
+    width: 40px;
+    height: 40px;
+    border: 1.5px solid;
+    border-radius: 70%;
+    margin-right: 10px;
+    align-self: center;
+}
+
+div.reviewForm {
+    -webkit-box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.1);
+    -moz-box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.1);
+    box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    margin-bottom: 10px;
 }
