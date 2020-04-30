@@ -146,6 +146,9 @@ export default {
       this.showAddModal = !this.showAddModal;
     },
     changeShowModal() {
+      if (this.showAddModal) {
+        this.showAddModal = false;
+      }
       this.showModal = !this.showModal;
     },
     deleteChannel(channelId) {
