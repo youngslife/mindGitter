@@ -7,6 +7,8 @@ from accounts.models import User
 from accounts.serializers import UserDisplaySerializer
 from .serializers import UserChannelSerializer, ChannelSerializer
 from django.http import JsonResponse
+# notification
+# from accounts.views import create_notification
 
 # Create your views here.
 
@@ -19,9 +21,10 @@ def board(request):
         serializer = UserChannelSerializer(user)
         return JsonResponse(serializer.data)
     elif request.method == 'POST':  # create a diary book
-        data = request.data
+        # data = request.data
         # # postman에서 보낼 때는 dict형으로 바꿔줘야 QueryDict is immutable 에러 안남
-        # data = request.data.dict()
+        data = request.data.dict()
+
         data.update({'create_user': request.user.id})
         serializer = ChannelSerializer(data=data)
         print('serializer', serializer)
@@ -76,6 +79,11 @@ def board_join(request, id):
         user = get_object_or_404(User, username=request.user)
         channel = get_object_or_404(Channel, id=id)
         user.channels.add(channel)
+        print('채널만든사람!!!!!', channel.create_user.id)
+        
+        # notification
+        # create_notification(channel.create_user, user, 'join')
+
         return JsonResponse({'message': 'success to join'}, status=201)
 
     elif request.method == 'DELETE':  # leave from a channel
