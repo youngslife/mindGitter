@@ -52,7 +52,8 @@ const state = {
     },
     yaxis: {
       min: 35
-    }
+    },
+    colors: ['#A93F55', '#46AF78', "#663F59",  '#BAFF29', "#4E88B4", "#F27036", '#7A918D'],
   },
   notiList: null
 };
@@ -98,6 +99,7 @@ const mutations = {
   setEditDiary: (state, editDiary) => (state.editDiary = editDiary),
   setEditChan: (state, editChan) => (state.editChan = editChan),
   setPostLoading: (state, flag) => (state.postLoading = flag),
+  setSeries: (state, series) => (state.series = series),
   setNotiList: (state, notiList) => (state.notiList = notiList)
 };
 
