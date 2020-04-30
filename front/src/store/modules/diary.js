@@ -78,6 +78,10 @@ const actions = {
     };
     await axios.get(HOST + "/channels/", options).then(message => {
       commit("setChanList", message.data.channels);
+      console.log(message.data.channels.length)
+      if (!message.data.channels.length) {
+        router.push("createDiary")
+      }
     });
   },
   async addChannel({ dispatch, commit }, PostInfo) {
