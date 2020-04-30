@@ -192,4 +192,7 @@ div.date{
   border: 2px solid round rgba(86, 61, 124,.15);
 }
 
+.v-timeline-item__body > .v-card:not(.v-card--flat):before, .v-timeline-item__body > .v-card:not(.v-card--flat):after {
+  border: 10px solid transparent !important;
+}
 

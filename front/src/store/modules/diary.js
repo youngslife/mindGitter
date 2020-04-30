@@ -96,8 +96,8 @@ const mutations = {
   setEditDiary: (state, editDiary) => (state.editDiary = editDiary),
   setEditChan: (state, editChan) => (state.editChan = editChan),
   setPostLoading: (state, flag) => (state.postLoading = flag),
-  setNotiList: (state, notiList) => (state.notiList = notiList),
-  setSeries: (state, series) => (state.series = series)
+  setSeries: (state, series) => (state.series = series),
+  setNotiList: (state, notiList) => (state.notiList = notiList)
 };
 
 const actions = {

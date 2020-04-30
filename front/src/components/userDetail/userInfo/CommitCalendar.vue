@@ -1,5 +1,6 @@
 <template>
   <div class="commitCalendar">
+    <p style="margin-bottom:10px">최근 5개월 간 작성한 기록입니다 :)</p>
     <v-container v-if="getCommitInfo">
       <!-- 월 -->
       <v-row class="month">
