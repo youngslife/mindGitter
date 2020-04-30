@@ -50,7 +50,7 @@
                   small-chips accept="image/*" 
                   label="diaryimage" 
                   clearable prepend-icon="mdi-file-image"
-                  v-model="file"
+                  @change="onFileChange"
                 ></v-file-input>
               </div>
               <div>
@@ -60,6 +60,9 @@
           </form>
           <div class="hnBackBtn" @click="goHome">
             <v-icon color="rgba(255, 255, 255, 0.9)">fas fa-arrow-left</v-icon>
+          </div>
+          <div class="ddBtn ddHamBtn" @click="goUserDetail">
+            <v-icon color="rgba(255, 255, 255, 0.9)" small>mdi-account</v-icon>
           </div>
         </v-img>
       </v-card>
@@ -128,6 +131,20 @@ export default {
     },
     goHome() {
       router.push("/");
+    },
+    goUserDetail() {
+      router.push("userDetail");
+    },
+    onFileChange(file) {
+      console.log(file)
+      if (file) {
+        this.PostInfo.file = file;
+        this.PostInfo.fileName =
+          String(this.getUserId) + new Date().getTime() + ".jpg";
+      } else {
+        this.PostInfo.file = null;
+        this.PostInfo.fileName = "default_channel1.jpg";
+      }
     }
   }
 };

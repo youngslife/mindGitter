@@ -79,12 +79,11 @@ const actions = {
     await axios.get(HOST + "/channels/", options).then(message => {
       commit("setChanList", message.data.channels);
       console.log(message.data.channels.length)
-      if (!message.data.channels.length) {
-        router.push("createDiary")
-      }
+      return "y"
     });
   },
   async addChannel({ dispatch, commit }, PostInfo) {
+    console.log(PostInfo)
     if (PostInfo.title && PostInfo.description) {
       if (PostInfo.file) {
         await dispatch("s3Init", "channel");
