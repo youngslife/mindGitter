@@ -51,11 +51,11 @@ class PostList(APIView):
                 'Content-Type':'application/json'
             }
             data = {
-                'video_url': request.data['video_file'],
-                'post_id': Post.objects.first().id,
-                'user_id': request.user.id
+                'video_url': 'https://mind-gitter-diary.s3.ap-northeast-2.amazonaws.com/diary/' + request.data['video_file'],
+                'post_id': str(Post.objects.first().id),
+                'user_id': str(request.user.id)
             }
-            res = requests.post('https://mind-gitter.me/message/', headers=headers, data=data)
+            res = requests.post('https://mind-gitter.me/message/', headers=headers, json=data)
             print(res)
 
             ## ==================================================
@@ -129,6 +129,8 @@ class PostDetail(APIView):
 
 ## 모델 분석 결과 저장 요청 (요청은 모델 쪽에서)
 class PostAnalyze(APIView):
+    permission_classes = (AllowAny,)
+
     def put(self, request, post_id):
         
         posting = get_object_or_404(Post, id=post_id)
