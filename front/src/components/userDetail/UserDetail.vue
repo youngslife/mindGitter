@@ -12,7 +12,7 @@
         <div class="change-profil" @click="changeModal">
           <v-icon>fas fa-user-circle</v-icon>프로필사진 변경
         </div>
-        <div class="logout" @click="logout">
+        <div class="logout" @click="clickLogout">
           <v-icon>fas fa-sign-out-alt</v-icon>로그아웃
         </div>
       </v-card>
@@ -80,12 +80,21 @@ export default {
   },
   methods: {
     ...mapActions(["logout", "updateUserInfo", "logout"]),
-    ...mapMutations(["setUserImgModal", "setUserInfoModal", "setUserName"]),
+    ...mapMutations([
+      "setUserImgModal",
+      "setUserInfoModal",
+      "setUserName",
+      "setChanId",
+      "setChanName",
+      "setPostId",
+      "setUserId"
+    ]),
     onFileChange(e) {
       const files = e.target.files;
       if (files) {
         this.PostInfo.file = files[0];
-        this.PostInfo.fileName = String(this.getUserId) + ".jpg";
+        this.PostInfo.fileName =
+          String(this.getUserId) + new Date().getTime() + ".jpg";
       }
     },
     changePwd() {
@@ -94,13 +103,27 @@ export default {
     async changeModal() {
       await this.setUserInfoModal();
       this.setUserImgModal();
+    },
+    clickLogout() {
+      this.setChanId(null);
+      this.setChanName(null);
+      this.setPostId(null);
+      sessionStorage.removeItem("chan");
+      sessionStorage.removeItem("chanName");
+      sessionStorage.removeItem("post");
+      this.logout();
     }
   },
   async created() {
     const userName = sessionStorage.getItem("userName");
+    const userId = sessionStorage.getItem("userId");
+    // console.log(userName)
     if (userName) {
-      this.setUserName(userName);
+      // console.log("여기가 맞지")
+      await this.setUserName(userName);
+      await this.setUserId(userId);
     } else {
+      // console.log("왜 여길 들어왔지?")
       router.push("/");
     }
   },

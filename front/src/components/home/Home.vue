@@ -45,10 +45,16 @@
                 >mdi-text-box-plus-outline</v-icon
               >
             </div>
-            <div class="hNewBtn hBtnRight" @click="goUserDetail">
+            <div class="hNewBtn hBtnMiddle" @click="goUserDetail">
               <v-icon color="rgba(255, 255, 255, 0.4)" small
                 >mdi-account</v-icon
               >
+            </div>
+            <div class="hNewBtn hBtnRight" @click="goNotification" v-if="getNotiList && getNotiList.length">
+              <v-icon color="rgba(248,255,64,1)" small>mdi-alarm</v-icon>
+            </div>
+            <div class="hNewBtn hBtnRight" @click="goNotification" v-else>
+              <v-icon color="rgba(255, 255, 255, 0.4)" small>mdi-alarm</v-icon>
             </div>
           </v-img>
         </v-card>
@@ -74,7 +80,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["bringChanList"]),
+    ...mapActions(["bringChanList", "bringNotice"]),
     ...mapMutations(["setChanId"]),
     goCreate() {
       router.push("createDiary");
@@ -88,26 +94,34 @@ export default {
       await this.setChanId(channelId);
       router.push("/postList");
     },
+    goNotification() {
+      router.push("/notification");
+    },
     getDate(stringd) {
       const d = new Date(stringd);
       return d.getFullYear() + "." + d.getMonth() + "." + d.getDate();
     },
     getPartyList(userset) {
+      console.log(userset)
       if (userset.length === 1) {
         return userset[0].username;
       } else {
-        return userset[0].username + "외 " + userset.length + "명이";
+        return userset[0].username + "외 " + (userset.length-1) + "명이";
       }
     }
   },
   computed: {
-    ...mapGetters(["isLoggedIn", "getChanList"])
+    ...mapGetters(["isLoggedIn", "getChanList", "getNotiList"])
   },
   async created() {
     if (!this.isLoggedIn) {
       router.push("/login");
     } else {
+      await this.bringNotice();
       await this.bringChanList();
+      if (!this.getChanList.length) {
+        router.push("createDiary")
+      }
     }
   }
 };
