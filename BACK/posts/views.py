@@ -50,12 +50,12 @@ class PostList(APIView):
                 'Content-Type':'text/plain'
             }
             data = {
-                'video_url': request.data.video_file,
+                'video_url': request.data['video_file'],
                 'post_id': Post.objects.first().id,
                 'user_id': request.user.id
             }
-            res = requests.post('http://mind-gitter.me/message/', headers=headers, data=data)
-            # print(res)
+            res = requests.post('http://13.125.177.238/message/', headers=headers, data=data)
+            print(res)
 
             ## ==================================================
 
@@ -112,10 +112,12 @@ class PostDetail(APIView):
         before_tags = posting.tags.names()
         # print('원래포스팅태그들', before_tags)
         for tag in before_tags:
-            tag_id = posting.user.tags.get(name=tag).id
-            usertag = UserTag.objects.get(tag=tag_id)
+            # tag_id = posting.user.tags.get(name=tag).id
+            tag_id = get_object_or_404(Tag, name=tag).id
+            usertag = get_object_or_404(UserTag, tag=tag_id)
             count = usertag.count
             usertagserializer = UserTagSerializer(instance=usertag, data=request.data)
+            print(usertagserializer)
             if usertagserializer.is_valid():
                 usertagserializer.save(count=count-1)
 
@@ -151,7 +153,16 @@ class PostDetail(APIView):
 ## 모델 분석 결과 저장 요청 (요청은 모델 쪽에서)
 class PostAnalyze(APIView):
     def put(self, request, post_id):
+        
         posting = get_object_or_404(Post, id=post_id)
+        data = request.data
+        data.update({'title': posting.title})
+        print('★', data.get('title'))
+        data.update({'video_file': posting.video_file})
+        data.update({'channel_id': posting.channel_id})
+        data.update({'is_use_comment': posting.is_use_comment})
+        data.update({'is_save_video': posting.is_save_video})
+        print(data)
 
         before_tags = posting.tags.names()
         # 원래 디비에 저장되어 있던 포스팅 태그들
@@ -159,11 +170,11 @@ class PostAnalyze(APIView):
             tag_id = posting.user.tags.get(name=tag).id
             usertag = UserTag.objects.get(tag=tag_id)
             count = usertag.count
-            usertagserializer = UserTagSerializer(instance=usertag, data=request.data)
+            usertagserializer = UserTagSerializer(instance=usertag, data=data)
             if usertagserializer.is_valid():
                 usertagserializer.save(count=count-1)
 
-        serializer = PostSerializer(instance=posting, data=request.data)
+        serializer = PostSerializer(instance=posting, data=data)
         if serializer.is_valid():
             serializer.save()
             update_tags = posting.tags.names()
