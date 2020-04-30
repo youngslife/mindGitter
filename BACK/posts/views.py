@@ -155,13 +155,17 @@ class PostAnalyze(APIView):
     def put(self, request, post_id):
         
         posting = get_object_or_404(Post, id=post_id)
-        data = request.data
+        data = dict()
         data.update({'title': posting.title})
-        print('★', data.get('title'))
         data.update({'video_file': posting.video_file})
         data.update({'channel_id': posting.channel_id})
         data.update({'is_use_comment': posting.is_use_comment})
         data.update({'is_save_video': posting.is_save_video})
+        data.update({'context': request.data['fulltext']})
+        data.update({'csv_url': request.data['emotions']})
+        data.update({'tags': request.data['tags']})
+        data.update({'summary': request.data['abb']})
+        data.update({'emotions': request.data['statistics']})
         print(data)
 
         before_tags = posting.tags.names()
