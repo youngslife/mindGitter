@@ -152,8 +152,6 @@ class PostAnalyze(APIView):
             if usertagserializer.is_valid():
                 usertagserializer.save(count=count-1)
 
-        data['tags'] = ["하하/VV","헤헤/NNB", "히히/VV","호호/VA","후후/NNG"]
-
         ## 태그 거르기
         temp = list()
         for tag in data['tags']:
