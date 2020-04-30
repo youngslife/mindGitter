@@ -22,7 +22,8 @@ const state = {
   },
   editDiary: null,
   editChan: null,
-  postLoading: false
+  postLoading: false,
+  notiList: null
 };
 
 const getters = {
@@ -36,7 +37,8 @@ const getters = {
   getDiaries: state => state.diaries,
   getEditDiary: state => state.editDiary,
   getEditChan: state => state.editChan,
-  getPostLoading: state => state.postLoading
+  getPostLoading: state => state.postLoading,
+  getNotiList: state => state.notiList
 };
 
 const mutations = {
@@ -62,7 +64,8 @@ const mutations = {
   setDiaries: (state, diaries) => (state.diaries = diaries),
   setEditDiary: (state, editDiary) => (state.editDiary = editDiary),
   setEditChan: (state, editChan) => (state.editChan = editChan),
-  setPostLoading: (state, flag) => (state.postLoading = flag)
+  setPostLoading: (state, flag) => (state.postLoading = flag),
+  setNotiList: (state, notiList) => (state.notiList = notiList)
 };
 
 const actions = {
@@ -452,6 +455,34 @@ const actions = {
     commit("setPostLoading", false);
     console.log("res", res);
     router.push("/postList");
+  },
+  addNotification({ getters }, info) {
+    getters
+    console.log(info);
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    const body = {
+      username: info.username,
+      channel_id: parseInt(info.channel_id),
+      notice_type: "join" 
+    };
+    console.log(body);
+    axios.post(HOST + "/notifications/", body, options);
+  },
+  async bringNotice({ commit }) {
+    const token = sessionStorage.getItem("jwt")
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+  };
+  await axios.get(HOST + "/notifications/", options).then(message => {
+      commit("setNotiList", message.data);
+  });
   }
 };
 
