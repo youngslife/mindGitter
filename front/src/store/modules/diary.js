@@ -23,7 +23,6 @@ const state = {
   editDiary: null,
   editChan: null,
   postLoading: false,
-<<<<<<< HEAD
   series: null,
   charOptions: {
     chart: {
@@ -54,10 +53,8 @@ const state = {
     yaxis: {
       min: 35
     }
-  }
-=======
+  },
   notiList: null
->>>>>>> 5d819047bdf9a86250199db3b181d78cb2e789fc
 };
 
 const getters = {
@@ -72,12 +69,9 @@ const getters = {
   getEditDiary: state => state.editDiary,
   getEditChan: state => state.editChan,
   getPostLoading: state => state.postLoading,
-<<<<<<< HEAD
   getSeries: state => state.series,
-  getChartOptions: state => state.charOptions
-=======
+  getChartOptions: state => state.charOptions,
   getNotiList: state => state.notiList
->>>>>>> 5d819047bdf9a86250199db3b181d78cb2e789fc
 };
 
 const mutations = {
@@ -104,11 +98,7 @@ const mutations = {
   setEditDiary: (state, editDiary) => (state.editDiary = editDiary),
   setEditChan: (state, editChan) => (state.editChan = editChan),
   setPostLoading: (state, flag) => (state.postLoading = flag),
-<<<<<<< HEAD
-  setSeries: (state, series) => (state.series = series)
-=======
   setNotiList: (state, notiList) => (state.notiList = notiList)
->>>>>>> 5d819047bdf9a86250199db3b181d78cb2e789fc
 };
 
 const actions = {
