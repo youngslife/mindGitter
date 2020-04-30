@@ -1,8 +1,16 @@
 <template>
   <div class="diaryList" v-if="getSelectedChan && getDiaries">
     <div class="infoAndSetting">
-      <h1>{{ getSelectedChan.title }}</h1>
-      <v-icon class="settings" @click="changeShowModal">fas fa-cog</v-icon>
+      <div class="ddBar">
+      <div class="ddBtn ddBackBtn" @click="goChanList">
+        <v-icon color="rgba(0, 0, 0, 0.5)" small>fas fa-arrow-left</v-icon>
+      </div>
+      <p class="ddDate">{{ getSelectedChan.title }}</p>
+      <div class="ddBtn ddHamBtn" @click="changeShowModal">
+        <v-icon color="rgba(0, 0, 0, 0.5)" small>fas fa-ellipsis-v</v-icon>  
+      </div>
+    </div>
+     
       <v-card v-if="showModal" @close="showModal = false" class="settings">
         <div class="addFri" @click="changeShowAddModal">
           <v-icon>fas fa-user-plus</v-icon>친구 초대
@@ -40,13 +48,14 @@
       </v-card>
     </div>
     <div calss="search">
-      <v-icon class="search">fas fa-search</v-icon>
+      <!-- <v-icon class="search">fas fa-search</v-icon>
       <input
         type="text"
         v-model="searchParams.searchKwd"
         @keydown.enter="searchingTag(searchParams)"
         placeholder="search tag"
-      />
+      /> -->
+
       <div
         class="sharedImage"
         v-for="(user, i) in getSelectedChan.user_set"
@@ -57,11 +66,35 @@
           :src="showProfile(user.profile_img)"
           alt="sharedUserProfile"
         />
+
       </div>
     </div>
+    <div>    
     <datepicker v-model="date" input-class="hi"></datepicker>
     <v-divider></v-divider>
-    <div v-for="(diary, i) in getDiaries['dates']" :key="i">
+    <v-col>
+    <v-text-field
+          v-model="searchParams.searchKwd"
+          @keydown.enter="searchingTag(searchParams)"
+          class="mx-4"
+          flat
+          hide-details
+          label="Search"
+          single-line
+          dense
+          solo-inverted
+          clearable
+          prepend-inner-icon="mdi-search"
+          clear-icon="mdi-close-circle-outline"
+        ></v-text-field>
+        </v-col>
+        </div>
+    <!-- <v-sheet class="pa-4 primary lighten-2"> -->
+        
+      <!-- </v-sheet> -->
+   
+    
+    <!-- <div v-for="(diary, i) in getDiaries['dates']" :key="i">
       <div class="diaries" v-if="diary <= changeDate">
         <div class="date">{{ diary }}</div>
         <div
@@ -97,7 +130,50 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
+
+    <v-timeline class="timeline" :reverse="reverse" dense clipped>
+      <div v-for="(diary, i) in getDiaries['dates']" :key="i">
+        <div class="diaries" v-if="diary <= changeDate">
+          <div class="date">{{ diary }}</div>
+            <v-timeline-item
+              v-for="(item, idx) in getDiaries[diary]"
+                :key="idx"
+                @click="goDetail(item.pk)"
+            >
+              <template v-slot:icon >
+                <div v-for="(user, i) in getSelectedChan.user_set"
+                    :key="i">
+                <v-avatar v-if="user.id == item.user_id" >
+                  <img 
+                      :src="showProfile(user.profile_img)"
+                      alt="userProfile"
+                      class="uImage">
+                </v-avatar>
+                </div>
+
+              </template>
+              <!-- <span slot="opposite">Tus eu perfecto</span> -->
+              <v-card @click="goDetail(item.pk)">
+                <v-card-title class="headline">{{ item.title }}</v-card-title>
+                <v-card-text>
+                  <div class="tag" v-if="item.tags.length">
+                  <span class="tag" v-for="(tag, j) in item.tags" :key="j"
+                    >#{{ tag }}
+                  </span>
+                  </div>
+                  <div class="tag" v-else>
+                    <span class="tag">
+                      태그 분석중입니다.
+                    </span>
+                  </div>
+                </v-card-text>
+              </v-card>
+            </v-timeline-item>
+          </div>
+        </div>
+      </v-timeline>
+      
     <Nav />
   </div>
 </template>
@@ -125,7 +201,8 @@ export default {
       date: new Date(),
       showAddModal: false,
       showModal: false,
-      profileAddr: process.env.VUE_APP_STATIC_ADDR + "profile/"
+      profileAddr: process.env.VUE_APP_STATIC_ADDR + "profile/",
+      reverse: false,
     };
   },
   components: {
@@ -164,6 +241,10 @@ export default {
       "addNotification",
       "searchingTag"
     ]),
+    goChanList() {
+      router.push("/");
+    },
+    //은영
     pushNotice(channelId) {
       this.noticeInfo.channel_id = channelId;
       if (
@@ -229,7 +310,9 @@ export default {
     } else {
       router.push("/");
     }
-  }
+  },
+  
+  
 };
 </script>
 
