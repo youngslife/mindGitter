@@ -22,7 +22,7 @@
       </div>
     </div>
     <div v-else class="hContentBox">
-      <p>
+      <p class="noneNoti">
         새로운 알림이 없습니다.
       </p>
     </div>
