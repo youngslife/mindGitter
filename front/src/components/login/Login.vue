@@ -13,7 +13,8 @@
       <div class="LoginForm">
         <h1>Login</h1>
         <ul id="username">
-          <label for="username">ID</label>
+          <label for="username" class="label-left">ID</label>
+          <br />
           <input
             v-model="credentials.username"
             type="text"
@@ -23,6 +24,7 @@
         </ul>
         <ul id="password">
           <label for="password">Password</label>
+          <br />
           <input
             v-model="credentials.password"
             type="password"
@@ -32,14 +34,14 @@
         </ul>
         <button>로그인</button>
       </div>
-      <a href="/signup">Signup</a>
+      <button @click="goSignup">Sign up</button>
     </form>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-
+import { mapGetters, mapMutations, mapActions } from "vuex";
+import router from "@/router";
 export default {
   name: "Login",
   data() {
@@ -51,10 +53,17 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["validation"])
+    ...mapActions(["validation"]),
+    ...mapMutations(["clearErrors"]),
+    goSignup() {
+      router.push("/signup");
+    }
   },
   computed: {
     ...mapGetters(["getErrors", "isLoading"])
+  },
+  created() {
+    this.clearErrors();
   }
 };
 </script>

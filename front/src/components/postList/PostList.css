@@ -1,0 +1,195 @@
+h1{
+  display: inline;
+  position: relative;
+}
+
+div.infoAndSetting>.v-icon.settings{
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 25px;
+}
+
+.v-card.settings{
+  position: absolute;
+  margin: 20px;
+  padding: 10px;
+  width: 165px;
+  top: 20px;
+  right: 20px;
+  z-index: 250;
+  text-align: left;
+}
+
+.v-card.settings>div{
+  margin: 7px 0 7px 3px;
+}
+
+.v-card.settings>div>.v-icon{
+  margin-right: 10px;
+  font-size: 15px;
+}
+
+.v-card.invite{
+  position: absolute;
+  margin: 10px;
+  width: 300px;
+  right: 20px;
+  z-index: 100;
+}
+
+.v-btn.search{
+  margin: 3px;
+}
+
+.v-btn.close{
+  margin: 3px;
+}
+
+
+div.search{
+  margin: 10px;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
+
+input{
+  height: 25px;
+  padding: 3px;
+  margin: 5px;
+  background-color: #e9e9e9;
+}
+
+div.sharedImage{
+  display: inline-block;
+}
+
+img.sharedUserProfile{
+  width: 40px;
+  height: 40px;
+  border-radius: 70%;
+  border: 1.5px solid;
+  margin-top: 10px;
+  margin-left: 5px;
+}
+
+div.vdp-datepicker{
+  margin: 20px;
+}
+
+input.hi{
+  text-align: center;
+  background-color: gray;
+}
+
+div.diaries{
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+div.diaries>div.diaryInfo{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+div.diaries>div.diaryInfo>div.userImage{
+  display: inline-block;
+}
+
+div.diaries>div.diaryInfo>div.userImage>img{
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid;
+  border-radius: 70%;
+  margin-right: 10px;
+}
+
+div.diaries>div.diaryInfo>div.content{
+  background-color: #e9e9e9;
+  display: inline-block;
+}
+
+div.diaryList{
+  height: 700px;
+}
+
+div.date{
+  font-size: 15px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: cadetblue;
+  text-align: left;
+  margin-bottom: 5px;
+}
+
+.ddBar {
+  height: 8vh;
+  width: 100%;
+  background-color: white;
+  position: relative;
+  border-top-left-radius: 17px;
+  border-top-right-radius: 17px;
+}
+
+.ddBtn {
+  height: 8vw; 
+  width: 8vw; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+  z-index:99999999999999999999999999;
+}
+
+.ddBackBtn {
+  position:absolute;
+  top:4vh; left:9vw; 
+  transform: translate(-50%, -50%); 
+}
+
+.ddHamBtn {
+  position:absolute;
+  top:4vh; left:91vw; 
+  transform: translate(-50%, -50%); 
+}
+
+.ddDate {
+  font-size: large;
+  font-weight: 600;
+  color: rgba(0,0,0,0.65);
+  line-height: 8vh;
+  text-align: center;
+}
+
+.timeline.theme--light.v-timeline::before {
+  width: 0px;
+}
+
+
+.v-card__title {
+  font-size: 1rem;
+  line-height: 1rem; 
+  /* default값: line-height: 2rem, font-size: 1.25rem */
+  height:7vh; display:flex; justify-content:center;
+}
+
+.tag {
+  /* text-align: left; */
+}
+
+.v-timeline {
+  padding-top: 15px;
+}
+
+.shared {
+  text-align: left;
+}
+
+.tag > span {
+  font-size:1.8vh; color:#4682B4; font-weight:550;
+  background-color: rgba(86, 61, 124,.15);
+  border: 2px solid round rgba(86, 61, 124,.15);
+}
+
+

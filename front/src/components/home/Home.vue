@@ -1,26 +1,63 @@
 <template>
   <v-container class="hContainer">
     <v-carousel
+      v-if="getChanList"
       :show-arrows="carOption"
       hide-delimiter-background
       delimiter-icon="mdi-minus"
-      light
+      white
       height="98vh"
     >
-      <v-carousel-item v-for="(item, i) in diaryList" :key="i">
-        <h1>{{ item.title }}</h1>
-        <v-img :src="item.src" alt="No Image" class="cImage"></v-img>
-        <div class="cSummary">
-          <h2>Summary of Diary</h2>
-          <p>{{ item.content }}</p>
-        </div>
-        <button @click="goDetail" class="cBtn">Detail</button>
-      </v-carousel-item>
-      <v-carousel-item>
-        <h1>새 일기장</h1>
-        <div class="aCon">
-          <v-icon class="newBtn" @click="goCreate">mdi-plus</v-icon>
-        </div>
+      <v-carousel-item v-for="(item, i) in getChanList" :key="i">
+        <v-card dark style="border-radius:17px" @click="goDetail(item.id)">
+          <v-img
+            :src="imgAddr + item.cover_image"
+            gradient="to bottom, rgba(0,0,0,.2), rgba(0,0,0,.1)"
+            alt="No Image"
+            class="cImage"
+          >
+            <div class="hContentBox">
+              <p class="hTitle">{{ item.title }}</p>
+              <p class="hSubTitle">
+                {{ item.description }}
+              </p>
+              <div class="hMetaWrapper">
+                <div class="hMetasBox">
+                  <p class="hMeta">만든 날</p>
+                  <p class="hMeta">{{ getDate(item.created_at) }}</p>
+                </div>
+                <div class="hMetasBox">
+                  <p class="hMeta">최근 작성일</p>
+                  <p class="hMeta">{{ getDate(item.updated_at) }}</p>
+                </div>
+                <div class="hMetasBox">
+                  <p class="hMeta">만든 이</p>
+                  <p class="hMeta">{{ item.create_user.username }}</p>
+                </div>
+                <div class="hMetasBox">
+                  <p class="hMeta">쓰는 이</p>
+                  <p class="hMeta">{{ item.user_set.length + ' 명' }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="hNewBtn hBtnLeft" @click="goCreate">
+              <v-icon color="rgba(255, 255, 255, 0.4)" small
+                >mdi-text-box-plus-outline</v-icon
+              >
+            </div>
+            <div class="hNewBtn hBtnMiddle" @click="goUserDetail">
+              <v-icon color="rgba(255, 255, 255, 0.4)" small
+                >mdi-account</v-icon
+              >
+            </div>
+            <div class="hNewBtn hBtnRight" @click="goNotification" v-if="getNotiList && getNotiList.length">
+              <v-icon color="rgba(248,255,64,1)" small>mdi-alarm</v-icon>
+            </div>
+            <div class="hNewBtn hBtnRight" @click="goNotification" v-else>
+              <v-icon color="rgba(255, 255, 255, 0.4)" small>mdi-alarm</v-icon>
+            </div>
+          </v-img>
+        </v-card>
       </v-carousel-item>
     </v-carousel>
   </v-container>
@@ -28,7 +65,7 @@
 
 <script>
 import router from "@/router";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "Home",
@@ -36,55 +73,54 @@ export default {
     return {
       wHeight: 0,
       wWidth: 0,
+      imgAddr: process.env.VUE_APP_STATIC_ADDR + "channel/",
       carOption: false,
-      diaryList: [],
       addImg:
         "https://w0.pngwave.com/png/106/279/computer-icons-medicine-health-care-plus-button-png-clip-art.png"
     };
   },
   methods: {
-    // 유저의 일기 목록 가져오기
-    getDiary() {
-      const gotList = [
-        {
-          title: "첫 번째",
-          content: "첫 번째 일기의 내용입니다",
-          src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg"
-        },
-        {
-          title: "두 번째",
-          content: "두 번째 일기의 내용입니다",
-          src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg"
-        },
-        {
-          title: "세 번째",
-          content: "세 번째 일기의 내용입니다",
-          src: "https://cdn.vuetifyjs.com/images/carousel/bird.jpg"
-        },
-        {
-          title: "네 번째",
-          content: "네 번째 일기의 내용입니다",
-          src: "https://cdn.vuetifyjs.com/images/carousel/planet.jpg"
-        }
-      ];
-      this.diaryList = gotList;
-    },
+    ...mapActions(["bringChanList", "bringNotice"]),
+    ...mapMutations(["setChanId"]),
     goCreate() {
       router.push("createDiary");
     },
-    goDetail() {
-      router.push("diaryList");
+    //은영추가
+    goUserDetail() {
+      router.push("userDetail");
+    },
+    async goDetail(channelId) {
+      // this.bringChanDetail(channelId);
+      await this.setChanId(channelId);
+      router.push("/postList");
+    },
+    goNotification() {
+      router.push("/notification");
+    },
+    getDate(stringd) {
+      const d = new Date(stringd);
+      return d.getFullYear() + "." + d.getMonth() + "." + d.getDate();
+    },
+    getPartyList(userset) {
+      if (userset.length === 1) {
+        return userset[0].username;
+      } else {
+        return userset[0].username + "외 " + (userset.length-1) + "명이";
+      }
     }
   },
-  // vuex Login 연동
   computed: {
-    ...mapGetters(["isLoggedIn"])
+    ...mapGetters(["isLoggedIn", "getChanList", "getNotiList"])
   },
-  created() {
-    if (this.isLoggedIn) {
-      this.getDiary();
-    } else {
+  async created() {
+    if (!this.isLoggedIn) {
       router.push("/login");
+    } else {
+      await this.bringNotice();
+      await this.bringChanList();
+      if (!this.getChanList.length) {
+        router.push("createDiary")
+      }
     }
   }
 };
