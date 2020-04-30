@@ -22,7 +22,8 @@ const state = {
   },
   editDiary: null,
   editChan: null,
-  postLoading: false
+  postLoading: false,
+  notiList: null
 };
 
 const getters = {
@@ -36,7 +37,8 @@ const getters = {
   getDiaries: state => state.diaries,
   getEditDiary: state => state.editDiary,
   getEditChan: state => state.editChan,
-  getPostLoading: state => state.postLoading
+  getPostLoading: state => state.postLoading,
+  getNotiList: state => state.notiList
 };
 
 const mutations = {
@@ -62,7 +64,8 @@ const mutations = {
   setDiaries: (state, diaries) => (state.diaries = diaries),
   setEditDiary: (state, editDiary) => (state.editDiary = editDiary),
   setEditChan: (state, editChan) => (state.editChan = editChan),
-  setPostLoading: (state, flag) => (state.postLoading = flag)
+  setPostLoading: (state, flag) => (state.postLoading = flag),
+  setNotiList: (state, notiList) => (state.notiList = notiList)
 };
 
 const actions = {
@@ -75,13 +78,19 @@ const actions = {
     };
     await axios.get(HOST + "/channels/", options).then(message => {
       commit("setChanList", message.data.channels);
+      console.log(message.data.channels.length)
+      if (!message.data.channels.length) {
+        router.push("createDiary")
+      }
     });
   },
   async addChannel({ dispatch, commit }, PostInfo) {
-    if (PostInfo.title && PostInfo.fileName && PostInfo.description) {
+    if (PostInfo.title && PostInfo.description) {
+      if (PostInfo.file) {
+        await dispatch("s3Init", "channel");
+        await dispatch("updates3", PostInfo);
+      }
       console.log("addChannel", PostInfo);
-      await dispatch("s3Init", "channel");
-      await dispatch("updates3", PostInfo);
       const token = sessionStorage.getItem("jwt");
       const options = {
         headers: {
@@ -99,27 +108,13 @@ const actions = {
       console.log(res);
       await commit("setChanList", null);
       router.push("/");
-    } else if (PostInfo.title && PostInfo.fileName) {
-      alert("! 일기장에 대한 설명을 작성해주세요.");
-    } else if (PostInfo.title && PostInfo.description) {
-      alert("! 일기장 배경 사진을 첨부해주세요.");
-    } else if (PostInfo.fileName && PostInfo.description) {
-      alert("! 일기장의 제목을 작성해주세요");
     } else if (PostInfo.title) {
-      alert(
-        "! 일기장에 대한 설명을 작성해주세요.\n! 일기장 배경 사진을 첨부해주세요."
-      );
-    } else if (PostInfo.fileName) {
-      alert(
-        "! 일기장의 제목을 작성해주세요\n! 일기장에 대한 설명을 작성해주세요."
-      );
+      alert("! 일기장에 대한 설명을 작성해주세요.");
     } else if (PostInfo.description) {
-      alert(
-        "! 일기장의 제목을 작성해주세요\n! 일기장 배경 사진을 첨부해주세요."
-      );
+      alert("! 일기장의 제목을 작성해주세요.");
     } else {
       alert(
-        "! 일기장의 제목을 작성해주세요\n! 일기장에 대한 설명을 작성해주세요.\n! 일기장 배경 사진을 첨부해주세요."
+        "! 일기장의 제목을 작성해주세요\n! 일기장에 대한 설명을 작성해주세요."
       );
     }
   },
@@ -158,6 +153,7 @@ const actions = {
         return b - a;
       });
       temp["dates"] = dates;
+      console.log(temp);
       commit("setDiaries", temp);
     });
   },
@@ -452,6 +448,134 @@ const actions = {
     commit("setPostLoading", false);
     console.log("res", res);
     router.push("/postList");
+  },
+  addNotification({ getters }, info) {
+    getters;
+    console.log(info);
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    const body = {
+      username: info.username,
+      channel_id: parseInt(info.channel_id),
+      notice_type: "join"
+    };
+    console.log(body);
+    axios.post(HOST + "/notifications/", body, options);
+  },
+  async bringNotice({ commit }) {
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    await axios.get(HOST + "/notifications/", options).then(message => {
+      let notices = [];
+      for (const noti of message.data) {
+        if (noti.accept_or_not == "0") {
+          axios.get(`${HOST}/user/${noti.inviter}`, options).then(mess => {
+            notices.push({
+              id: noti.id,
+              inviter: mess.data.username,
+              channelId: noti.channel
+            });
+          });
+        }
+      }
+      commit("setNotiList", notices);
+    });
+  },
+  async joinChan({ getters }, joinInfo) {
+    getters;
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    await axios
+      .post(`${HOST}/channels/${joinInfo.channelId}/join/`, {}, options)
+      .then(message => {
+        message;
+        // console.log(message)
+      })
+      .catch(err => {
+        err;
+        // console.log(err.response);
+      });
+    const body = {
+      accept_or_not: "1"
+    };
+    await axios
+      .put(`${HOST}/notifications/${joinInfo.id}/`, body, options)
+      .then(mess => {
+        mess;
+      });
+  },
+  async rejectInvite({ getters }, joinInfo) {
+    getters;
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    const body = {
+      accept_or_not: "1"
+    };
+    await axios
+      .put(`${HOST}/notifications/${joinInfo.id}/`, body, options)
+      .then(mess => {
+        mess;
+      });
+  },
+  searchingTag: ({ commit }, searchParams) => {
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    const channId = sessionStorage.getItem("chan");
+    console.log(searchParams);
+    axios
+      .get(
+        `${HOST}/channels/${channId}/tags/?search=${searchParams.searchKwd}`,
+        options
+      )
+      .then(message => {
+        console.log(searchParams.searchKwd, "요청 완료");
+        const temp = {};
+        for (const post of message.data) {
+          if (temp[post.created_at.slice(0, 10)]) {
+            temp[post.created_at.slice(0, 10)].push({
+              pk: post.pk,
+              title: post.title,
+              tags: post.tags,
+              user_id: post.user_id
+            });
+          } else {
+            temp[post.created_at.slice(0, 10)] = [
+              {
+                pk: post.pk,
+                title: post.title,
+                tags: post.tags,
+                user_id: post.user_id
+              }
+            ];
+          }
+        }
+        const dates = Object.keys(temp).sort(function(a, b) {
+          return b - a;
+        });
+        temp["dates"] = dates;
+        console.log(temp);
+        commit("setDiaries", temp);
+      });
   }
 };
 
