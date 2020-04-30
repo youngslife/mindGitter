@@ -24,9 +24,13 @@ def board(request):
         data = request.data
         # # postman에서 보낼 때는 dict형으로 바꿔줘야 QueryDict is immutable 에러 안남
         # data = request.data.dict()
+        print(1)
         data.update({'create_user': request.user.id})
+        print(2)
         serializer = ChannelSerializer(data=data)
-        print('serializer', serializer)
+        print(3)
+        # print('serializer', serializer)
+        print(4)
         if serializer.is_valid():
             print('valid')
             serializer.save()
