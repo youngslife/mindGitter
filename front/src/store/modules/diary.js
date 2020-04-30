@@ -85,7 +85,7 @@ const mutations = {
     sessionStorage.setItem("chanName", chanName);
   },
   setPostId: (state, postId) => {
-    state.postId = postId;
+    state.postId = postId;  
     sessionStorage.setItem("post", postId);
   },
   setSelectedChan: (state, channel) => (state.selectedChan = channel),
@@ -242,9 +242,10 @@ const actions = {
     );
     await commit("setWriterInfo", mess.data);
   },
-  async addComment({ commit, getters }, reviewContext) {
+  async addComment({ getters, commit }, reviewContext) {
     const token = sessionStorage.getItem("jwt");
     const postpk = getters.getSelectedDiary.pk;
+    const chanId = sessionStorage.getItem("chan");
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -254,45 +255,45 @@ const actions = {
     const body = {
       context: reviewContext
     };
-    await axios.post(`${HOST}/posts/${postpk}/comments/`, body, options).then(
-      axios.get(`${HOST}/posts/${postpk}`, options).then(message => {
-        commit("setSelectedDiary", message.data);
-        const selectedChanUser = getters.getSelectedChan.user_set;
-        for (let idx = 0; idx < selectedChanUser.length; idx++) {
-          if (selectedChanUser[idx].id === message.data.user_id) {
-            commit("setWriterInfo", selectedChanUser[idx]);
-          }
-        }
-      })
-    );
+    await axios.post(`${HOST}/posts/${postpk}/comments/`, body, options)
+    const message = await axios.get(`${HOST}/channels/${chanId}`, options)
+    await commit("setSelectedChan", message.data);
+    const message2 = await axios.get(`${HOST}/posts/${postpk}/`, options);
+    await commit("setSelectedDiary", message2.data);
+    const selectedChanUser = getters.getSelectedChan.user_set;
+    for (let idx = 0; idx < selectedChanUser.length; idx++) {
+      if (selectedChanUser[idx].id === message.data.user_id) {
+        commit("setWriterInfo", selectedChanUser[idx]);
+      }
+    }    
   },
-  deleteComment({ getters, commit }, commentInfo) {
+  async deleteComment({ getters, commit }, commentInfo) {
     const token = sessionStorage.getItem("jwt");
     const postpk = getters.getSelectedDiary.pk;
+    const chanId = sessionStorage.getItem("chan");
     const options = {
       headers: {
         Authorization: "JWT " + token
       }
     };
-    axios
-      .delete(`${HOST}/posts/${postpk}/comments/${commentInfo.id}`, options)
-      .then(message => {
-        message;
-        alert("성공적으로 삭제되었습니다.");
-        axios.get(`${HOST}/posts/${postpk}`, options).then(message => {
-          commit("setSelectedDiary", message.data);
-          const selectedChanUser = getters.getSelectedChan.user_set;
-          for (let idx = 0; idx < selectedChanUser.length; idx++) {
-            if (selectedChanUser[idx].id === message.data.user_id) {
-              commit("setWriterInfo", selectedChanUser[idx]);
-            }
-          }
-        });
-      })
-      .catch(err => {
-        err;
+    try {
+      const messa = await axios.delete(`${HOST}/posts/${postpk}/comments/${commentInfo.id}`, options)
+      messa;
+      alert("성공적으로 삭제되었습니다.");
+      const message = await axios.get(`${HOST}/channels/${chanId}`, options)
+      await commit("setSelectedChan", message.data);
+      const message2 = await axios.get(`${HOST}/posts/${postpk}/`, options);
+      await commit("setSelectedDiary", message2.data);
+      const selectedChanUser = getters.getSelectedChan.user_set;
+      for (let idx = 0; idx < selectedChanUser.length; idx++) {
+        if (selectedChanUser[idx].id === message.data.user_id) {
+          commit("setWriterInfo", selectedChanUser[idx]);
+        }
+      }  
+    } catch (err) {
+      err;
         alert("삭제 중에 문제가 발생하였습니다.");
-      });
+    }
   },
 
   async deleteDiary({ getters }, postId) {

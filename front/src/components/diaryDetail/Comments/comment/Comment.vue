@@ -1,6 +1,6 @@
 <template>
   <v-row class="comment" align="center"
-      justify="center">
+      justify="center"  v-if="user">
     <v-col cols="2" class="userImage" :user="user">
       <img
         :src="showProfile(user.profile_img)"
@@ -13,14 +13,14 @@
       <p class="context">{{ comment.context }}</p>
     </v-col>
     <v-col cols="2" v-if="comment.user == currentUser" class="delBtn">
-      <v-icon>fas fa-trash-alt</v-icon>
+      <v-icon @click="deleteComment(comment)">fas fa-trash-alt</v-icon>
     </v-col>
   </v-row>
 </template>
 
 <script>
 import axios from "axios";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -30,6 +30,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["deleteComment"]),
     showProfile(profile_img) {
       return profile_img
         ? this.profileAddr + profile_img

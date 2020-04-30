@@ -1,5 +1,5 @@
 <template>
-  <div class="commentContainer">
+  <div class="commentContainer" v-if="currentUser">
     <v-row class="reviewForm">
       <v-col cols="2" class="userImage">
         <img
@@ -31,13 +31,12 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 import axios from "axios";
 import Comment from "./comment/Comment.vue";
 import router from "@/router";
 
 export default {
-  name: "newComment",
   components: {
     Comment,
   },
@@ -49,7 +48,8 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["addComment", "deleteComment"]),
+    ...mapActions(["addComment"]),
+    ...mapMutations(["setUserName"]),
     showProfile(profile_img) {
       return profile_img
         ? this.profileAddr + profile_img

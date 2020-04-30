@@ -138,10 +138,12 @@ export default {
     onFileChange(file) {
       if (file) {
         this.PostInfo.file = file;
+        this.file = file
         this.PostInfo.fileName =
           String(this.getUserId) + new Date().getTime() + ".jpg";
       } else {
         this.PostInfo.file = null;
+        this.file = null;
         this.PostInfo.fileName = "default_channel1.jpg";
       }
     }
