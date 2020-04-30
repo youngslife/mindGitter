@@ -85,6 +85,7 @@ const actions = {
     commit("setToken", null);
     commit("setUserName", null);
     sessionStorage.removeItem("jwt");
+    sessionStorage.removeItem("userName");
     router.push("/login");
   },
   pushError: ({ commit }, error) => {
