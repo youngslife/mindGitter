@@ -39,7 +39,12 @@
     </div>
     <div calss="search">
       <v-icon class="search">fas fa-search</v-icon>
-      <input type="text" v-model="searchTag" />
+      <input
+        type="text"
+        v-model="searchParams.searchKwd"
+        @keydown.enter="searchingTag(searchParams)"
+        placeholder="search tag"
+      />
       <div
         class="sharedImage"
         v-for="(user, i) in getSelectedChan.user_set"
@@ -56,9 +61,7 @@
     <v-divider></v-divider>
     <div v-for="(diary, i) in getDiaries['dates']" :key="i">
       <div class="diaries" v-if="diary <= changeDate">
-        <div class="date">
-          {{ diary }}
-        </div>
+        <div class="date">{{ diary }}</div>
         <div
           class="diaryInfo"
           v-for="(item, idx) in getDiaries[diary]"
@@ -112,7 +115,11 @@ export default {
         username: "",
         channel_id: ""
       },
-      searchTag: null,
+      // searchTag: null,
+      searchParams: {
+        searchKwd: null,
+        channId: null
+      },
       date: new Date(),
       showAddModal: false,
       showModal: false,

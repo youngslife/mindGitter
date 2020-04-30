@@ -161,6 +161,7 @@ const actions = {
         return b - a;
       });
       temp["dates"] = dates;
+      console.log(temp);
       commit("setDiaries", temp);
     });
   },
@@ -538,6 +539,50 @@ const actions = {
       .put(`${HOST}/notifications/${joinInfo.id}/`, body, options)
       .then(mess => {
         mess;
+      });
+  },
+  searchingTag: ({ commit }, searchParams) => {
+    const token = sessionStorage.getItem("jwt");
+    const options = {
+      headers: {
+        Authorization: "JWT " + token
+      }
+    };
+    const channId = sessionStorage.getItem("chan");
+    console.log(searchParams);
+    axios
+      .get(
+        `${HOST}/channels/${channId}/tags/?search=${searchParams.searchKwd}`,
+        options
+      )
+      .then(message => {
+        console.log(searchParams.searchKwd, "요청 완료");
+        const temp = {};
+        for (const post of message.data) {
+          if (temp[post.created_at.slice(0, 10)]) {
+            temp[post.created_at.slice(0, 10)].push({
+              pk: post.pk,
+              title: post.title,
+              tags: post.tags,
+              user_id: post.user_id
+            });
+          } else {
+            temp[post.created_at.slice(0, 10)] = [
+              {
+                pk: post.pk,
+                title: post.title,
+                tags: post.tags,
+                user_id: post.user_id
+              }
+            ];
+          }
+        }
+        const dates = Object.keys(temp).sort(function(a, b) {
+          return b - a;
+        });
+        temp["dates"] = dates;
+        console.log(temp);
+        commit("setDiaries", temp);
       });
   }
 };
