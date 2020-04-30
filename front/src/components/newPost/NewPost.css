@@ -1,3 +1,7 @@
+h1 {
+  text-align: center;
+}
+
 form.AddPostForm {
   -webkit-align-items: center;
   align-items: center;
@@ -13,7 +17,7 @@ div.AddPostForm {
   align-self: center;
   justify-content: center;
   margin-top: 5vh;
-  background-color: rgba(255, 232, 169, 0.7);
+  /* background-color: rgba(255, 232, 169, 0.7); */
   border-radius: 5%;
 }
 
@@ -25,27 +29,21 @@ label {
   font-size: large;
 }
 
-ul#posttitle {
-  padding-top: 2vh;
-  /* height: 15vh; */
-}
-
 ul#postvideo {
   font-size: small;
   text-align: center;
-  /* font-size: large; */
 }
 
 input#posttitle {
   margin-top: 2vh;
   width: 80%;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #777;
 }
 
 input#posttag {
   margin-top: 2vh;
   width: 80%;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #777;
 }
 
 input#postvideo {
@@ -58,9 +56,9 @@ button.submit {
   min-height: 30px;
   max-height: 40px;
   height: 10vh;
-  width: 80%;
+  width: 100%;
   border-radius: 5px;
-  background: #ffde84;
+  background: #bebebe;
   color: white;
   margin-bottom: 20px;
 }
@@ -74,9 +72,9 @@ div.preview {
 }
 
 .videoPreview {
-  height:100px;
-  width: 100%;
-  margin:auto;
+  height: 26vh;
+  width: 39vh;
+  margin: auto;
 }
 
 .v-card.loading{
@@ -85,4 +83,16 @@ div.preview {
   top: 40%;
   left: 10%;
   width: 80%;
+}
+
+.optCheck {
+  font-size: 4.5vmin;
+  padding: 0 3vw;
+}
+
+div.createPostHeader {
+  background-image: url(../../assets/newpost.jpg);
+  background-size: 100%;
+  background-position-y: 80%;
+  padding-bottom: 5vh;
 }
