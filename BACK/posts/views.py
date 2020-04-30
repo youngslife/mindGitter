@@ -48,14 +48,14 @@ class PostList(APIView):
             
             ## AI 모델에 분석 요청 ===============================
             headers = {
-                'Content-Type':'text/plain'
+                'Content-Type':'application/json'
             }
             data = {
                 'video_url': request.data['video_file'],
                 'post_id': Post.objects.first().id,
                 'user_id': request.user.id
             }
-            res = requests.post('http://13.125.177.238/message/', headers=headers, data=data)
+            res = requests.post('https://mind-gitter.me/message/', headers=headers, data=data)
             print(res)
 
             ## ==================================================
