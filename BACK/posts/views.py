@@ -10,13 +10,12 @@ from .serializers import CommentSerializer, TagSerializer, EmotionSerializer, Po
 from accounts.models import User, UserTag
 from .models import Post
 import json
-
 from taggit.models import Tag
-
 from accounts.serializers import UserTagSerializer
 from taggit.models import TaggedItem
 
 import requests
+import json
 
 
 @api_view(['GET',])
@@ -30,13 +29,6 @@ def tagtest(request, post_id):
 
 class PostList(APIView):
     permission_classes = (IsAuthenticated,)
-
-    # 후에 기능 불필요시 삭제 예정
-    # 해당 user가 생성한 모든 post 조회
-    def get(self, requet):
-        # user-(channel)-post 연결후 만들기
-        pass
-
 
     # post(일기) 생성
     def post(self, request):
@@ -134,6 +126,12 @@ class PostAnalyze(APIView):
     def put(self, request, post_id):
         
         posting = get_object_or_404(Post, id=post_id)
+        origin_tags = list()
+        tags = TaggedItem.objects.filter(object_id=post_id)
+        for tag in tags:
+            t = get_object_or_404(Tag, id=tag.tag_id)
+            origin_tags.append(t.name)
+
         data = dict()
         data.update({'title': posting.title})
         data.update({'video_file': posting.video_file})
@@ -156,16 +154,15 @@ class PostAnalyze(APIView):
             if usertagserializer.is_valid():
                 usertagserializer.save(count=count-1)
 
-
         ## 태그 거르기
         temp = list()
-        for tag in data['tags']:
+        for tag in json.loads(data['tags']):
             if ('/NNG' not in tag) and ('/NNB' not in tag):
                 continue
             else:
                 temp.append(tag[:-4])
-
-        data.update({'tags': temp})
+        data.update({'tags': origin_tags + temp})
+        
 
         serializer = PostSerializer(instance=posting, data=data)
         if serializer.is_valid():
@@ -182,7 +179,6 @@ class PostAnalyze(APIView):
                         usertagserializer.save(count=count+1)
                 else:
                     user.tags.add(new_tag)
-        
             return Response({'message': 'save to analyzed data in database successfully'}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

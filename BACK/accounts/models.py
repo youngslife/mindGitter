@@ -10,7 +10,6 @@ from taggit.models import TaggedItemBase
 # Create your models here.
 class User(AbstractUser):
     channels = models.ManyToManyField(Channel, blank=True)
-    # tags = models.ManyToManyField(Tag, blank=True)
     tags = TaggableManager(through='UserTag', blank=True, related_name='tags')
     emotions = models.ManyToManyField(Emotion, through='UserEmotion')
     
@@ -38,7 +37,6 @@ class UserEmotion(models.Model):
 class Notification(models.Model):
     TYPE_CHOICES = (
         ('join', 'Join'),
-        # ('comment', 'Comment')
     )
 
     inviter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inviter')

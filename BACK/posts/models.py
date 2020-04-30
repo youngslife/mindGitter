@@ -19,8 +19,8 @@ class Post(models.Model):
     title = models.CharField(max_length=50)
     video_file = models.CharField(max_length=100)
     context = models.CharField(max_length=200, blank=True)
-    # emotions : 해당 포스트의 각 감정 평균 값을 나타내는 크기 7의 리스트 -> stringify한 값
-    emotions = models.CharField(max_length=300, blank=True)
+    
+    emotions = models.CharField(max_length=300, blank=True) # emotions : 해당 포스트의 각 감정 평균 값을 나타내는 크기 7의 리스트 -> stringify한 값
     summary = models.CharField(max_length=200, blank=True)
     tags = TaggableManager(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -29,8 +29,8 @@ class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_use_comment = models.BooleanField() # 코멘트 허용 여부
     is_save_video = models.BooleanField() # 영상 저장 여부
-    # csv_url : 해당 포스트의 1초당 감정 리스트를 저장한 csv 파일의 s3 url
-    csv_url = models.CharField(max_length=200, blank=True)
+    
+    csv_url = models.CharField(max_length=200, blank=True) # csv_url : 해당 포스트의 1초당 감정 리스트를 저장한 csv 파일의 s3 url
 
     class Meta:
         ordering = ['-pk']

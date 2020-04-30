@@ -42,9 +42,6 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
     ),
 }
 
@@ -73,7 +70,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',  # 확인하기
-    # pip install
     'rest_auth',
     'rest_auth.registration',  # 회원가입
     'allauth',
@@ -82,17 +78,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    # tag기능
     'taggit',
-    # 'taggit.apps.TaggitAppConfig',
-    # 'taggit_templatetags2',
     'taggit_serializer',
 ]
 
 MIDDLEWARE = [
-    # corsheaders 추가
     'corsheaders.middleware.CorsMiddleware',
-    # 원래 있던 것
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -208,7 +199,6 @@ STATIC_URL = '/api/static/'
 AUTH_USER_MODEL = 'accounts.User'
 
 # sign up
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 SITE_ID = 1
 
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
@@ -224,4 +214,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Tag
 TAGGIT_CASE_INSENSITIVE = True # 태그 대소문자 구분안함
-# TAGGIT_LIMIT =  # 태그 클라우드에 나타나는 태그 최대 개수
