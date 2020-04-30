@@ -181,3 +181,15 @@ div.date{
 .v-timeline {
   padding-top: 15px;
 }
+
+.shared {
+  text-align: left;
+}
+
+.tag > span {
+  font-size:1.8vh; color:#4682B4; font-weight:550;
+  background-color: rgba(86, 61, 124,.15);
+  border: 2px solid round rgba(86, 61, 124,.15);
+}
+
+

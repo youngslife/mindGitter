@@ -53,7 +53,7 @@
         @keydown.enter="searchingTag(searchParams)"
         placeholder="search tag"
       /> -->
-      
+
       <div
         class="sharedImage"
         v-for="(user, i) in getSelectedChan.user_set"
@@ -64,13 +64,14 @@
           :src="showProfile(user.profile_img)"
           alt="sharedUserProfile"
         />
+
       </div>
     </div>
-    
-    <datepicker v-model="date" input-class="hi"><v-icon medium>event</v-icon></datepicker>
+    <div>    
+    <datepicker v-model="date" input-class="hi"></datepicker>
     <v-divider></v-divider>
-    <v-sheet class="pa-4 primary lighten-2">
-        <v-text-field
+    <v-col>
+    <v-text-field
           v-model="searchParams.searchKwd"
           @keydown.enter="searchingTag(searchParams)"
           class="mx-4"
@@ -78,12 +79,17 @@
           hide-details
           label="Search"
           single-line
+          dense
           solo-inverted
           clearable
           prepend-inner-icon="mdi-search"
           clear-icon="mdi-close-circle-outline"
         ></v-text-field>
-      </v-sheet>
+        </v-col>
+        </div>
+    <!-- <v-sheet class="pa-4 primary lighten-2"> -->
+        
+      <!-- </v-sheet> -->
    
     
     <!-- <div v-for="(diary, i) in getDiaries['dates']" :key="i">
@@ -134,16 +140,19 @@
                 @click="goDetail(item.pk)"
             >
               <template v-slot:icon >
-                <v-avatar  v-for="(user, i) in getSelectedChan.user_set"
+                <div v-for="(user, i) in getSelectedChan.user_set"
                     :key="i">
-                  <img v-if="user.id == item.user_id"
+                <v-avatar v-if="user.id == item.user_id" >
+                  <img 
                       :src="showProfile(user.profile_img)"
                       alt="userProfile"
                       class="uImage">
                 </v-avatar>
+                </div>
+
               </template>
               <!-- <span slot="opposite">Tus eu perfecto</span> -->
-              <v-card class="elevation-2" @click="goDetail(item.pk)">
+              <v-card @click="goDetail(item.pk)">
                 <v-card-title class="headline">{{ item.title }}</v-card-title>
                 <v-card-text>
                   <div class="tag" v-if="item.tags.length">
@@ -151,7 +160,7 @@
                     >#{{ tag }}
                   </span>
                   </div>
-                  <div v-else>
+                  <div class="tag" v-else>
                     <span class="tag">
                       태그 분석중입니다.
                     </span>
@@ -316,6 +325,7 @@ export default {
       router.push("/");
     }
   },
+  
   
 };
 </script>
