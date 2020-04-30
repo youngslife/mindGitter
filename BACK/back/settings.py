@@ -27,11 +27,11 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
 
-# ALLOWED_HOSTS = [
-#     '13.125.177.238',
-#     'mind-gitter.me',
-#     'localhost'
-# ]
+ALLOWED_HOSTS = [
+    '13.125.177.238',
+    'mind-gitter.me',
+    'localhost'
+]
 
 # REST_framework 설정
 REST_FRAMEWORK = {

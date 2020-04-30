@@ -81,10 +81,12 @@ const actions = {
     });
   },
   async addChannel({ dispatch, commit }, PostInfo) {
-    if (PostInfo.title && PostInfo.fileName && PostInfo.description) {
+    if (PostInfo.title && PostInfo.description) {
+      if (PostInfo.file) {
+        await dispatch("s3Init", "channel");
+        await dispatch("updates3", PostInfo);
+      }
       console.log("addChannel", PostInfo);
-      await dispatch("s3Init", "channel");
-      await dispatch("updates3", PostInfo);
       const token = sessionStorage.getItem("jwt");
       const options = {
         headers: {
@@ -102,27 +104,13 @@ const actions = {
       console.log(res);
       await commit("setChanList", null);
       router.push("/");
-    } else if (PostInfo.title && PostInfo.fileName) {
-      alert("! 일기장에 대한 설명을 작성해주세요.");
-    } else if (PostInfo.title && PostInfo.description) {
-      alert("! 일기장 배경 사진을 첨부해주세요.");
-    } else if (PostInfo.fileName && PostInfo.description) {
-      alert("! 일기장의 제목을 작성해주세요");
     } else if (PostInfo.title) {
-      alert(
-        "! 일기장에 대한 설명을 작성해주세요.\n! 일기장 배경 사진을 첨부해주세요."
-      );
-    } else if (PostInfo.fileName) {
-      alert(
-        "! 일기장의 제목을 작성해주세요\n! 일기장에 대한 설명을 작성해주세요."
-      );
+      alert("! 일기장에 대한 설명을 작성해주세요.");
     } else if (PostInfo.description) {
-      alert(
-        "! 일기장의 제목을 작성해주세요\n! 일기장 배경 사진을 첨부해주세요."
-      );
+      alert("! 일기장의 제목을 작성해주세요.");
     } else {
       alert(
-        "! 일기장의 제목을 작성해주세요\n! 일기장에 대한 설명을 작성해주세요.\n! 일기장 배경 사진을 첨부해주세요."
+        "! 일기장의 제목을 작성해주세요\n! 일기장에 대한 설명을 작성해주세요."
       );
     }
   },

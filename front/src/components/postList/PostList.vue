@@ -160,7 +160,8 @@ export default {
       "bringChanDetail",
       "leaveChannel",
       //은영
-      "addNotification"
+      "addNotification",
+      "searchingTag"
     ]),
     //은영
     pushNotice(channelId) {
