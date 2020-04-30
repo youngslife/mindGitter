@@ -1,28 +1,34 @@
 <template>
-  <v-row v-if="getUserInfoSet && getChanList">
-    <v-col cols="3">
+  <div>
+    <v-row style="margin: 10vh 0 0 40vw;" cols="3">
       <img class="userProfile" :src="showProfile()" alt="userprofile" />
-    </v-col>
-    <v-col class="userSummary" cols="9">
-      <v-row>
-        <v-col cols="4">Post</v-col>
-        <v-col cols="5">First Post</v-col>
-        <v-col cols="3">Diary</v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="4">총 {{ getUserInfoSet.post_set.length }}편</v-col>
-        <v-col cols="5" v-if="getUserInfoSet.post_set.length">{{
-          getUserInfoSet.post_set[
-            getUserInfoSet.post_set.length - 1
-          ].created_at.slice(0, 10)
-        }}</v-col>
-        <v-col cols="5" v-else>
-          -
-        </v-col>
-        <v-col cols="3">{{ getChanList.length }}개</v-col>
-      </v-row>
-    </v-col>
-  </v-row>
+    </v-row>
+    <v-row style="margin-left:40vw; margin-top:20px">
+      <p v-if="getUserName">{{ getUserName }}</p>
+      <p v-else>로그인을 안하셨군요?</p>
+    </v-row>
+    <v-row style="margin-top:5vh;" v-if="getUserInfoSet && getChanList">
+      <v-col class="userSummary" cols="12">
+        <v-row>
+          <v-col cols="4">Post</v-col>
+          <v-col cols="5">First Post</v-col>
+          <v-col cols="3">Diary</v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="4">총 {{ getUserInfoSet.post_set.length }}편</v-col>
+          <v-col cols="5" v-if="getUserInfoSet.post_set.length">{{
+            getUserInfoSet.post_set[
+              getUserInfoSet.post_set.length - 1
+            ].created_at.slice(0, 10)
+          }}</v-col>
+          <v-col cols="5" v-else>
+            -
+          </v-col>
+          <v-col cols="3">{{ getChanList.length }}개</v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
@@ -43,7 +49,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getUserProfile", "getUserInfoSet", "getChanList"])
+    ...mapGetters(["getUserProfile", "getUserInfoSet", "getChanList", "getUserName"])
   },
   async created() {
     await this.bringUserProfile();

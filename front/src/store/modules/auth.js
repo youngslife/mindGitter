@@ -259,13 +259,25 @@ const actions = {
 
     for (let i = 0; i < 147; i++) {
       if (dates.getMonth() < 9) {
-        indexDict[
-          `${dates.getFullYear()}-0${dates.getMonth() + 1}-${dates.getDate()}`
-        ] = i;
+        if (dates.getDate() < 10) {
+          indexDict[
+            `${dates.getFullYear()}-0${dates.getMonth() + 1}-0${dates.getDate()}`
+          ] = i;
+        } else {
+          indexDict[
+            `${dates.getFullYear()}-0${dates.getMonth() + 1}-${dates.getDate()}`
+          ] = i;
+        }
       } else {
-        indexDict[
-          `${dates.getFullYear()}-${dates.getMonth() + 1}-${dates.getDate()}`
-        ] = i;
+        if (dates.getDate() < 10) {
+          indexDict[
+            `${dates.getFullYear()}-${dates.getMonth() + 1}-0${dates.getDate()}`
+          ] = i;
+        } else {
+          indexDict[
+            `${dates.getFullYear()}-${dates.getMonth() + 1}-${dates.getDate()}`
+          ] = i;
+        }
       }
       dates.setDate(dates.getDate() + 1);
     }
