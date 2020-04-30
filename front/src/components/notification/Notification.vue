@@ -81,7 +81,6 @@ export default {
       router.push("/login");
     } else {
       await this.bringNotice();
-      console.log(this.getNotiList)
     }
   }
 };

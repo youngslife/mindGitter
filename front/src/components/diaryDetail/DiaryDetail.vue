@@ -165,7 +165,6 @@ export default {
     } else {
       router.push("/");
     };
-    console.log(this.getSelectedDiary)
     await this.bringEmotionData()
   }
 };

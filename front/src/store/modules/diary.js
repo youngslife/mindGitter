@@ -537,7 +537,6 @@ const actions = {
           });
         }
       }
-      console.log(notices)
       commit("setNotiList", notices);
     });
   },
