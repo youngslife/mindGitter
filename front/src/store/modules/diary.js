@@ -83,8 +83,10 @@ const actions = {
   async addChannel({ dispatch, commit }, PostInfo) {
     if (PostInfo.title && PostInfo.fileName && PostInfo.description) {
       console.log("addChannel", PostInfo);
-      await dispatch("s3Init", "channel");
-      await dispatch("updates3", PostInfo);
+      if (PostInfo.file) {
+        await dispatch("s3Init", "channel");
+        await dispatch("updates3", PostInfo);
+      }
       const token = sessionStorage.getItem("jwt");
       const options = {
         headers: {
