@@ -117,13 +117,10 @@ export default {
   async created() {
     const userName = sessionStorage.getItem("userName");
     const userId = sessionStorage.getItem("userId");
-    // console.log(userName)
     if (userName) {
-      // console.log("여기가 맞지")
       await this.setUserName(userName);
       await this.setUserId(userId);
     } else {
-      // console.log("왜 여길 들어왔지?")
       router.push("/");
     }
   },

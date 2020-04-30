@@ -1,4 +1,4 @@
-.ddContainer {
+.nContainer {
   margin: 1vh 1vw;
   width: 98vw;
   height: 98vh;
@@ -10,7 +10,7 @@
   box-shadow: 19px -6px 24px -15px rgba(0,0,0,0.75);
 }
 
-.ddBtn {
+.nBtn {
   height: 8vw; 
   width: 8vw; 
   display:flex; 
@@ -19,13 +19,13 @@
   z-index:99999999999999999999999999;
 }
 
-.ddBackBtn {
+.nBackBtn {
   position:absolute;
   top:4vh; left:9vw; 
   transform: translate(-50%, -50%); 
 }
 
-.ddDate {
+.nDate {
   font-size: large;
   font-weight: 600;
   color: rgba(0,0,0,0.65);
@@ -33,38 +33,51 @@
   text-align: center;
 }
 
-.hContentBox {
-  justify-content:space-around; 
+.nContentBox {
+  display: flex;
+  justify-content:start; 
   flex-direction:column;
-  width: 70vw; 
-  height: 27vh; 
+  width: 80vw; 
+  height: calc(90vh - 40px); 
   position:absolute;
-  top:25%; 
+  top:calc(9vh + (90vh - 40px)/2); 
   left:50%; 
   transform: translate(-50%, -50%)
 }
 
-.hMetaWrapper {
+.nMetaWrapper {
   width:100%; 
-  display:flex; 
-  justify-content:space-between;
+  display:flex;
+  flex-direction: column;
+  margin: 2vh 0 1vh;
+  height: 15vh;
+  justify-content:center;
+  align-items: center;
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+  border: solid 1px rgba(0,0,0,0.4);
 }
 
-.hMetasBox {
-  border-radius:5px; 
-  width:17vw; 
-  height: 5vh;     
+.nMetasBox {
+  width:80%; 
+  height: 12vh;     
   display:flex;
   justify-content:center;
-  flex-direction:column;
   align-items:center;
   color: rgba(0,0,0,0.65);
   font-weight: 550;
 }
 
-.hNewBtn {
+.nImage {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin: 5px;
+}
+
+.nNewBtn {
   border-radius:50%; 
-  height: 100%; 
+  height: 90%; 
   width: 40vw; 
   display:flex; 
   justify-content:center; 
@@ -73,18 +86,29 @@
   background-color:rgba(255, 255, 255, 0.2);
 }
 
-.ddExpandBtn {
+.nExpandBtn {
   -webkit-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.1);
   -moz-box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.1);
   box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.1);
   border-radius: 25px;
-  /* margin-left:50vw; */
+  width: 100px;
+  height: 30px;
+  display:flex;
+  justify-content: center;
 }
 
-.ddExpandBtn > p {
-  font-size:2.5vh; margin:0 2vw; font-weight:550; color:rgba(0,0,0,0.4)
+.nExpandBtn > p {
+  font-size:2.5vh; margin:0 3px; font-weight:550; color:rgba(0,0,0,0.4);
+  line-height: 33px;
 }
 
-p.noneNoti {
-  font-size:2.5vh; margin:0 2vw; font-weight:550; color:rgba(0,0,0,0.4)
+.nNoneNotiImg {
+  height: 7vh;
+  width: 7vh;
+  margin: 25vh auto 0; 
+}
+
+.nNoneNoti {
+  font-size:2.5vh; margin:0 2vw; font-weight:550; color:rgba(0,0,0,0.4);
+  line-height: 10vh;
 }

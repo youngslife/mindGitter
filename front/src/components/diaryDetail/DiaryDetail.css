@@ -112,6 +112,27 @@ p {
   overflow: auto;  
 }
 
+.ddYetContent {
+  height: 49vh;
+  width: 100%;
+  margin: auto;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.ddYetContent > p {
+  font-weight: 550;
+  color:rgba(0,0,0,0.45)
+}
+
+.ddYetContent > img {
+  height:7vh; width:7vh;
+  margin: 1vh;
+}
+
 .ddContentBox::-webkit-scrollbar {
   display: none;
 }

@@ -22,7 +22,7 @@ div.infoAndSetting>.v-icon.settings{
 }
 
 .v-card.settings>div{
-  margin-bottom: 10px;
+  margin: 7px 0 7px 3px;
 }
 
 .v-card.settings>div>.v-icon{

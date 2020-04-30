@@ -1,5 +1,5 @@
 <template >
-  <div class="ddContainer" v-if="getSelectedDiary && getWriterInfo && getSeries">
+  <div class="ddContainer" v-if="getSelectedDiary && getWriterInfo">
     <div class="ddBar">
       <div class="ddBtn ddBackBtn" @click="goPostList">
         <v-icon color="rgba(0, 0, 0, 0.5)" small>fas fa-arrow-left</v-icon>
@@ -13,46 +13,33 @@
       <video
         controls
         width="100%"
-        v-if="getSelectedDiary.is_save_video"
+        v-show="getSelectedDiary.is_save_video"
       > 
         <source :src="videoAddr + getSelectedDiary.video_file" />
       </video>
+      <iframe 
+        width="100%" 
+        :src="defaultVideo" 
+        frameborder="0"
+        v-show="!getSelectedDiary.is_save_video"
+        allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen></iframe>
       <div class="ddTabBar">
         <div :class="mode==selectedMode ? 'ddSelectedTab':'ddTab'" v-for="mode in modes" :key="mode" @click="changeMode(mode)">
           <p :class="mode==selectedMode ? 'ddSelectedTabText':'ddTabText'">{{ mode }}</p>
         </div>
       </div>
-      <!-- <div class="context" v-if="getSelectedDiary.summary">
-        {{ getSelectedDiary.summary }}
-      </div>
-      <div class="context" v-else>
-        아직 영상에 대한 분석이 끝나지 않았습니다.<br /><br />
-        조금만 기다려주세요 :D
-      </div>
-    </div>
-    <div class="text" v-if="selectedMode == 'Analysis'">
-      <div class="analysis" v-if="getSelectedDiary.emotion">
-        <span>{{ getSelectedDiary.emotion }}</span>
-      </div>
-      <div class="analysis" v-else>
-        아직 영상에 대한 분석이 끝나지 않았습니다.<br /><br />
-        조금만 기다려주세요 :D
-      </div>
-    </div>
-    <div class="text" v-if="selectedMode == 'Comment'">
-      <div v-if="getSelectedDiary.is_use_comment">
-        <Comments /> -->
-      <div class="ddContent" v-if="selectedMode == 'Script'">
+      <div class="ddContent" v-if="(selectedMode =='Script') && ( getSelectedDiary.summary )">
         <div class="ddTitle" >
           <v-icon small>mdi-format-quote-open</v-icon>
           <p> {{ getSelectedDiary.title }} </p>
           <v-icon small>mdi-format-quote-close</v-icon>
         </div>
         <div class="ddAbb" >
-          <p>{{ fakeAbb }}</p>
+          <p>{{ getSelectedDiary.summary }}</p>
         </div>
         <div class="ddTags">
-          <span class="ddTag" v-for="(tag, idx) in fakeTags" :key="idx">
+          <span class="ddTag" v-for="(tag, idx) in getSelectedDiary.tags" :key="idx">
             #{{ tag }} 
           </span>
         </div>
@@ -67,16 +54,24 @@
           </p>
         </div>
         <div v-show="showFull" class="ddContext">
-          <p>{{ fakeContent }}</p>
+          <p>{{ getSelectedDiary.context }}</p>
         </div>
       </div>
-
-      <div class="ddContent" v-if="selectedMode == 'Emotion'">
+      <div class="ddYetContent" v-if="(selectedMode =='Script') && ( !getSelectedDiary.summary )">
+        <img src="https://image.flaticon.com/icons/png/512/2422/2422071.png" alt="under construction">
+        <p>아직 음성을 분석하는 중이에요 :)</p>
+        <p>분석에 몇 분이 소요될 수 있습니다</p>
+      </div>
+      <div class="ddContent" v-if="selectedMode == 'Emotion' && ( getSelectedDiary.summary )">
         <div>
           <apexchart type="bubble" height="300" :options="getChartOptions" :series="getSeries"></apexchart>
         </div>
       </div>
-
+      <div class="ddYetContent" v-if="(selectedMode =='Emotion') && ( !getSelectedDiary.summary )">
+        <img src="https://image.flaticon.com/icons/png/512/2422/2422071.png" alt="under construction">
+        <p>아직 감정을 분석하는 중이에요 :)</p>
+        <p>분석에 몇 분이 소요될 수 있습니다</p>
+      </div>
       <div class="ddContent" v-if="selectedMode == 'Comment'">
         <div v-if="getSelectedDiary.is_use_comment">
           <Comments />
@@ -103,17 +98,6 @@
     </v-card>
   </div>
 </template>
-<!-- <div class="tags" v-if="getSelectedDiary.tags[0] != 'null'">
-  <span v-for="(tag, idx) in getSelectedDiary.tags" :key="idx">
-    #{{ tag }}
-  </span>
-</div> -->
-        <!-- <div class="context">
-  <p>{{ getSelectedDiary.context }}</p>
-</div> -->
-<!-- <div class="context">
-  <p>{{ getSelectedDiary.context }}</p>
-</div> -->
 <script>
 import router from "@/router";
 import Comments from "./Comments/Comments.vue";
@@ -135,9 +119,7 @@ export default {
       writer: null,
       showModal: false,
       showFull: false,
-      fakeContent: "오늘은 좀 작가 속이 많이 상한 날인데요. 진짜 많이 사용한다. 일단 진짜 오랫동안 친하게 지냈던 거의 십 년 가까이 그랬던 친구랑 약간 심하게 다퉈했는데 한 번도 있었던 일이 아니었어. 적응도 안되고 답답하고 무슨 말을 먼저 끝내야 될지 모르겠다는 생각이 조금 들어서 약간 그런 속상한 마음에 카메라를 잠시 키우게 됐습니다. 사실 이런 거 싸우는 것은 정말 사소한 과 하나로 싸우게 되거든요. 간 사소한 일, 사선, 감정 이런 걸로 싸우게 되는데 시간이 알아서 해결해 주겠다. 시간을 견디는 저 스스로가 좀 힘들 수 있겠지만 같은 어떻게 보면 진짜 별일 아닌 건데 빨리 해결됐으면 좋겠네요. 그리고는 직접 표가 아니라고 생각한다. 아무튼 속은 조금 풀린것 같으니 빠른 시일 내에 친구나 화해를 해야겠네요.",
-      fakeTags: ["친구", "시간", "일", "해결", "생각", "속"],
-      fakeAbb: "적응도 안되고 답답하고 무슨 말을 먼저 끝내야 될지 모르겠다는 생각이 조금 들어서 약간 그런 속상한 마음에 카메라를 잠시 키우게 됐습니다.",
+      defaultVideo: 'https://www.youtube.com/embed/9Gd5C8XBzzw',
     }
   },
   computed: {
@@ -183,6 +165,7 @@ export default {
     } else {
       router.push("/");
     };
+    console.log(this.getSelectedDiary)
     await this.bringEmotionData()
   }
 };

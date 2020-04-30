@@ -136,7 +136,6 @@ export default {
       router.push("userDetail");
     },
     onFileChange(file) {
-      console.log(file)
       if (file) {
         this.PostInfo.file = file;
         this.PostInfo.fileName =

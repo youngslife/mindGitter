@@ -18,22 +18,24 @@
         </div>
       </v-card>
       <v-card v-if="showAddModal" @close="showAddModal = false" class="invite">
-        <v-card-title>Share Diary</v-card-title>
-        <v-card-text>
-          친구 아이디
+        <v-card-text style="font-weight:bold; margin-top:20px">
+          친구 아이디 검색하기
         </v-card-text>
-        <input
-          type="text"
-          v-model="noticeInfo.username"
-          @keydown.enter="pushNotice(getSelectedChan.id)"
-          placeholder="친구이름검색"
-        />
+        <div style="width:80%; margin: 0 auto;">
+          <v-text-field
+            label="name"
+            v-model="noticeInfo.username"
+            @keydown.enter="pushNotice(getSelectedChan.id)"
+            append-icon="mdi-account-search"
+          ></v-text-field>
+        </div>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn class="search" @click="pushNotice(getSelectedChan.id)"
             >요청</v-btn
           >
           <v-btn class="close" @click="changeShowAddModal">닫기</v-btn>
+          <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
     </div>
@@ -159,24 +161,16 @@ export default {
       "bringDiaryDetail",
       "bringChanDetail",
       "leaveChannel",
-      //은영
       "addNotification",
       "searchingTag"
     ]),
-    //은영
     pushNotice(channelId) {
       this.noticeInfo.channel_id = channelId;
-      console.log(channelId);
-      console.log(this.noticeInfo);
       if (
         confirm(`${this.noticeInfo.username}님께 공유 요청을 보내시겠습니까?`)
       ) {
-        console.log("공유");
-        console.log(channelId);
-        console.log(this.noticeInfo);
         this.addNotification(this.noticeInfo);
-      } else {
-        console.log("공유취소");
+        alert("공유 요청을 보냈습니다 :) 상대방이 수락하면 쓰는 이에 추가됩니다")
       }
       this.showAddModal = false;
     },
