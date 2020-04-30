@@ -62,15 +62,6 @@ class PostList(APIView):
 
             posting = Post.objects.first()  # -pk 로 정렬이므로
 
-            # ## AI 모델 결과 저장 =================================
-
-            # posting.tags.add(req.tags) # 태그 저장
-            # posting.emotion.add(req.s3) # 감정 분석 결과 csv 주소 저장
-            # posting.context.add(req.content) # 글내용 저장
-            # posting.summary.add(req.abb) # 글요약 저장
-
-            # ## ==================================================
-
             new_tags = posting.tags.names()
             for new_tag in new_tags:
                 if user.tags.filter(name=new_tag).exists():
@@ -82,11 +73,6 @@ class PostList(APIView):
                         usertagserializer.save(count=count+1)
                 else:
                     user.tags.add(new_tag)
-
-            # 짧은 코드로 구현  법(3줄) => count 바꿀 수가 없음... / 수정 시, 문제 생김
-            # new_tags = posting.tags.names()
-            # for new_tag in new_tags:
-            #     user.tags.add(new_tag)
 
             return Response(status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -104,16 +90,9 @@ class PostDetail(APIView):
     # 수정
     def put(self, request, post_id):
         posting = get_object_or_404(Post, id=post_id)
-        #파일이 아니라서 아래처럼 파일 지워줄 필요 없음 => 일단 혹시 몰라서 남겨둠
-        # cover_img = post.cover_image
-        # cover_img.delete()
-        # video_file = post.video_file
-        # video_file.delete()
 
         before_tags = posting.tags.names()
-        # print('원래포스팅태그들', before_tags)
         for tag in before_tags:
-            # tag_id = posting.user.tags.get(name=tag).id
             tag_id = get_object_or_404(Tag, name=tag).id
             usertag = get_object_or_404(UserTag, tag=tag_id)
             count = usertag.count
@@ -126,13 +105,10 @@ class PostDetail(APIView):
         if serializer.is_valid():
             serializer.save()
             update_tags = posting.tags.names()
-            # print('업데이트된 태그들', update_tags)
-            # print('원래포스팅태그들', before_tags)
             user = posting.user
             for new_tag in update_tags:
                 if user.tags.filter(name=new_tag).exists():
                     tag_id=user.tags.get(name=new_tag).id
-                    # tag = Tag.objects.get(name=new_tag)
                     usertag = UserTag.objects.get(tag=tag_id)
                     count = usertag.count
                     usertagserializer = UserTagSerializer(instance=usertag, data=request.data)
@@ -166,8 +142,7 @@ class PostAnalyze(APIView):
         data.update({'csv_url': request.data['emotions']})
         data.update({'tags': request.data['tags']})
         data.update({'summary': request.data['abb']})
-        data.update({'emotions': request.data['statistics']})
-        print(data)
+        data.update({'emotions': json.dumps(request.data['statistics'])})
 
         before_tags = posting.tags.names()
         # 원래 디비에 저장되어 있던 포스팅 태그들
@@ -194,13 +169,10 @@ class PostAnalyze(APIView):
         if serializer.is_valid():
             serializer.save()
             update_tags = posting.tags.names()
-            # print('업데이트된 태그들', update_tags)
-            # print('원래포스팅태그들', before_tags)
             user = posting.user
             for new_tag in update_tags:
                 if user.tags.filter(name=new_tag).exists():
                     tag_id=user.tags.get(name=new_tag).id
-                    # tag = Tag.objects.get(name=new_tag)
                     usertag = UserTag.objects.get(tag=tag_id)
                     count = usertag.count
                     usertagserializer = UserTagSerializer(instance=usertag, data=request.data)
@@ -209,7 +181,6 @@ class PostAnalyze(APIView):
                 else:
                     user.tags.add(new_tag)
         
-            # return Response(serializer.data)
             return Response({'message': 'save to analyzed data in database successfully'}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -241,7 +212,6 @@ class CommentDetail(APIView):
                 serializer.save()
                 return JsonResponse({'message': 'success to save comment'}, status=200)
             else:
-                # return JsonResponse({'message': 'fail to save comment'}, status=400)
                 return JsonResponse({'message': serializer.errors}, status=400)
         else:
             return JsonResponse({'message': 'INVALID USER'}, status=400)
@@ -258,16 +228,3 @@ class CommentDetail(APIView):
                 return JsonResponse({'message': 'do not exists the comment in the post'}, status=400)
         else:
             return JsonResponse({'message': 'INVALID USER'}, status=400)
-
-# Searching Tag
-# class SearchTags(APIView):
-#     permission_classes = (IsAuthenticated, )
-#     def get(self, request, tag):
-#         posts = list(Post.objects.filter(tags__name=tag))
-#         serializer = PostSerializer(data=posts, many=True)
-#         print(serializer)
-#         if serializer.is_valid():
-#             return JsonResponse(serializer.data, status=200)
-#         else:
-#             return JsonResponse({'message': serializer.errors}, status=400)
-
