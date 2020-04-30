@@ -155,10 +155,7 @@ export default {
           "일기장이 삭제되면 지금까지 작성하신 일기가 모두 삭제됩니다.\n삭제하시겠습니까?"
         )
       ) {
-        console.log("삭제");
         this.deleteChan(channelId);
-      } else {
-        console.log("취소");
       }
     },
     async goDetail(diaryPK) {
@@ -167,7 +164,6 @@ export default {
       router.push("/diaryDetail");
     },
     showProfile(profile_img) {
-      console.log(this.profileAddr + profile_img);
       return profile_img
         ? this.profileAddr + profile_img
         : require("../../assets/basic_userImage.png");
@@ -179,11 +175,7 @@ export default {
           "일기장에서 탈퇴하시면 이 곳에서 작성한 일기는 다시 볼 수 없습니다.\n정말로 떠나시겠습니까?"
         )
       ) {
-        console.log("탈퇴");
         await this.leaveChannel(channelId);
-        // router.push("/");
-      } else {
-        console.log("취소");
       }
     },
     async editChan(channelInfo) {

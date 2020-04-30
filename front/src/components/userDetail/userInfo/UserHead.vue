@@ -27,7 +27,6 @@ export default {
   methods: {
     ...mapMutations(["setUserImgModal", "setUserInfoModal", "setUserImgModal"]),
     async changeModal() {
-      console.log(this.getUserImgModal)
       if (this.getUserImgModal) {
         await this.setUserImgModal();
       }

@@ -50,6 +50,7 @@
                   small-chips accept="image/*" 
                   label="diaryimage" 
                   clearable prepend-icon="mdi-file-image"
+                  @change = handleFile()
                   v-model="file"
                 ></v-file-input>
               </div>
@@ -79,7 +80,7 @@ export default {
         title: null,
         description: null,
         file: null,
-        fileName: this.getFileName
+        fileName: this.getFileName ? this.getFileName : "default_channel1.jpg"
       },
       titleRules: [
         value => !!value || "제목을 입력해 주세요 :)",

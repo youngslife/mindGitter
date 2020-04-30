@@ -25,7 +25,6 @@ export default {
   methods: {
     ...mapActions(["bringUserProfile"]),
     showProfile() {
-      console.log(this.profileAddr + this.getUserProfile);
       return this.getUserProfile
         ? this.profileAddr + this.getUserProfile
         : require("../../../assets/basic_userImage.png");
