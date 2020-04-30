@@ -24,19 +24,11 @@ class ProfileImageAPIView(APIView):
 
     def put(self, request):  # profile_img 넘겨줘야함
         user = request.user
-        # profile_img = request.user.profile_img
-        # profile_img.delete()
         serializer = ProfileImageSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
-
-    # def delete(self, request):
-    #     profile_img = request.user.profile_img
-    #     profile_img.delete()
-    #     return Response(status=204)
-
 
 class UserNameAPIView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -71,13 +63,6 @@ class NotificationAPIView(APIView):
         notifications = NotificationSerializer(data=data)
         if notifications.is_valid():
             notifications.save()
-        # notifications = Notification.objects.create(
-        #             inviter = inviter,
-        #             to = to,
-        #             notification_type = request.data.notification_type
-        #             # comment = comment
-        #         )
-        
             return Response(notifications.data, status=status.HTTP_201_CREATED)  # 응답 굳이 이형태로 주지 않아도 될듯
         return Response(notifications.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -93,7 +78,6 @@ class NoticeDetail(APIView):
     def put(self, request, notice_id):
         
         notification = Notification.objects.get(id=notice_id)
-        # data = request.data.dict()
         data = request.data
 
         data.update({'inviter': notification.inviter.id,
@@ -101,28 +85,9 @@ class NoticeDetail(APIView):
                     'channel': notification.channel.id,
                     'notice_type': notification.notice_type
                 })
-        # data.update({'guest': notification.guest.id})
-        # data.update({'channel': notification.channel.id})
-        # data.update({'notice_type': notification.notice_type})
 
         serializer = NotificationSerializer(instance=notification, data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-# def create_notification(request, inviter, to, notification_type):
-#     print(inviter, to, notification_type)
-    
-#     notifications = Notification.objects.create(
-#         inviter = inviter,
-#         to = to,
-#         notification_type = notification_type
-#         # comment = comment
-#     )
-
-#     notifications.save()
-    
-

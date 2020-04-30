@@ -34,8 +34,6 @@ class UserNameSerializer(serializers.ModelSerializer):
 
 
 class NotificationSerializer(serializers.ModelSerializer):
-    # inviter = UserDisplaySerializer()
-    # to = UserDisplaySerializer()
     class Meta:
         model = Notification
         fields = '__all__'
