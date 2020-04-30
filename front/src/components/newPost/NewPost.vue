@@ -18,7 +18,7 @@
             id="posttitle"
             placeholder="title"
           ></v-text-field>
-          <v-file-input prepend-icon="" append-outer-icon="mdi-camera" accept="video/mp4" id="postvideo" placeholder="upload your video" @change="onFileChange"></v-file-input>
+          <v-file-input prepend-icon="" append-outer-icon="mdi-camera" accept="video/*" id="postvideo" placeholder="upload your video" @change="onFileChange"></v-file-input>
           <video
             class="videoPreview"
             :src="videoTempUrl"

@@ -32,14 +32,6 @@
         </v-card-actions>
       </v-card>
       <CommitCalendar />
-      <div class="emotion">
-        <h3>Emotion</h3>
-        <div class="emotionDetail">감정 분석 결과</div>
-      </div>
-      <div class="tag">
-        <h3>Tag</h3>
-        <div class="tagDetail">tag 분석 결과</div>
-      </div>
     </v-container>
     <Nav />
   </div>
