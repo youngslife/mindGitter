@@ -1,0 +1,39 @@
+div.userImage {
+  display: inline-block;
+  width: 23%;
+}
+
+div.col {
+  padding: 5px;
+}
+
+div.userImage>img {
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid;
+  border-radius: 70%;
+  margin-right: 10px;
+}
+
+div.commentInfo {
+  display: inline-block;
+  width: 75%;
+  text-align: left;
+}
+
+p.username {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+p.context {
+  font-size: 13px;
+}
+
+div.comment {
+  padding-bottom: 0;
+}
+
+div.delBtn {
+  padding-top: 9px;
+}

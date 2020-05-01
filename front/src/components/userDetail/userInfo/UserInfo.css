@@ -1,9 +1,15 @@
 img.userProfile {
-    width: 100%;
+    width: 20vw;
+    height: 20vw;
     border-radius: 50%;
     border: 1.5px solid;
 }
 
+.userProfile {
+    margin-right: 0;
+}
+
 div.row.userSummary {
     font-size: 4vw;
+    margin:auto;
 }

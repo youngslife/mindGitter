@@ -31,10 +31,13 @@ export default {
       router.push("/");
     },
     goCreateDiary() {
-      router.push("newDiary");
+      router.push("newPost");
     },
     goUserDetail() {
-      router.push("userDetail");
+      const link = document.location.href.split("/");
+      if (link[link.length - 1] != "userDetail") {
+        router.push("userDetail");
+      }
     }
   }
 };

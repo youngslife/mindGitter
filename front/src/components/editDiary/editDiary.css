@@ -1,0 +1,98 @@
+.hnContainer {
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+  margin:auto;
+}
+
+.hnDiary{
+  height: 98vh;
+}
+
+.hnImage {
+  border-radius: 17px;
+  height: 98vh;
+  object-fit: cover;
+  object-position: center;
+  position:relative;
+}
+
+.hnBackBtn {
+  border-radius:50%; 
+  height: 7vw; 
+  width: 7vw; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+  z-index:99999999999999999999999999;
+  background-color:rgba(255, 255, 255, 0.3);
+  position:absolute;
+  top:5%; 
+  left:10%; 
+  transform: translate(-50%, -50%); 
+}
+
+.hnDiaryForm {
+  display:flex;
+  justify-content:space-around; 
+  flex-direction:column;           
+  width: 70vw; 
+  height: 27vh; 
+  position:absolute;
+  top:50%; 
+  left:50%; 
+  transform: translate(-50%, -50%)
+}
+
+.hnCoverTxt {
+  color:rgba(255, 255, 255, 0.7); margin-top:1vh
+}
+
+.hnCoverBox {
+  display:flex; justify-content:space-around; margin-top:2vh
+}
+
+.hnCoverWrapper {
+  height:10vw; width:10vw; display:flex; justify-content: center; align-items:center;
+}
+
+.hnCoverSample {
+  height:10vw; width:10vw; border-radius:50%;
+}
+
+.hnCoverSample:hover {
+  height:9vw; width:9vw; border-radius:50%;
+  transition: all 0.2s ease 0s;
+}
+
+.v-icon.back{
+  font-size: 30px;
+  position: absolute;
+  left: 15px;
+  margin: 10px;
+  z-index: 9999;
+}
+
+button.submit{
+  margin-top: 2vh;
+  height: 30px;
+  width: 100%;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 10px;
+}
+
+.ddBtn {
+  border-radius:50%; 
+  height: 7vw; 
+  width: 7vw; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+  z-index:99999999999999999999999999;
+  background-color:rgba(255, 255, 255, 0.3);
+  position:absolute;
+  top:5%; 
+  right:5%; 
+  transform: translate(-50%, -50%); 
+}

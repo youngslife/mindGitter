@@ -5,9 +5,14 @@ import CreateDiary from "../components/createDiary/createDiary.vue";
 import DiaryDetail from "../components/diaryDetail/DiaryDetail.vue";
 import PostList from "../components/postList/PostList.vue";
 import Login from "../components/login/Login.vue";
-import NewDiary from "../components/newDiary/NewDiary.vue";
+import NewPost from "../components/newPost/NewPost.vue";
 import UserDetail from "../components/userDetail/UserDetail.vue";
 import Signup from "../components/signup/Signup.vue";
+import EditPost from "../components/editPost/editPost.vue";
+import EditChan from "../components/editDiary/editDiary";
+import ChangePwd from "../components/userDetail/ChangePwd.vue";
+// notification
+import Notification from "../components/notification/Notification.vue";
 
 Vue.use(VueRouter);
 
@@ -33,9 +38,9 @@ const routes = [
     component: PostList
   },
   {
-    path: "/newDiary",
-    name: "NewDiary",
-    component: NewDiary
+    path: "/newPost",
+    name: "NewPost",
+    component: NewPost
   },
   {
     path: "/login",
@@ -51,6 +56,27 @@ const routes = [
     path: "/",
     name: "home",
     component: Home
+  },
+  {
+    path: "/editPost",
+    name: "editPost",
+    component: EditPost
+  },
+  {
+    path: "/editChan",
+    name: "editChan",
+    component: EditChan
+  },
+  {
+    path: "/changePwd",
+    name: "changePwd",
+    component: ChangePwd
+  },
+  //Notification
+  {
+    path: "/notification",
+    name: "notification",
+    component: Notification
   }
 ];
 
