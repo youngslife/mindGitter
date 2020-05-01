@@ -10,14 +10,11 @@ from .serializers import CommentSerializer, TagSerializer, EmotionSerializer, Po
 from accounts.models import User, UserTag
 from .models import Post
 import json
-
 from taggit.models import Tag
-
 from accounts.serializers import UserTagSerializer
 from taggit.models import TaggedItem
 
 import requests
-
 
 @api_view(['GET',])
 @permission_classes((IsAuthenticated, ))
@@ -30,13 +27,6 @@ def tagtest(request, post_id):
 
 class PostList(APIView):
     permission_classes = (IsAuthenticated,)
-
-    # 후에 기능 불필요시 삭제 예정
-    # 해당 user가 생성한 모든 post 조회
-    def get(self, requet):
-        # user-(channel)-post 연결후 만들기
-        pass
-
 
     # post(일기) 생성
     def post(self, request):
@@ -51,11 +41,11 @@ class PostList(APIView):
                 'Content-Type':'application/json'
             }
             data = {
-                'video_url': request.data['video_file'],
-                'post_id': Post.objects.first().id,
-                'user_id': request.user.id
+                'video_url': 'https://mind-gitter-diary.s3.amazonaws.com/diary/' + request.data['video_file'],
+                'post_id': str(Post.objects.first().id),
+                'user_id': str(request.user.id)
             }
-            res = requests.post('https://mind-gitter.me/message/', headers=headers, data=data)
+            res = requests.post('https://mind-gitter.me/message/', headers=headers, json=data)
             print(res)
 
             ## ==================================================
@@ -129,20 +119,28 @@ class PostDetail(APIView):
 
 ## 모델 분석 결과 저장 요청 (요청은 모델 쪽에서)
 class PostAnalyze(APIView):
+    permission_classes = (AllowAny,)
+
     def put(self, request, post_id):
         
         posting = get_object_or_404(Post, id=post_id)
+        origin_tags = list()
+        tags = TaggedItem.objects.filter(object_id=post_id)
+        for tag in tags:
+            t = get_object_or_404(Tag, id=tag.tag_id)
+            origin_tags.append(t.name)
+
         data = dict()
         data.update({'title': posting.title})
         data.update({'video_file': posting.video_file})
         data.update({'channel_id': posting.channel_id})
         data.update({'is_use_comment': posting.is_use_comment})
         data.update({'is_save_video': posting.is_save_video})
-        data.update({'context': request.data['fulltext']})
-        data.update({'csv_url': request.data['emotions']})
-        data.update({'tags': request.data['tags']})
-        data.update({'summary': request.data['abb']})
-        data.update({'emotions': json.dumps(request.data['statistics'])})
+        data.update({'context': request.data.get('fulltext')[:999]})
+        data.update({'csv_url': request.data.get('emotions')})
+        data.update({'tags': request.data.get('tags')})
+        data.update({'summary': request.data.get('abb')[:999]})
+        data.update({'emotions': json.dumps(request.data.get('statistics'))})
 
         before_tags = posting.tags.names()
         # 원래 디비에 저장되어 있던 포스팅 태그들
@@ -154,16 +152,15 @@ class PostAnalyze(APIView):
             if usertagserializer.is_valid():
                 usertagserializer.save(count=count-1)
 
-
         ## 태그 거르기
         temp = list()
-        for tag in data['tags']:
+        for tag in data.get('tags'):
             if ('/NNG' not in tag) and ('/NNB' not in tag):
                 continue
             else:
                 temp.append(tag[:-4])
-
-        data.update({'tags': temp})
+        data.update({'tags': origin_tags + temp})
+        
 
         serializer = PostSerializer(instance=posting, data=data)
         if serializer.is_valid():
@@ -180,7 +177,6 @@ class PostAnalyze(APIView):
                         usertagserializer.save(count=count+1)
                 else:
                     user.tags.add(new_tag)
-        
             return Response({'message': 'save to analyzed data in database successfully'}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

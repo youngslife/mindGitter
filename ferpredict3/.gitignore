@@ -1,0 +1,12 @@
+# python
+__pycache__/
+
+# vscode
+.vscode/
+
+# etc
+datasets/
+data/
+!data/*.py
+
+.env
