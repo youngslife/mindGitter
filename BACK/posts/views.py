@@ -15,8 +15,6 @@ from accounts.serializers import UserTagSerializer
 from taggit.models import TaggedItem
 
 import requests
-import json
-
 
 @api_view(['GET',])
 @permission_classes((IsAuthenticated, ))
@@ -43,7 +41,7 @@ class PostList(APIView):
                 'Content-Type':'application/json'
             }
             data = {
-                'video_url': 'https://mind-gitter-diary.s3.ap-northeast-2.amazonaws.com/diary/' + request.data['video_file'],
+                'video_url': 'https://mind-gitter-diary.s3.amazonaws.com/diary/' + request.data['video_file'],
                 'post_id': str(Post.objects.first().id),
                 'user_id': str(request.user.id)
             }
@@ -138,11 +136,11 @@ class PostAnalyze(APIView):
         data.update({'channel_id': posting.channel_id})
         data.update({'is_use_comment': posting.is_use_comment})
         data.update({'is_save_video': posting.is_save_video})
-        data.update({'context': request.data['fulltext']})
-        data.update({'csv_url': request.data['emotions']})
-        data.update({'tags': request.data['tags']})
-        data.update({'summary': request.data['abb']})
-        data.update({'emotions': json.dumps(request.data['statistics'])})
+        data.update({'context': request.data.get('fulltext')})
+        data.update({'csv_url': request.data.get('emotions')})
+        data.update({'tags': request.data.get('tags')})
+        data.update({'summary': request.data.get('abb')})
+        data.update({'emotions': json.dumps(request.data.get('statistics'))})
 
         before_tags = posting.tags.names()
         # 원래 디비에 저장되어 있던 포스팅 태그들
@@ -156,7 +154,7 @@ class PostAnalyze(APIView):
 
         ## 태그 거르기
         temp = list()
-        for tag in json.loads(data['tags']):
+        for tag in data.get('tags'):
             if ('/NNG' not in tag) and ('/NNB' not in tag):
                 continue
             else:
