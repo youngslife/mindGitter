@@ -136,10 +136,10 @@ class PostAnalyze(APIView):
         data.update({'channel_id': posting.channel_id})
         data.update({'is_use_comment': posting.is_use_comment})
         data.update({'is_save_video': posting.is_save_video})
-        data.update({'context': request.data.get('fulltext')})
+        data.update({'context': request.data.get('fulltext')[:999]})
         data.update({'csv_url': request.data.get('emotions')})
         data.update({'tags': request.data.get('tags')})
-        data.update({'summary': request.data.get('abb')})
+        data.update({'summary': request.data.get('abb')[:999]})
         data.update({'emotions': json.dumps(request.data.get('statistics'))})
 
         before_tags = posting.tags.names()
