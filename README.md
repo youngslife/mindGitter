@@ -110,10 +110,8 @@
 5. docker image build
 
 - conda 환경에서 작업하였기 때문에 conda export 명령문으로 환경 파일을 빌드할 수 있게 합니다.
-- conda image에서 빌드를 시작하며 필요한 ffmpeg, jdk, knolpy등을 설치합니다
-- 건호를 부릅니다.
+- conda image에서 빌드를 시작하며 필요한 ffmpeg, jdk, knolpy등을 설치합니다.
 
-- 
 
 ### Docker, Docker Compose
 
